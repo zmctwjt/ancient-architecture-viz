@@ -1,0 +1,27 @@
+{
+  "name": "ancient-architecture-visualization",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "千年营造·华夏砖木——中国古代建筑数据可视化平台",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^4.5.0"
+  },
+  "dependencies": {
+    "echarts": "^5.4.3",
+    "gsap": "^3.12.2"
+  },
+  "keywords": [
+    "数据可视化",
+    "中国古代建筑",
+    "ECharts",
+    "计算机设计大赛"
+  ],
+  "author": "",
+  "license": "MIT"
+}

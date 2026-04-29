@@ -1,0 +1,489 @@
+/**
+ * 公共样式 - 古建筑数据可视化平台
+ * 深色主题 + 古铜金/青瓦色/朱砂红配色
+ */
+
+/* ==================== 基础重置 ==================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 100px; /* flexible.js 会覆盖 */
+}
+
+body {
+  font-family: 'Microsoft YaHei', 'PingFang SC', 'Noto Sans SC', sans-serif;
+  background: #0a0e14;
+  color: rgba(255, 255, 255, 0.9);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ==================== CSS变量 ==================== */
+:root {
+  /* 主色调 */
+  --color-primary: #C8A96E;
+  --color-secondary: #4ECDC4;
+  --color-accent: #E07B54;
+  
+  /* 背景色 - 确保深色背景不闪烁 */
+  --bg-dark: #0a0e14;
+  --bg-card: rgba(13, 17, 23, 0.95);
+  --bg-panel: rgba(20, 25, 35, 0.95);
+  
+  /* 边框 */
+  --border-color: rgba(200, 169, 110, 0.3);
+  --border-glow: 0 0 20px rgba(200, 169, 110, 0.2);
+  
+  /* 文字 */
+  --text-primary: rgba(255, 255, 255, 0.9);
+  --text-secondary: rgba(255, 255, 255, 0.7);
+  --text-muted: rgba(255, 255, 255, 0.5);
+  
+  /* 图表配色 */
+  --chart-gold: #C8A96E;
+  --chart-cyan: #4ECDC4;
+  --chart-red: #E07B54;
+  --chart-purple: #9B59B6;
+  --chart-blue: #3498DB;
+  --chart-green: #2ECC71;
+}
+
+/* ==================== 页面布局 ==================== */
+.page-container {
+  width: 100%;
+  min-height: 100vh;
+  padding: 0.2rem;
+  background: 
+    radial-gradient(ellipse at top, rgba(200, 169, 110, 0.05) 0%, transparent 50%),
+    radial-gradient(ellipse at bottom, rgba(78, 205, 196, 0.05) 0%, transparent 50%),
+    #0a0e14;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 页面标题 */
+.page-header {
+  text-align: center;
+  padding: 0.3rem 0;
+  margin-bottom: 0.2rem;
+  position: relative;
+}
+
+.page-title {
+  font-size: 0.36rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  letter-spacing: 0.05em;
+  text-shadow: 0 0 30px rgba(200, 169, 110, 0.3);
+  position: relative;
+  display: inline-block;
+}
+
+.page-title::after {
+  content: '';
+  position: absolute;
+  bottom: -0.1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1rem;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--color-primary), transparent);
+}
+
+.page-subtitle {
+  font-size: 0.14rem;
+  color: var(--text-muted);
+  margin-top: 0.15rem;
+}
+
+/* ==================== 面板组件 ==================== */
+.chart-panel {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 0.15rem;
+  position: relative;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.chart-panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, 
+    transparent, 
+    var(--color-primary), 
+    var(--color-secondary),
+    transparent
+  );
+  opacity: 0.6;
+}
+
+.chart-panel:hover {
+  box-shadow: var(--border-glow);
+  border-color: rgba(200, 169, 110, 0.5);
+}
+
+.panel-title {
+  font-size: 0.16rem;
+  color: var(--color-primary);
+  margin-bottom: 0.1rem;
+  padding-left: 0.1rem;
+  border-left: 3px solid var(--color-primary);
+}
+
+/* ==================== 图表容器 ==================== */
+.chart-container {
+  width: 100%;
+  height: 100%;
+  min-height: 2.5rem;
+}
+
+/* ==================== 统计卡片网格 ==================== */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.15rem;
+}
+
+.stats-overview {
+  padding: 0.1rem 0;
+}
+
+/* ==================== 导航组件 ==================== */
+.nav-container {
+  display: flex;
+  justify-content: center;
+  gap: 0.2rem;
+  padding: 0.2rem;
+  flex-wrap: wrap;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.2rem 0.3rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  color: var(--text-secondary);
+  min-width: 1.5rem;
+}
+
+.nav-item:hover {
+  transform: translateY(-5px);
+  border-color: var(--color-primary);
+  box-shadow: 0 10px 30px rgba(200, 169, 110, 0.2);
+}
+
+.nav-item.active {
+  background: linear-gradient(135deg, rgba(200, 169, 110, 0.2), rgba(78, 205, 196, 0.1));
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.nav-icon {
+  font-size: 0.32rem;
+  margin-bottom: 0.1rem;
+}
+
+.nav-label {
+  font-size: 0.14rem;
+}
+
+/* ==================== 统计卡片 ==================== */
+.stat-card {
+  background: linear-gradient(135deg, var(--bg-card), rgba(200, 169, 110, 0.05));
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 0.2rem;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: scale(1.02);
+  box-shadow: var(--border-glow);
+}
+
+.stat-number {
+  font-size: 0.36rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  font-family: 'Orbitron', 'Arial', sans-serif;
+}
+
+.stat-label {
+  font-size: 0.12rem;
+  color: var(--text-muted);
+  margin-top: 0.05rem;
+}
+
+/* ==================== 弹窗组件 ==================== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-content {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 0.3rem;
+  max-width: 6rem;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  transform: scale(0.9);
+  transition: transform 0.3s ease;
+}
+
+.modal-overlay.active .modal-content {
+  transform: scale(1);
+}
+
+.modal-close {
+  position: absolute;
+  top: 0.15rem;
+  right: 0.15rem;
+  width: 0.3rem;
+  height: 0.3rem;
+  background: transparent;
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.modal-close:hover {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: white;
+}
+
+/* ==================== 时间轴组件 ==================== */
+.timeline {
+  position: relative;
+  padding: 0.2rem 0;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 0.15rem;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, var(--color-primary), var(--color-secondary));
+}
+
+.timeline-item {
+  position: relative;
+  padding-left: 0.4rem;
+  margin-bottom: 0.2rem;
+}
+
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: 0.09rem;
+  top: 0.05rem;
+  width: 0.14rem;
+  height: 0.14rem;
+  background: var(--color-primary);
+  border-radius: 50%;
+  border: 2px solid var(--bg-dark);
+}
+
+.timeline-year {
+  font-size: 0.14rem;
+  color: var(--color-secondary);
+  font-weight: 600;
+}
+
+.timeline-title {
+  font-size: 0.16rem;
+  color: var(--text-primary);
+  margin: 0.05rem 0;
+}
+
+.timeline-desc {
+  font-size: 0.12rem;
+  color: var(--text-muted);
+}
+
+/* ==================== 加载动画 ==================== */
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2rem;
+}
+
+.loading-spinner {
+  width: 0.4rem;
+  height: 0.4rem;
+  border: 3px solid rgba(200, 169, 110, 0.2);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ==================== 响应式布局 ==================== */
+@media (max-width: 768px) {
+  html {
+    font-size: 50px !important;
+  }
+  
+  .page-title {
+    font-size: 0.24rem;
+  }
+  
+  .nav-container {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .nav-item {
+    width: 80%;
+  }
+}
+
+/* ==================== 滚动条样式 ==================== */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(200, 169, 110, 0.3);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(200, 169, 110, 0.5);
+}
+
+/* ==================== 数据分析结论面板 ==================== */
+.insight-panel {
+  background: linear-gradient(135deg, rgba(200, 169, 110, 0.1), rgba(78, 205, 196, 0.05));
+  border: 1px solid rgba(200, 169, 110, 0.3);
+  border-radius: 8px;
+  padding: 0.15rem;
+  margin-top: 0.1rem;
+}
+
+.insight-title {
+  font-size: 0.14rem;
+  color: var(--color-primary);
+  margin-bottom: 0.08rem;
+  display: flex;
+  align-items: center;
+  gap: 0.05rem;
+}
+
+.insight-content {
+  font-size: 0.12rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* ==================== 图表点击提示 ==================== */
+.chart-hint {
+  position: absolute;
+  bottom: 0.05rem;
+  right: 0.1rem;
+  font-size: 0.1rem;
+  color: var(--text-muted);
+  opacity: 0.7;
+}
+
+/* ==================== 信息弹窗内容样式 ==================== */
+.info-modal-title {
+  font-size: 0.2rem;
+  color: var(--color-primary);
+  margin-bottom: 0.15rem;
+  text-align: center;
+}
+
+.info-modal-section {
+  margin-bottom: 0.15rem;
+}
+
+.info-modal-section h4 {
+  font-size: 0.14rem;
+  color: var(--color-secondary);
+  margin-bottom: 0.08rem;
+}
+
+.info-modal-section p {
+  font-size: 0.12rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.info-modal-data {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.1rem;
+  margin: 0.1rem 0;
+}
+
+.info-data-item {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.08rem;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.info-data-value {
+  font-size: 0.18rem;
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.info-data-label {
+  font-size: 0.1rem;
+  color: var(--text-muted);
+  margin-top: 0.03rem;
+}

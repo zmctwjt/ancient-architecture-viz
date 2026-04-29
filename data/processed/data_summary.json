@@ -1,0 +1,65 @@
+{
+  "meta": {
+    "title": "数据清洗汇总报告",
+    "generated_at": "2026-04-21T09:33:35.387594",
+    "version": "1.0"
+  },
+  "datasets": {
+    "buildings": {
+      "source_file": "ncha_ancient_buildings.json",
+      "output_file": "buildings_processed.json",
+      "total_records": 43,
+      "fields": [
+        "dynasty_distribution",
+        "province_distribution",
+        "type_distribution",
+        "batch_distribution"
+      ]
+    },
+    "architects": {
+      "source_file": "architects.json",
+      "output_file": "architects_processed.json",
+      "total_records": 20,
+      "fields": [
+        "dynasty_distribution",
+        "influence_distribution",
+        "graph_data",
+        "timeline_data"
+      ]
+    },
+    "books": {
+      "source_file": "books.json",
+      "output_file": "books_processed.json",
+      "total_records": 14,
+      "fields": [
+        "dynasty_distribution",
+        "type_distribution",
+        "survival_distribution",
+        "sunburst_data",
+        "timeline_data"
+      ]
+    },
+    "culture": {
+      "source_file": "culture.json",
+      "output_file": "culture_processed.json",
+      "total_records": {
+        "residences": 8,
+        "official_buildings": 5,
+        "palaces": 5,
+        "bridges": 8,
+        "intangible_heritage": 12
+      },
+      "fields": [
+        "residence",
+        "official",
+        "palace",
+        "bridge",
+        "intangible_heritage"
+      ]
+    }
+  },
+  "usage": {
+    "description": "处理后的数据文件位于 data/processed/ 目录，可直接用于ECharts图表渲染",
+    "integration": "在JS中使用: fetch('./data/processed/xxx_processed.json')"
+  }
+}

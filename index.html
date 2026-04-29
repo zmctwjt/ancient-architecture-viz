@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>千年营造·华夏砖木 - 中国古代建筑数据可视化</title>
+  <meta name="description" content="基于数据可视化的中国古代建筑成就展示平台，涵盖建筑成就、杰出科学家、传世著作、建筑文化四大维度">
+  <link rel="stylesheet" href="./src/css/common.css">
+  <link rel="stylesheet" href="./src/css/responsive.css">
+  <script src="/js/flexible.js"></script>
+  <script type="importmap">
+  {
+    "imports": {
+      "echarts": "https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.esm.min.js",
+      "gsap": "https://cdn.jsdelivr.net/npm/gsap@3.12.7/+esm"
+    }
+  }
+  </script>
+  <style>
+    /* 预加载背景色，防止闪烁 */
+    html, body {
+      background-color: #0a0e14 !important;
+    }
+    /* 飘落叶片样式 */
+    .falling-leaf {
+      position: absolute;
+      pointer-events: none;
+      z-index: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="page-container" id="app">
+    <!-- 飘落叶片背景 -->
+    <div class="leaves-container" id="leafContainer"></div>
+    
+    <!-- 页面头部 -->
+    <header class="page-header">
+      <h1 class="page-title">千年营造·华夏砖木</h1>
+      <p class="page-subtitle">中国古代建筑数据可视化平台</p>
+    </header>
+    
+    <!-- 数据统计概览 -->
+    <section class="stats-overview">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-number" data-count="43">0</div>
+          <div class="stat-label">全国重点文物保护单位</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" data-count="20">0</div>
+          <div class="stat-label">杰出建筑科学家</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" data-count="14">0</div>
+          <div class="stat-label">传世建筑著作</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" data-count="38">0</div>
+          <div class="stat-label">建筑文化类型</div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- 导航入口 -->
+    <nav class="nav-container">
+      <a href="./src/view/achievement/index.html" class="nav-item">
+        <span class="nav-icon">🏛️</span>
+        <span class="nav-label">建筑成就</span>
+      </a>
+      <a href="./src/view/scientist/index.html" class="nav-item">
+        <span class="nav-icon">👨‍🔬</span>
+        <span class="nav-label">杰出科学家</span>
+      </a>
+      <a href="./src/view/literature/index.html" class="nav-item">
+        <span class="nav-icon">📚</span>
+        <span class="nav-label">传世著作</span>
+      </a>
+      <a href="./src/view/culture/index.html" class="nav-item">
+        <span class="nav-icon">🏮</span>
+        <span class="nav-label">建筑文化</span>
+      </a>
+    </nav>
+    
+    <!-- 朝代时间轴 -->
+    <section class="timeline-section">
+      <div class="chart-panel">
+        <h2 class="panel-title">中国古代建筑发展时间轴</h2>
+        <div id="timeline-chart" class="chart-container"></div>
+      </div>
+    </section>
+    
+    <!-- 建筑类型分布 -->
+    <section class="distribution-section">
+      <div class="chart-panel">
+        <h2 class="panel-title">四类建筑分布概览</h2>
+        <div id="radar-chart" class="chart-container"></div>
+      </div>
+    </section>
+    
+    <!-- 数据洞察面板 -->
+    <section class="insights-section" style="padding: 0.2rem;">
+      <h2 class="panel-title" style="text-align: center; margin-bottom: 0.2rem;">📊 核心数据洞察</h2>
+      <div id="home-insights" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(3rem, 1fr)); gap: 0.15rem;"></div>
+    </section>
+    
+    <!-- 页脚 -->
+    <footer class="page-footer" style="text-align: center; padding: 0.2rem; margin-top: 0.3rem; border-top: 1px solid rgba(200, 169, 110, 0.2);">
+      <p style="font-size: 0.12rem; color: rgba(255, 255, 255, 0.5); margin-bottom: 0.08rem;">2026年中国大学生计算机设计大赛 | 数据可视化与交互信息设计</p>
+      <p style="font-size: 0.11rem; color: rgba(255, 255, 255, 0.4);">数据来源：国家文物局、百度百科、中国非物质文化遗产网</p>
+    </footer>
+  </div>
+  
+  <script type="module" src="./src/view/home/main.js"></script>
+</body>
+</html>

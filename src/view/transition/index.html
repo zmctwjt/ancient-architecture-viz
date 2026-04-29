@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>朝代过渡 - 千年营造·华夏砖木</title>
+  <script src="/js/flexible.js"></script>
+  <script type="importmap">
+  {
+    "imports": {
+      "gsap": "https://cdn.jsdelivr.net/npm/gsap@3.12.7/+esm"
+    }
+  }
+  </script>
+  <link rel="stylesheet" href="../../css/common.css">
+  <link rel="stylesheet" href="../../css/responsive.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #0d1117;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .timeline-container {
+      position: relative;
+      width: 90%;
+      max-width: 1200px;
+      height: 400px;
+    }
+    .timeline-line {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #C8A96E, #4ECDC4, #E07B54, #C8A96E);
+      transform: translateY(-50%);
+    }
+    .dynasty-node {
+      position: absolute;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .dynasty-node:hover { transform: translate(-50%, -50%) scale(1.2); }
+    .dynasty-circle {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      border: 3px solid #C8A96E;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: bold;
+      color: #C8A96E;
+      box-shadow: 0 0 20px rgba(200, 169, 110, 0.3);
+    }
+    .dynasty-node.active .dynasty-circle {
+      background: linear-gradient(135deg, #C8A96E 0%, #D4B896 100%);
+      color: #0d1117;
+      box-shadow: 0 0 30px rgba(200, 169, 110, 0.6);
+    }
+    .dynasty-info {
+      position: absolute;
+      top: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .dynasty-node:hover .dynasty-info,
+    .dynasty-node.active .dynasty-info { opacity: 1; }
+    .dynasty-name {
+      font-size: 18px;
+      color: #C8A96E;
+      margin-bottom: 5px;
+    }
+    .dynasty-period {
+      font-size: 12px;
+      color: #4ECDC4;
+    }
+    .title {
+      font-size: 48px;
+      color: #C8A96E;
+      margin-bottom: 20px;
+      text-shadow: 0 0 30px rgba(200, 169, 110, 0.5);
+    }
+    .subtitle {
+      font-size: 18px;
+      color: #4ECDC4;
+      margin-bottom: 60px;
+    }
+    .enter-btn {
+      margin-top: 60px;
+      padding: 15px 50px;
+      background: linear-gradient(135deg, #C8A96E 0%, #D4B896 100%);
+      border: none;
+      border-radius: 30px;
+      color: #0d1117;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      opacity: 0;
+    }
+    .enter-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 30px rgba(200, 169, 110, 0.5);
+    }
+    .enter-btn.show { opacity: 1; }
+  </style>
+</head>
+<body>
+  <h1 class="title">千年营造</h1>
+  <p class="subtitle">点击朝代节点，探索华夏建筑文明</p>
+
+  <div class="timeline-container">
+    <div class="timeline-line"></div>
+
+    <div class="dynasty-node" style="left: 5%" data-dynasty="pre-qin" data-target="../achievement/index.html">
+      <div class="dynasty-circle">先秦</div>
+      <div class="dynasty-info">
+        <div class="dynasty-name">先秦时期</div>
+        <div class="dynasty-period">前2070-前221</div>
+      </div>
+    </div>
+
+    <div class="dynasty-node" style="left: 20%" data-dynasty="qin-han" data-target="../achievement/index.html">
+      <div class="dynasty-circle">秦汉</div>
+      <div class="dynasty-info">
+        <div class="dynasty-name">秦汉时期</div>
+        <div class="dynasty-period">前221-220</div>
+      </div>
+    </div>
+
+    <div class="dynasty-node" style="left: 35%" data-dynasty="wei-jin" data-target="../achievement/index.html">
+      <div class="dynasty-circle">魏晋</div>
+      <div class="dynasty-info">
+        <div class="dynasty-name">魏晋南北朝</div>
+        <div class="dynasty-period">220-589</div>
+      </div>
+    </div>
+
+    <div class="dynasty-node" style="left: 50%" data-dynasty="sui-tang" data-target="../achievement/index.html">
+      <div class="dynasty-circle">隋唐</div>
+      <div class="dynasty-info">
+        <div class="dynasty-name">隋唐时期</div>
+        <div class="dynasty-period">581-907</div>
+      </div>
+    </div>
+
+    <div class="dynasty-node" style="left: 65%" data-dynasty="song-yuan" data-target="../achievement/index.html">
+      <div class="dynasty-circle">宋元</div>
+      <div class="dynasty-info">
+        <div class="dynasty-name">宋元时期</div>
+        <div class="dynasty-period">960-1368</div>
+      </div>
+    </div>
+
+    <div class="dynasty-node" style="left: 80%" data-dynasty="ming-qing" data-target="../achievement/index.html">
+      <div class="dynasty-circle">明清</div>
+      <div class="dynasty-info">
+        <div class="dynasty-name">明清时期</div>
+        <div class="dynasty-period">1368-1911</div>
+      </div>
+    </div>
+
+    <div class="dynasty-node active" style="left: 95%" data-dynasty="all" data-target="../../../index.html">
+      <div class="dynasty-circle">总览</div>
+      <div class="dynasty-info">
+        <div class="dynasty-name">全时期总览</div>
+        <div class="dynasty-period">前2070-1911</div>
+      </div>
+    </div>
+  </div>
+
+  <button class="enter-btn" id="enterBtn">进入探索</button>
+
+  <script type="module">
+    import { gsap } from 'gsap';
+
+    // 动画初始化
+    gsap.from('.title', { opacity: 0, y: -50, duration: 1, delay: 0.2 });
+    gsap.from('.subtitle', { opacity: 0, y: -30, duration: 1, delay: 0.4 });
+    gsap.from('.timeline-line', { scaleX: 0, duration: 1.5, delay: 0.6, ease: 'power2.out' });
+    gsap.from('.dynasty-node', {
+      opacity: 0,
+      scale: 0,
+      duration: 0.5,
+      stagger: 0.1,
+      delay: 1,
+      ease: 'back.out(1.7)'
+    });
+
+    // 朝代节点交互
+    let selectedDynasty = 'all';
+    const nodes = document.querySelectorAll('.dynasty-node');
+    const enterBtn = document.getElementById('enterBtn');
+
+    nodes.forEach(node => {
+      node.addEventListener('click', () => {
+        nodes.forEach(n => n.classList.remove('active'));
+        node.classList.add('active');
+        selectedDynasty = node.dataset.dynasty;
+
+        // 显示进入按钮
+        enterBtn.classList.add('show');
+        enterBtn.textContent = `进入${node.querySelector('.dynasty-name').textContent}`;
+      });
+    });
+
+    // 进入按钮点击
+    enterBtn.addEventListener('click', () => {
+      const activeNode = document.querySelector('.dynasty-node.active');
+      if (activeNode) {
+        const target = activeNode.dataset.target;
+        // 添加过渡动画
+        gsap.to('body', {
+          opacity: 0,
+          duration: 0.5,
+          onComplete: () => {
+            window.location.href = target;
+          }
+        });
+      }
+    });
+
+    // 自动显示进入按钮
+    setTimeout(() => {
+      enterBtn.classList.add('show');
+    }, 2000);
+  </script>
+</body>
+</html>

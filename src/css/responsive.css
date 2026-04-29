@@ -1,0 +1,292 @@
+/**
+ * 响应式样式
+ * 适配不同屏幕尺寸
+ */
+
+/* ==================== 基础变量 ==================== */
+:root {
+  --grid-columns: 3;
+  --grid-gap: 0.4rem;
+  --container-padding: 0.4rem;
+}
+
+/* ==================== 大屏桌面 (>=1440px) ==================== */
+@media screen and (min-width: 1440px) {
+  .page-container {
+    max-width: 1920px;
+    margin: 0 auto;
+  }
+  
+  .chart-panel {
+    min-height: 400px;
+  }
+  
+  .panel-title {
+    font-size: 0.24rem;
+  }
+}
+
+/* ==================== 标准桌面 (1024px-1439px) ==================== */
+@media screen and (min-width: 1024px) and (max-width: 1439px) {
+  .page-container {
+    padding: var(--container-padding);
+  }
+  
+  .chart-panel {
+    min-height: 350px;
+  }
+}
+
+/* ==================== 平板 (768px-1023px) ==================== */
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+  :root {
+    --grid-columns: 2;
+    --grid-gap: 0.3rem;
+    --container-padding: 0.3rem;
+  }
+  
+  .page-title {
+    font-size: 0.48rem !important;
+  }
+  
+  .page-subtitle {
+    font-size: 0.2rem !important;
+  }
+  
+  .chart-panel {
+    min-height: 300px;
+  }
+  
+  .panel-title {
+    font-size: 0.2rem;
+  }
+  
+  /* 导航改为2列 */
+  .nav-container {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  
+  /* 统计卡片改为2列 */
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+/* ==================== 手机 (<768px) ==================== */
+@media screen and (max-width: 767px) {
+  :root {
+    --grid-columns: 1;
+    --grid-gap: 0.2rem;
+    --container-padding: 0.2rem;
+  }
+  
+  /* 页面标题 */
+  .page-title {
+    font-size: 0.36rem !important;
+    letter-spacing: 0.05em;
+  }
+  
+  .page-subtitle {
+    font-size: 0.16rem !important;
+  }
+  
+  /* 头部 */
+  .page-header {
+    padding: 0.3rem 0.2rem;
+  }
+  
+  /* 统计概览 */
+  .stats-overview {
+    padding: 0.2rem;
+  }
+  
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.15rem;
+  }
+  
+  .stat-card {
+    padding: 0.2rem;
+  }
+  
+  .stat-number {
+    font-size: 0.36rem;
+  }
+  
+  .stat-label {
+    font-size: 0.12rem;
+  }
+  
+  /* 导航 */
+  .nav-container {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.15rem;
+    padding: 0.2rem;
+  }
+  
+  .nav-item {
+    padding: 0.25rem;
+  }
+  
+  .nav-icon {
+    font-size: 0.4rem;
+  }
+  
+  .nav-label {
+    font-size: 0.14rem;
+  }
+  
+  /* 图表面板 */
+  .chart-panel {
+    min-height: 250px;
+    padding: 0.15rem;
+    margin-bottom: 0.2rem;
+  }
+  
+  .panel-title {
+    font-size: 0.16rem;
+    margin-bottom: 0.15rem;
+  }
+  
+  .chart-container {
+    min-height: 200px;
+  }
+  
+  /* 时间轴部分 */
+  .timeline-section,
+  .distribution-section {
+    padding: 0.2rem;
+  }
+  
+  /* 页脚 */
+  .page-footer {
+    padding: 0.3rem 0.2rem;
+    font-size: 0.12rem;
+  }
+  
+  /* 返回按钮 */
+  .back-btn {
+    top: 0.15rem;
+    left: 0.15rem;
+    padding: 0.08rem 0.15rem;
+    font-size: 0.12rem;
+  }
+  
+  /* 文化页标签 */
+  .tabs-container {
+    flex-wrap: wrap;
+    gap: 0.1rem;
+  }
+  
+  .tab-btn {
+    padding: 0.1rem 0.2rem;
+    font-size: 0.14rem;
+  }
+  
+  /* 文化内容网格 */
+  .culture-grid {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .culture-card {
+    min-height: 200px;
+  }
+}
+
+/* ==================== 小屏手机 (<375px) ==================== */
+@media screen and (max-width: 375px) {
+  .page-title {
+    font-size: 0.28rem !important;
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .nav-container {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .chart-panel {
+    min-height: 220px;
+  }
+}
+
+/* ==================== 横屏模式 ==================== */
+@media screen and (max-height: 500px) and (orientation: landscape) {
+  .page-header {
+    padding: 0.2rem;
+  }
+  
+  .page-title {
+    font-size: 0.32rem !important;
+  }
+  
+  .stats-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+  }
+  
+  .chart-panel {
+    min-height: 180px;
+  }
+}
+
+/* ==================== 减少动画（用户偏好） ==================== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .falling-leaf {
+    display: none !important;
+  }
+}
+
+/* ==================== 深色模式支持 ==================== */
+@media (prefers-color-scheme: dark) {
+  /* 已经是深色主题，无需额外处理 */
+}
+
+/* ==================== 打印样式 ==================== */
+@media print {
+  .leaves-container,
+  .nav-container,
+  .back-btn {
+    display: none !important;
+  }
+  
+  .chart-panel {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  
+  body {
+    background: white !important;
+    color: black !important;
+  }
+}
+
+/* ==================== 辅助功能 ==================== */
+/* 高对比度模式 */
+@media (prefers-contrast: high) {
+  .chart-panel {
+    border: 2px solid #C8A96E;
+  }
+  
+  .panel-title {
+    color: #fff;
+    text-shadow: 0 0 2px #000;
+  }
+}
+
+/* 焦点样式 */
+.nav-item:focus,
+.tab-btn:focus,
+.back-btn:focus {
+  outline: 2px solid #4ECDC4;
+  outline-offset: 2px;
+}
