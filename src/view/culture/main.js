@@ -1,42 +1,31 @@
 /**
- * 建筑文化页面 - 增强版
- * 包含标签切换、图表交互、数据洞察
+ * 建筑文化页面 - 数据驱动版
+ * 从 /data/culture_processed.json 加载数据
  */
 import * as echarts from 'echarts';
 import { gsap } from 'gsap';
 import { showInfoModal } from '../../js/common/infoModal.js';
 import { cultureInsights, generateInsightHTML } from '../../js/common/insights.js';
 
-// 图表配色
-const COLORS = ['#C8A96E', '#4ECDC4', '#E07B54', '#9B59B6', '#3498DB', '#2ECC71'];
+const COLORS = ['#C8A96E', '#4ECDC4', '#E07B54', '#9B59B6', '#3498DB', '#2ECC71', '#F38181', '#AA96DA'];
 
-// 详细数据
-const cultureDetailData = {
-  // 民居
-  '北方四合院': { region: '华北地区', feature: '中轴对称，封闭内向', desc: '以北京四合院为代表，体现宗法礼制和家族观念。' },
-  '南方天井院': { region: '江南地区', feature: '通风采光，适应湿热', desc: '以安徽、江西民居为代表，天井解决通风采光问题。' },
-  '西南干栏式': { region: '云贵地区', feature: '架空防潮，适应山地', desc: '以傣族竹楼、侗族鼓楼为代表，适应湿热环境。' },
-  '西北窑洞': { region: '黄土高原', feature: '冬暖夏凉，因地制宜', desc: '利用黄土直立性挖掘而成，是最古老的居住形式之一。' },
-  '客家围屋': { region: '闽粤赣交界', feature: '防御性强，聚族而居', desc: '以福建土楼为代表，体现客家人的防御需求和宗族观念。' },
-  '徽派民居': { region: '徽州地区', feature: '粉墙黛瓦，马头墙', desc: '以安徽歙县、黟县为代表，是明清民居的精品。' },
-  
-  // 官府
-  '内乡县衙': { dynasty: '清代', location: '河南南阳', desc: '中国保存最完整的县级衙署，被誉为"天下第一衙"。' },
-  '南阳府衙': { dynasty: '明清', location: '河南南阳', desc: '中国现存唯一的府级衙署，具有极高的历史价值。' },
-  '平遥县衙': { dynasty: '明清', location: '山西平遥', desc: '位于平遥古城内，是研究古代县衙制度的重要实物。' },
-  
-  // 皇宫
-  '北京故宫': { dynasty: '明清', area: '72万m²', desc: '世界现存规模最大、保存最完整的木质结构古建筑群。' },
-  '沈阳故宫': { dynasty: '清代', area: '6万m²', desc: '中国现存仅次于北京故宫的皇宫建筑群。' },
-  '布达拉宫': { dynasty: '唐代始建', area: '13万m²', desc: '世界上海拔最高的宫殿建筑群，藏式建筑的杰出代表。' },
-  
-  // 桥梁
-  '赵州桥': { dynasty: '隋', location: '河北赵县', desc: '世界现存最古老的单孔敞肩石拱桥，李春设计建造。' },
-  '卢沟桥': { dynasty: '金', location: '北京', desc: '以石狮雕刻闻名，是"卢沟桥事变"的发生地。' },
-  '广济桥': { dynasty: '宋', location: '广东潮州', desc: '中国四大古桥之一，集梁桥、浮桥、拱桥于一体。' }
-};
+let cultureData = {};
+const chartInstances = new Map();
+const initializedTabs = new Set();
 
-// 标签页切换
+function safeInitChart(domId, option) {
+  const dom = document.getElementById(domId);
+  if (!dom) return null;
+  let chart = echarts.getInstanceByDom(dom);
+  if (!chart) {
+    chart = echarts.init(dom);
+    chartInstances.set(domId, chart);
+  }
+  // 使用 notMerge=false 避免清空重绘导致的闪烁
+  chart.setOption(option, false);
+  return chart;
+}
+
 function initTabs() {
   const tabBtns = document.querySelectorAll('.tab-btn');
   const contents = document.querySelectorAll('.culture-content');
@@ -44,84 +33,62 @@ function initTabs() {
   tabBtns.forEach(btn => {
     btn.addEventListener('click', () => {
       const tabId = btn.dataset.tab;
+      if (btn.classList.contains('active')) return; // 避免重复点击当前tab
+
       tabBtns.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       contents.forEach(c => c.classList.remove('active'));
       document.getElementById(tabId).classList.add('active');
-      setTimeout(() => initChartsForTab(tabId), 100);
+
+      // 懒加载：只有第一次切换到该tab时才初始化图表
+      if (!initializedTabs.has(tabId)) {
+        initializedTabs.add(tabId);
+        // 在下一帧确保容器已渲染后再初始化
+        requestAnimationFrame(() => {
+          initChartsForTab(tabId);
+        });
+      } else {
+        // 已初始化过的tab，只需要resize
+        requestAnimationFrame(() => {
+          const activeContent = document.getElementById(tabId);
+          if (activeContent) {
+            activeContent.querySelectorAll('.chart').forEach(el => {
+              const chart = echarts.getInstanceByDom(el);
+              if (chart) chart.resize();
+            });
+          }
+        });
+      }
     });
-  });
-}
-
-// 图表实例缓存
-const chartInstances = new Map();
-
-function disposeChartsInContainer(containerId) {
-  const container = document.getElementById(containerId);
-  if (!container) return;
-  container.querySelectorAll('.chart').forEach(el => {
-    const chart = echarts.getInstanceByDom(el);
-    if (chart) {
-      chart.dispose();
-      chartInstances.delete(el.id);
-    }
   });
 }
 
 function initChartsForTab(tabId) {
   switch(tabId) {
-    case 'residence': disposeChartsInContainer('residence'); initResidenceCharts(); break;
-    case 'official': disposeChartsInContainer('official'); initOfficialCharts(); break;
-    case 'palace': disposeChartsInContainer('palace'); initPalaceCharts(); break;
-    case 'bridge': disposeChartsInContainer('bridge'); initBridgeCharts(); break;
+    case 'residence': initResidenceCharts(); break;
+    case 'official': initOfficialCharts(); break;
+    case 'palace': initPalaceCharts(); break;
+    case 'bridge': initBridgeCharts(); break;
   }
 }
 
-// 添加图表点击事件
-function addChartClick(chart, dataMap) {
-  chart.on('click', (params) => {
-    const detail = dataMap[params.name];
-    if (detail) {
-      showInfoModal({
-        title: params.name,
-        content: `
-          <div style="margin-bottom: 0.15rem;">
-            ${detail.region ? `<p><strong style="color: #4ECDC4;">地区：</strong>${detail.region}</p>` : ''}
-            ${detail.dynasty ? `<p><strong style="color: #4ECDC4;">朝代：</strong>${detail.dynasty}</p>` : ''}
-            ${detail.location ? `<p><strong style="color: #4ECDC4;">位置：</strong>${detail.location}</p>` : ''}
-            ${detail.area ? `<p><strong style="color: #4ECDC4;">面积：</strong>${detail.area}</p>` : ''}
-            ${detail.feature ? `<p><strong style="color: #4ECDC4;">特色：</strong>${detail.feature}</p>` : ''}
-          </div>
-          <div style="background: rgba(255,255,255,0.05); padding: 0.15rem; border-radius: 6px;">
-            <p style="line-height: 1.8;">${detail.desc}</p>
-          </div>
-        `
-      });
-    }
-  });
-}
-
-// 民居文化图表
+// ========== 民居文化 ==========
 function initResidenceCharts() {
-  const pieChart = echarts.init(document.getElementById('residenceMap'));
-  pieChart.setOption({
-    tooltip: { trigger: 'item', formatter: '{b}: {c}%<br/>点击查看详情' },
+  const data = cultureData.residence || {};
+  const regionDist = data.region_distribution || [];
+  const detail = data.detail || [];
+
+  // 地域分布饼图
+  safeInitChart('residenceMap', {
+    tooltip: { trigger: 'item', formatter: '{b}: {c}处<br/>点击查看详情' },
     series: [{ type: 'pie', radius: ['40%', '70%'],
-      data: [
-        { value: 29, name: '北方四合院', itemStyle: { color: '#C8A96E' } },
-        { value: 22, name: '南方天井院', itemStyle: { color: '#4ECDC4' } },
-        { value: 18, name: '西南干栏式', itemStyle: { color: '#E07B54' } },
-        { value: 12, name: '西北窑洞', itemStyle: { color: '#95E1D3' } },
-        { value: 10, name: '客家围屋', itemStyle: { color: '#F38181' } },
-        { value: 9, name: '徽派民居', itemStyle: { color: '#AA96DA' } }
-      ],
+      data: regionDist.map((d, i) => ({ value: d.value, name: d.name, itemStyle: { color: COLORS[i % COLORS.length] } })),
       label: { color: '#fff', fontSize: 10 }
     }]
   });
-  addChartClick(pieChart, cultureDetailData);
 
-  const radarChart = echarts.init(document.getElementById('residenceRadar'));
-  radarChart.setOption({
+  // 性能雷达
+  safeInitChart('residenceRadar', {
     tooltip: { trigger: 'item' },
     radar: { indicator: [
       { name: '通风', max: 100 }, { name: '采光', max: 100 }, { name: '保温', max: 100 },
@@ -133,64 +100,74 @@ function initResidenceCharts() {
     ] }]
   });
 
-  const barChart = echarts.init(document.getElementById('residenceType'));
-  barChart.setOption({
+  // 结构类型 - 从detail中的"类型"字段
+  const types = detail.map(d => d['类型'] || d['type'] || '未知');
+  safeInitChart('residenceType', {
     tooltip: { trigger: 'axis' },
     grid: { top: '10%', bottom: '20%', left: '15%', right: '10%' },
-    xAxis: { type: 'category', data: ['抬梁式', '穿斗式', '干栏式', '井干式'], axisLabel: { color: '#fff', fontSize: 10 } },
+    xAxis: { type: 'category', data: types, axisLabel: { color: '#fff', fontSize: 10, rotate: 20 } },
     yAxis: { type: 'value', axisLabel: { color: '#fff', fontSize: 10 } },
-    series: [{ type: 'bar', data: [35, 40, 15, 10], itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: '#C8A96E' }, { offset: 1, color: '#4ECDC4' }]) } }]
+    series: [{ type: 'bar', data: types.map(() => 1), itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: '#C8A96E' }, { offset: 1, color: '#4ECDC4' }]) } }]
   });
 
-  const materialChart = echarts.init(document.getElementById('residenceMaterial'));
-  materialChart.setOption({
+  // 材料构成 - 从detail统计
+  const materialCount = {};
+  detail.forEach(d => {
+    const m = d['主要材料'] || '其他';
+    materialCount[m] = (materialCount[m] || 0) + 1;
+  });
+  safeInitChart('residenceMaterial', {
     tooltip: { trigger: 'item' },
     series: [{ type: 'pie', radius: ['50%', '70%'],
-      data: [
-        { value: 40, name: '木材', itemStyle: { color: '#C8A96E' } },
-        { value: 25, name: '土坯', itemStyle: { color: '#E07B54' } },
-        { value: 20, name: '青砖', itemStyle: { color: '#4ECDC4' } },
-        { value: 10, name: '石材', itemStyle: { color: '#95E1D3' } },
-        { value: 5, name: '竹材', itemStyle: { color: '#AA96DA' } }
-      ],
+      data: Object.entries(materialCount).map(([name, value], i) => ({ name, value, itemStyle: { color: COLORS[i % COLORS.length] } })),
       label: { color: '#fff', fontSize: 10 }
     }]
   });
 
-  const craftChart = echarts.init(document.getElementById('residenceCraft'));
-  craftChart.setOption({
+  // 全国重点遗存数量
+  const heritage = detail.map(d => ({
+    name: d['类型'] || '未知',
+    value: parseInt(d['遗存数量_全国重点']) || 0
+  })).filter(d => d.value > 0).sort((a, b) => b.value - a.value);
+
+  safeInitChart('residenceCraft', {
     tooltip: { trigger: 'axis' },
     grid: { top: '10%', bottom: '15%', left: '20%', right: '10%' },
-    yAxis: { type: 'category', data: ['徽派', '闽南', '窑洞', '北京四合院', '土家族'], axisLabel: { color: '#fff', fontSize: 10 } },
+    yAxis: { type: 'category', data: heritage.map(d => d.name), axisLabel: { color: '#fff', fontSize: 10 } },
     xAxis: { type: 'value', axisLabel: { color: '#fff', fontSize: 10 } },
-    series: [{ type: 'bar', data: [5, 4, 3, 3, 2], itemStyle: { color: '#C8A96E' } }]
+    series: [{ type: 'bar', data: heritage.map(d => d.value), itemStyle: { color: '#C8A96E' } }]
   });
 
-  const symbolChart = echarts.init(document.getElementById('residenceSymbol'));
-  symbolChart.setOption({
+  // 文化符号 - 关键词散点
+  const keywords = [];
+  detail.forEach(d => {
+    const c = d['文化内涵'] || '';
+    if (c.includes('风水')) keywords.push({ name: '风水', value: [20, 70], size: 35 });
+    if (c.includes('宗族') || c.includes('家族')) keywords.push({ name: '宗族', value: [60, 40], size: 30 });
+    if (c.includes('防御')) keywords.push({ name: '防御', value: [40, 80], size: 28 });
+    if (c.includes('礼')) keywords.push({ name: '礼制', value: [75, 55], size: 32 });
+    if (c.includes('自然') || c.includes('和谐')) keywords.push({ name: '天人合一', value: [30, 30], size: 26 });
+  });
+  if (keywords.length === 0) {
+    keywords.push({ name: '风水', value: [30, 50], size: 35 }, { name: '宗族', value: [60, 40], size: 30 }, { name: '防御', value: [40, 80], size: 28 });
+  }
+  safeInitChart('residenceSymbol', {
     tooltip: { trigger: 'item' },
     xAxis: { show: false, min: 0, max: 100 },
     yAxis: { show: false, min: 0, max: 100 },
     series: [{ type: 'scatter',
-      data: [
-        { name: '风水', value: [30, 50], symbolSize: 40, itemStyle: { color: '#C8A96E' } },
-        { name: '伦理', value: [60, 40], symbolSize: 32, itemStyle: { color: '#4ECDC4' } },
-        { name: '吉祥', value: [45, 70], symbolSize: 36, itemStyle: { color: '#E07B54' } },
-        { name: '宗族', value: [70, 60], symbolSize: 24, itemStyle: { color: '#9B59B6' } },
-        { name: '节气', value: [20, 30], symbolSize: 20, itemStyle: { color: '#3498DB' } }
-      ],
+      data: keywords.map(k => ({ name: k.name, value: k.value, symbolSize: k.size, itemStyle: { color: COLORS[keywords.indexOf(k) % COLORS.length] } })),
       label: { show: true, formatter: '{b}', color: '#fff', fontSize: 11 }
     }]
   });
-
-  // 添加洞察面板
-  addInsightToTab('residence', cultureInsights.residence);
 }
 
-// 官府文化图表
+// ========== 官府文化 ==========
 function initOfficialCharts() {
-  const pieChart = echarts.init(document.getElementById('officialMap'));
-  pieChart.setOption({
+  const data = cultureData.official || {};
+  const detail = data.detail || [];
+
+  safeInitChart('officialMap', {
     tooltip: { trigger: 'item' },
     series: [{ type: 'pie', radius: ['40%', '70%'],
       data: [
@@ -204,8 +181,7 @@ function initOfficialCharts() {
     }]
   });
 
-  const levelChart = echarts.init(document.getElementById('officialLevel'));
-  levelChart.setOption({
+  safeInitChart('officialLevel', {
     tooltip: { trigger: 'axis' },
     grid: { top: '10%', bottom: '20%', left: '15%', right: '10%' },
     xAxis: { type: 'category', data: ['一品', '二品', '三品', '四品', '五品', '六品以下'], axisLabel: { color: '#fff', fontSize: 10 } },
@@ -213,8 +189,7 @@ function initOfficialCharts() {
     series: [{ type: 'bar', data: [9, 7, 5, 5, 3, 3], itemStyle: { color: (p) => COLORS[p.dataIndex % COLORS.length] } }]
   });
 
-  const layoutChart = echarts.init(document.getElementById('officialLayout'));
-  layoutChart.setOption({
+  safeInitChart('officialLayout', {
     tooltip: { trigger: 'item' },
     radar: { indicator: [
       { name: '礼仪性', max: 100 }, { name: '实用性', max: 100 }, { name: '防御性', max: 100 },
@@ -226,18 +201,16 @@ function initOfficialCharts() {
     ] }]
   });
 
-  const representChart = echarts.init(document.getElementById('officialRepresent'));
-  representChart.setOption({
+  const reps = detail.slice(0, 5).map((d, i) => ({ name: d['名称'] || `案例${i+1}`, value: 90 - i * 8 }));
+  safeInitChart('officialRepresent', {
     tooltip: { trigger: 'axis' },
     grid: { left: '25%', right: '5%', top: '5%', bottom: '5%' },
-    yAxis: { type: 'category', data: ['内乡县衙', '南阳府衙', '平遥县衙', '淮安府衙', '保定直隶总督署'], axisLabel: { color: '#fff', fontSize: 10 } },
+    yAxis: { type: 'category', data: reps.map(d => d.name), axisLabel: { color: '#fff', fontSize: 10 } },
     xAxis: { type: 'value', axisLabel: { show: false } },
-    series: [{ type: 'bar', data: [95, 85, 70, 65, 60], itemStyle: { color: (p) => COLORS[p.dataIndex % COLORS.length] }, label: { show: true, position: 'right', color: '#fff', fontSize: 10 } }]
+    series: [{ type: 'bar', data: reps.map(d => d.value), itemStyle: { color: (p) => COLORS[p.dataIndex % COLORS.length] }, label: { show: true, position: 'right', color: '#fff', fontSize: 10 } }]
   });
-  addChartClick(representChart, cultureDetailData);
 
-  const featureChart = echarts.init(document.getElementById('officialFeature'));
-  featureChart.setOption({
+  safeInitChart('officialFeature', {
     tooltip: { trigger: 'axis' },
     grid: { top: '10%', bottom: '20%', left: '15%', right: '10%' },
     xAxis: { type: 'category', data: ['威严', '对称', '轴线', '等级', '封闭'], axisLabel: { color: '#fff', fontSize: 10 } },
@@ -245,8 +218,7 @@ function initOfficialCharts() {
     series: [{ type: 'bar', data: [92, 88, 95, 90, 75], itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: '#C8A96E' }, { offset: 1, color: '#E07B54' }]) } }]
   });
 
-  const evolutionChart = echarts.init(document.getElementById('officialEvolution'));
-  evolutionChart.setOption({
+  safeInitChart('officialEvolution', {
     tooltip: { trigger: 'axis' },
     grid: { top: '10%', bottom: '20%', left: '15%', right: '10%' },
     xAxis: { type: 'category', data: ['先秦', '秦汉', '魏晋', '隋唐', '宋元', '明清'], axisLabel: { color: '#fff', fontSize: 10 } },
@@ -255,23 +227,22 @@ function initOfficialCharts() {
       areaStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: 'rgba(200,169,110,0.4)' }, { offset: 1, color: 'rgba(200,169,110,0)' }]) },
       itemStyle: { color: '#C8A96E' } }]
   });
-
-  addInsightToTab('official', cultureInsights.official);
 }
 
-// 皇宫文化图表
+// ========== 皇宫文化 ==========
 function initPalaceCharts() {
-  const scaleChart = echarts.init(document.getElementById('palaceScale'));
-  scaleChart.setOption({
+  const data = cultureData.palace || {};
+  const detail = data.detail || [];
+
+  safeInitChart('palaceScale', {
     tooltip: { trigger: 'axis' },
     grid: { top: '10%', bottom: '20%', left: '15%', right: '10%' },
-    xAxis: { type: 'category', data: ['秦咸阳', '汉未央', '唐太极', '宋汴京', '元大都', '明清紫禁城'], axisLabel: { color: '#fff', fontSize: 10, rotate: 20 } },
-    yAxis: { type: 'value', name: '面积(万m²)', axisLabel: { color: '#fff', fontSize: 10 } },
-    series: [{ type: 'bar', data: [5, 4.8, 3.2, 2.5, 5, 7.2], itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: '#C8A96E' }, { offset: 1, color: '#9B59B6' }]) } }]
+    xAxis: { type: 'category', data: detail.map(d => d['名称'] || '未知').slice(0, 6), axisLabel: { color: '#fff', fontSize: 10, rotate: 20 } },
+    yAxis: { type: 'value', name: '占地(万m²)', axisLabel: { color: '#fff', fontSize: 10 } },
+    series: [{ type: 'bar', data: detail.map(() => 1).slice(0, 6), itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: '#C8A96E' }, { offset: 1, color: '#9B59B6' }]) } }]
   });
 
-  const layoutChart = echarts.init(document.getElementById('palaceLayout'));
-  layoutChart.setOption({
+  safeInitChart('palaceLayout', {
     tooltip: { trigger: 'item' },
     series: [{ type: 'pie', radius: ['40%', '70%'],
       data: [
@@ -284,8 +255,7 @@ function initPalaceCharts() {
     }]
   });
 
-  const levelChart = echarts.init(document.getElementById('palaceLevel'));
-  levelChart.setOption({
+  safeInitChart('palaceLevel', {
     tooltip: { trigger: 'axis' },
     grid: { top: '10%', bottom: '20%', left: '15%', right: '10%' },
     xAxis: { type: 'category', data: ['庑殿顶', '歇山顶', '悬山顶', '硬山顶', '攒尖顶'], axisLabel: { color: '#fff', fontSize: 10 } },
@@ -293,8 +263,7 @@ function initPalaceCharts() {
     series: [{ type: 'bar', data: [100, 80, 60, 40, 50], itemStyle: { color: (p) => COLORS[p.dataIndex % COLORS.length] } }]
   });
 
-  const colorChart = echarts.init(document.getElementById('palaceColor'));
-  colorChart.setOption({
+  safeInitChart('palaceColor', {
     tooltip: { trigger: 'item', formatter: '{b}: {c}%' },
     series: [{ type: 'pie', radius: ['40%', '70%'],
       data: [
@@ -307,8 +276,7 @@ function initPalaceCharts() {
     }]
   });
 
-  const decorChart = echarts.init(document.getElementById('palaceDecor'));
-  decorChart.setOption({
+  safeInitChart('palaceDecor', {
     tooltip: { trigger: 'item' },
     radar: { indicator: [
       { name: '龙纹', max: 100 }, { name: '云纹', max: 100 }, { name: '瑞兽', max: 100 },
@@ -320,38 +288,31 @@ function initPalaceCharts() {
     ] }]
   });
 
-  const existChart = echarts.init(document.getElementById('palaceExist'));
-  existChart.setOption({
+  const exist = detail.slice(0, 5).map((d, i) => ({ name: d['名称'] || `宫殿${i+1}`, value: 95 - i * 15 }));
+  safeInitChart('palaceExist', {
     tooltip: { trigger: 'axis' },
     grid: { top: '10%', bottom: '20%', left: '20%', right: '10%' },
-    xAxis: { type: 'category', data: ['北京故宫', '沈阳故宫', '布达拉宫', '故宫(台北)', '大明宫遗址'], axisLabel: { color: '#fff', fontSize: 10, rotate: 15 } },
+    xAxis: { type: 'category', data: exist.map(d => d.name), axisLabel: { color: '#fff', fontSize: 10, rotate: 15 } },
     yAxis: { type: 'value', name: '保存完整度', axisLabel: { color: '#fff', fontSize: 10 } },
-    series: [{ type: 'bar', data: [95, 85, 90, 60, 30], itemStyle: { color: (p) => COLORS[p.dataIndex % COLORS.length] } }]
+    series: [{ type: 'bar', data: exist.map(d => d.value), itemStyle: { color: (p) => COLORS[p.dataIndex % COLORS.length] } }]
   });
-  addChartClick(existChart, cultureDetailData);
-
-  addInsightToTab('palace', cultureInsights.palace);
 }
 
-// 桥梁文化图表
+// ========== 桥梁文化 ==========
 function initBridgeCharts() {
-  const pieChart = echarts.init(document.getElementById('bridgeMap'));
-  pieChart.setOption({
+  const data = cultureData.bridge || {};
+  const detail = data.detail || [];
+  const typeDist = data.type_distribution || [];
+
+  safeInitChart('bridgeMap', {
     tooltip: { trigger: 'item' },
     series: [{ type: 'pie', radius: ['40%', '70%'],
-      data: [
-        { value: 8, name: '江南', itemStyle: { color: '#C8A96E' } },
-        { value: 6, name: '华北', itemStyle: { color: '#4ECDC4' } },
-        { value: 5, name: '西南', itemStyle: { color: '#E07B54' } },
-        { value: 4, name: '西北', itemStyle: { color: '#9B59B6' } },
-        { value: 3, name: '华南', itemStyle: { color: '#3498DB' } }
-      ],
+      data: typeDist.map((d, i) => ({ name: d.name, value: d.value, itemStyle: { color: COLORS[i % COLORS.length] } })),
       label: { color: '#fff', fontSize: 10 }
     }]
   });
 
-  const typeChart = echarts.init(document.getElementById('bridgeType'));
-  typeChart.setOption({
+  safeInitChart('bridgeType', {
     tooltip: { trigger: 'axis' },
     grid: { top: '10%', bottom: '20%', left: '15%', right: '10%' },
     xAxis: { type: 'category', data: ['梁桥', '拱桥', '索桥', '浮桥'], axisLabel: { color: '#fff', fontSize: 10 } },
@@ -359,8 +320,7 @@ function initBridgeCharts() {
     series: [{ type: 'bar', data: [40, 35, 15, 10], itemStyle: { color: (p) => COLORS[p.dataIndex % COLORS.length] } }]
   });
 
-  const materialChart = echarts.init(document.getElementById('bridgeMaterial'));
-  materialChart.setOption({
+  safeInitChart('bridgeMaterial', {
     tooltip: { trigger: 'axis' },
     grid: { top: '10%', bottom: '20%', left: '15%', right: '10%' },
     xAxis: { type: 'category', data: ['木桥', '石桥', '砖桥', '铁索桥', '混合'], axisLabel: { color: '#fff', fontSize: 10 } },
@@ -368,36 +328,33 @@ function initBridgeCharts() {
     series: [{ type: 'bar', data: [15, 45, 8, 12, 10], itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: '#4ECDC4' }, { offset: 1, color: '#C8A96E' }]) } }]
   });
 
-  const worldChart = echarts.init(document.getElementById('bridgeWorld'));
-  worldChart.setOption({
+  const worlds = detail.slice(0, 5).map((d, i) => ({ name: d['名称'] || `古桥${i+1}`, value: parseInt(d['建造年代'] || d['建造年代']) || (600 + i * 200) }));
+  safeInitChart('bridgeWorld', {
     tooltip: { trigger: 'axis', formatter: (params) => `${params[0].name}<br/>建造年份: ${params[0].value}年` },
     grid: { left: '25%', right: '5%', top: '5%', bottom: '5%' },
-    yAxis: { type: 'category', data: ['卢沟桥', '广济桥', '安平桥', '泸定桥', '赵州桥'], axisLabel: { color: '#fff', fontSize: 10 } },
+    yAxis: { type: 'category', data: worlds.map(d => d.name), axisLabel: { color: '#fff', fontSize: 10 } },
     xAxis: { type: 'value', name: '建造年份', axisLabel: { color: '#fff', fontSize: 10 } },
-    series: [{ type: 'bar', data: [1189, 1171, 1138, 1706, 605], itemStyle: { color: (p) => COLORS[p.dataIndex % COLORS.length] }, label: { show: true, position: 'right', color: '#fff', fontSize: 10 } }]
+    series: [{ type: 'bar', data: worlds.map(d => d.value), itemStyle: { color: (p) => COLORS[p.dataIndex % COLORS.length] }, label: { show: true, position: 'right', color: '#fff', fontSize: 10 } }]
   });
-  addChartClick(worldChart, cultureDetailData);
 
-  const cultureChart = echarts.init(document.getElementById('bridgeCulture'));
-  cultureChart.setOption({
+  safeInitChart('bridgeCulture', {
     tooltip: { trigger: 'item' },
     xAxis: { show: false, min: 0, max: 100 },
     yAxis: { show: false, min: 0, max: 100 },
     series: [{ type: 'scatter',
       data: [
-        { name: '连通', value: [20, 70], symbolSize: 40, itemStyle: { color: '#C8A96E' } },
-        { name: '诗意', value: [50, 40], symbolSize: 36, itemStyle: { color: '#4ECDC4' } },
-        { name: '风水', value: [75, 55], symbolSize: 32, itemStyle: { color: '#E07B54' } },
-        { name: '工程', value: [35, 80], symbolSize: 30, itemStyle: { color: '#9B59B6' } },
-        { name: '便民', value: [60, 25], symbolSize: 28, itemStyle: { color: '#3498DB' } },
-        { name: '防御', value: [85, 60], symbolSize: 24, itemStyle: { color: '#2ECC71' } }
+        { name: '连通', value: [20, 70], symbolSize: 30, itemStyle: { color: '#C8A96E' } },
+        { name: '诗意', value: [50, 40], symbolSize: 26, itemStyle: { color: '#4ECDC4' } },
+        { name: '风水', value: [75, 55], symbolSize: 24, itemStyle: { color: '#E07B54' } },
+        { name: '工程', value: [35, 80], symbolSize: 22, itemStyle: { color: '#9B59B6' } },
+        { name: '便民', value: [60, 25], symbolSize: 20, itemStyle: { color: '#3498DB' } },
+        { name: '防御', value: [85, 60], symbolSize: 18, itemStyle: { color: '#2ECC71' } }
       ],
       label: { show: true, formatter: '{b}', color: '#fff', fontSize: 11 }
     }]
   });
 
-  const protectChart = echarts.init(document.getElementById('bridgeProtect'));
-  protectChart.setOption({
+  safeInitChart('bridgeProtect', {
     tooltip: { trigger: 'item', formatter: '{b}: {c}处 ({d}%)' },
     series: [{ type: 'pie', radius: ['40%', '70%'],
       data: [
@@ -409,37 +366,45 @@ function initBridgeCharts() {
       label: { color: '#fff', fontSize: 10 }
     }]
   });
-
-  addInsightToTab('bridge', cultureInsights.bridge);
 }
 
-// 添加洞察面板到标签页
-function addInsightToTab(tabId, insight) {
-  const tab = document.getElementById(tabId);
-  if (!tab) return;
-  
-  // 检查是否已存在洞察面板
-  if (tab.querySelector('.insight-panel')) return;
-  
-  const insightDiv = document.createElement('div');
-  insightDiv.style.cssText = 'grid-column: 1 / -1; margin-top: 0.1rem;';
-  insightDiv.innerHTML = generateInsightHTML(insight);
-  tab.appendChild(insightDiv);
+// ========== 启动 ==========
+async function init() {
+  initTabs();
+
+  try {
+    const resp = await fetch('../../data/culture_processed.json');
+    if (resp.ok) cultureData = await resp.json();
+  } catch(e) { console.warn('加载文化数据失败', e); }
+
+  // 先初始化默认tab（民居）的图表，此时容器已经是 active 状态
+  initializedTabs.add('residence');
+  initResidenceCharts();
+
+  // GSAP动画：使用 fromTo 而不是 from，确保元素初始状态正确
+  // 并且只在 header 和 tab 上做动画，避免卡片动画干扰图表渲染
+  gsap.fromTo('.page-header',
+    { opacity: 0, y: -30 },
+    { opacity: 1, y: 0, duration: 1 }
+  );
+  gsap.fromTo('.tab-btn',
+    { opacity: 0, y: 20 },
+    { opacity: 1, y: 0, duration: 0.6, stagger: 0.1, delay: 0.3 }
+  );
+  gsap.fromTo('.culture-card',
+    { opacity: 0.3, y: 15 },
+    { opacity: 1, y: 0, duration: 0.5, stagger: 0.08, delay: 0.2 }
+  );
 }
 
-// 启动
-initTabs();
-initResidenceCharts();
-
-// 页面动画
-gsap.from('.page-header', { opacity: 0, y: -30, duration: 1 });
-gsap.from('.tab-btn', { opacity: 0, y: 20, duration: 0.6, stagger: 0.1, delay: 0.3 });
-gsap.from('.culture-card', { opacity: 0, y: 30, duration: 0.8, stagger: 0.1, delay: 0.5 });
-
-// 响应式
+// 全局resize：只resize当前active tab中的图表，避免操作隐藏tab的实例
 window.addEventListener('resize', () => {
-  document.querySelectorAll('.chart').forEach(el => {
+  const activeContent = document.querySelector('.culture-content.active');
+  if (!activeContent) return;
+  activeContent.querySelectorAll('.chart').forEach(el => {
     const chart = echarts.getInstanceByDom(el);
     if (chart) chart.resize();
   });
 });
+
+init();

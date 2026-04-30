@@ -4,6 +4,9 @@ import { resolve } from 'path';
 /**
  * Vite 配置 - 多页面应用 (MPA)
  * 参考 4-c-web 项目结构
+ *
+ * 路径说明：子页面在 src/view/xxx/ 层级，
+ * fetch 数据路径使用 ../../data/ 相对路径（上溯两级到项目根）
  */
 export default defineConfig({
   // 基础配置
@@ -46,8 +49,6 @@ export default defineConfig({
           gsap: ['gsap']
         },
         assetFileNames: (assetInfo) => {
-          const info = assetInfo.name.split('.');
-          const ext = info[info.length - 1];
           if (/\.(png|jpe?g|gif|svg|webp|ico)$/i.test(assetInfo.name)) {
             return 'images/[name]-[hash][extname]';
           }
