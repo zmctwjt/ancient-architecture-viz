@@ -147,7 +147,7 @@ echo   Press Ctrl+C to stop
 echo.
 
 REM ---------- Start preview ----------
-call npm run preview
+call npm run preview -- --base /ancient-architecture-viz/
 
 echo.
 pause

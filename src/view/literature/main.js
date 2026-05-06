@@ -3,7 +3,7 @@
  * 数据来源：/data/books_processed.json
  */
 import * as echarts from 'echarts';
-import { loadData, COLORS, ECHARTS_THEME } from '../../js/common/utils.js';
+import { COLORS, ECHARTS_THEME, loadJson, matchDynastyGroup } from '../../js/common/utils.js';
 import { pageEnterAnimation } from '../../js/common/animation.js';
 import { showInfoModal, generateDataHTML } from '../../js/common/infoModal.js';
 import { literatureInsights, generateInsightHTML } from '../../js/common/insights.js';
@@ -38,47 +38,72 @@ const keywordDetailData = {
 
 function getDynastyFilter() {
   const params = new URLSearchParams(window.location.search);
-  return params.get('dynasty');
+  const dynasty = params.get('dynasty');
+  return dynasty ? dynasty.split(',') : [];
 }
 
-function showDynastyFilter(dynasty) {
-  const filterEl = document.getElementById('dynasty-filter');
-  const labelEl = document.getElementById('dynasty-label');
-  if (filterEl && labelEl && dynasty) {
-    labelEl.textContent = `当前筛选：${dynasty}`;
-    filterEl.style.display = 'block';
+// 图表实例追踪
+const chartInstances = [];
+
+function initDynastyButtons() {
+  const btns = document.querySelectorAll('.dynasty-btn');
+  const urlParams = new URLSearchParams(window.location.search);
+  const currentDynasties = urlParams.get('dynasty');
+
+  if (currentDynasties) {
+    const selected = currentDynasties.split(',');
+    btns.forEach(btn => {
+      if (selected.includes(btn.dataset.dynasty)) btn.classList.add('active');
+    });
   }
+
+  btns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      btn.classList.toggle('active');
+
+      const selected = [];
+      btns.forEach(b => {
+        if (b.classList.contains('active')) selected.push(b.dataset.dynasty);
+      });
+
+      if (selected.length > 0) {
+        const param = selected.join(',');
+        window.history.replaceState({}, '', window.location.pathname + '?dynasty=' + encodeURIComponent(param));
+        reinitWithFilter(param);
+      } else {
+        window.history.replaceState({}, '', window.location.pathname);
+        reinitWithFilter(null);
+      }
+    });
+  });
 }
 
-// 六大朝代映射到著作原始朝代
-function mapBookDynasty(filterDynasty) {
-  const map = {
-    '先秦': ['春秋—战国'],
-    '隋唐': ['唐'],
-    '宋元': ['北宋', '元'],
-    '明清': ['明', '清']
-  };
-  return map[filterDynasty] || [filterDynasty];
+async function reinitWithFilter(dynastyParam) {
+  chartInstances.forEach(chart => { if (chart) chart.dispose(); });
+  chartInstances.length = 0;
+  const dynasties = dynastyParam ? dynastyParam.split(',') : [];
+  await initData(dynasties);
 }
 
-async function init() {
+function initUI() {
+  pageEnterAnimation();
+  initDynastyButtons();
+}
+
+async function initData(filterDynasties) {
   let bookData = { timeline_data: [], dynasty_distribution: [] };
   try {
-    const resp = await fetch('../../data/books_processed.json');
-    if (resp.ok) bookData = await resp.json();
+    bookData = await loadJson('books_processed.json') || bookData;
   } catch(e) { console.warn('加载著作数据失败', e); }
 
-  const filterDynasty = getDynastyFilter();
-  showDynastyFilter(filterDynasty);
-
-  // 按朝代过滤著作数据
-  if (filterDynasty) {
-    const allowed = mapBookDynasty(filterDynasty);
-    bookData.timeline_data = (bookData.timeline_data || []).filter(b => allowed.includes(b.dynasty));
-    bookData.dynasty_distribution = (bookData.dynasty_distribution || []).filter(d => allowed.includes(d.name));
+  if (filterDynasties && filterDynasties.length > 0) {
+    bookData.timeline_data = (bookData.timeline_data || []).filter(b => 
+      filterDynasties.some(fd => matchDynastyGroup(b.dynasty, fd))
+    );
+    bookData.dynasty_distribution = (bookData.dynasty_distribution || []).filter(d => 
+      filterDynasties.some(fd => matchDynastyGroup(d.name, fd))
+    );
   }
-
-  pageEnterAnimation();
 
   await initTimelineChart(bookData);
   await initSunburstChart(bookData);
@@ -87,6 +112,10 @@ async function init() {
 
   addInsightPanels();
 }
+
+async function init() {
+  initUI();
+  await initData(getDynastyFilter());}
 
 function addInsightPanels() {
   const container = document.querySelector('.dashboard-grid');
@@ -111,6 +140,7 @@ async function initTimelineChart(data) {
   const chartDom = document.getElementById('timeline-chart');
   if (!chartDom) return;
   const chart = echarts.init(chartDom);
+  chartInstances.push(chart);
 
   const dynastyDist = data.dynasty_distribution || [];
   const dynasties = dynastyDist.map(d => d.name);
@@ -191,6 +221,7 @@ async function initSunburstChart(data) {
   const chartDom = document.getElementById('sunburst-chart');
   if (!chartDom) return;
   const chart = echarts.init(chartDom);
+  chartInstances.push(chart);
 
   // 按朝代聚合
   const dynastyMap = {};
@@ -256,6 +287,7 @@ async function initTypeChart(data) {
   const chartDom = document.getElementById('type-chart');
   if (!chartDom) return;
   const chart = echarts.init(chartDom);
+  chartInstances.push(chart);
 
   // 从 bookDetailData 统计类型分布
   const typeCount = {};
@@ -291,6 +323,19 @@ async function initTypeChart(data) {
   };
 
   chart.setOption(option);
+  chart.on('click', (params) => {
+    const type = params.name;
+    const books = Object.entries(bookDetailData)
+      .filter(([, b]) => (b.type || '其他') === type)
+      .map(([name, b]) => ({ name, author: b.author, dynasty: b.dynasty }));
+    if (books.length > 0) {
+      const list = books.map(b => `<li style="margin-bottom:0.06rem;"><strong style="color:#C8A96E;">《${b.name}》</strong> — ${b.author} · ${b.dynasty}</li>`).join('');
+      showInfoModal({
+        title: `著作类型 · ${type}（${books.length}部）`,
+        content: `<ul style="padding-left:0.2rem;line-height:1.6;">${list}</ul>`
+      });
+    }
+  });
   window.addEventListener('resize', () => chart.resize());
 }
 
@@ -309,6 +354,7 @@ async function initWordCloudChart(data) {
   const chartDom = document.getElementById('wordcloud-chart');
   if (!chartDom) return;
   const chart = echarts.init(chartDom);
+  chartInstances.push(chart);
 
   // 更丰富的关键词库，带权重
   const keywords = [

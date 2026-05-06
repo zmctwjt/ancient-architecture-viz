@@ -6,7 +6,7 @@
   <title>建筑著作 - 千年营造·华夏砖木</title>
   <link rel="stylesheet" href="../../css/common.css">
   <link rel="stylesheet" href="../../css/responsive.css">
-  <script src="/js/flexible.js"></script>
+  <script>(function(){var d=document.documentElement;var r=window.devicePixelRatio||1;d.setAttribute('data-dpr',r);function s(){var w=d.clientWidth;var rem=(w/1920)*100;rem=Math.max(rem,54);d.style.fontSize=rem+'px'}s();window.addEventListener('resize',s);window.addEventListener('pageshow',function(e){if(e.persisted)s()});window.flexible={dpr:r,rem:function(){return parseFloat(d.style.fontSize)},refreshRem:s}})();</script>
   <script type="importmap">
   {
     "imports": {
@@ -19,62 +19,116 @@
     .dashboard-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      grid-template-rows: auto 1fr;
       gap: 0.15rem;
-      height: calc(100vh - 1.5rem);
       padding: 0.15rem;
+      max-width: 14rem;
+      margin: 0 auto;
     }
-    .panel-timeline {
-      grid-column: span 2;
-    }
-    .back-link {
-      position: fixed;
-      top: 0.2rem;
-      left: 0.2rem;
-      color: var(--color-primary);
-      text-decoration: none;
-      font-size: 0.14rem;
-      z-index: 100;
-      padding: 0.08rem 0.15rem;
+    .chart-panel {
+      background: var(--bg-panel);
       border: 1px solid var(--border-color);
-      border-radius: 4px;
-      background: var(--bg-card);
+      border-radius: 8px;
+      padding: 0.15rem;
+      min-height: 4.5rem;
     }
-    .back-link:hover {
+    .panel-full {
+      grid-column: 1 / -1;
+    }
+    .chart-container {
+      width: 100%;
+      height: 4.5rem;
+    }
+    .panel-full .chart-container {
+      height: 5.5rem;
+    }
+    @media (max-width: 768px) {
+      .dashboard-grid { grid-template-columns: 1fr; }
+    }
+    .dynasty-btn {
+      padding: 0.06rem 0.16rem;
       background: rgba(200, 169, 110, 0.1);
+      border: 1px solid rgba(200, 169, 110, 0.3);
+      border-radius: 20px;
+      color: #C8A96E;
+      font-size: 0.12rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      outline: none;
+    }
+    .dynasty-btn:hover {
+      background: rgba(200, 169, 110, 0.25);
+      border-color: #C8A96E;
+      transform: translateY(-2px);
+    }
+    .dynasty-btn.active {
+      background: linear-gradient(135deg, rgba(200, 169, 110, 0.4), rgba(78, 205, 196, 0.2));
+      border-color: #C8A96E;
+      color: #fff;
+      font-weight: 600;
+      box-shadow: 0 0 12px rgba(200, 169, 110, 0.3);
     }
   </style>
 </head>
 <body>
-  <a href="../../../index.html" class="back-link">← 返回首页</a>
-  
+  <a href="../home/index.html" class="back-link" id="back-link">← 返回首页</a>
+
+  <script>
+    // 返回首页时带上 dynasty 参数
+    (function() {
+      const params = new URLSearchParams(window.location.search);
+      const dynasty = params.get('dynasty');
+      if (dynasty) {
+        const backLink = document.getElementById('back-link');
+        if (backLink) {
+          backLink.href = '../home/index.html?dynasty=' + encodeURIComponent(dynasty);
+        }
+      }
+    })();
+  </script>
+
   <div class="page-container">
     <header class="page-header">
       <h1 class="page-title">中国古代建筑著作</h1>
       <p class="page-subtitle">从《考工记》到《工程做法》，传承千年的建筑智慧</p>
+      <div id="dynasty-filter" style="margin-top: 0.15rem; text-align: center;">
+        <div id="dynasty-selector" style="display: flex; justify-content: center; gap: 0.1rem; flex-wrap: wrap;">
+          <button class="dynasty-btn" data-dynasty="先秦">先秦</button>
+          <button class="dynasty-btn" data-dynasty="秦汉">秦汉</button>
+          <button class="dynasty-btn" data-dynasty="魏晋">魏晋</button>
+          <button class="dynasty-btn" data-dynasty="隋唐">隋唐</button>
+          <button class="dynasty-btn" data-dynasty="宋元">宋元</button>
+          <button class="dynasty-btn" data-dynasty="明清">明清</button>
+        </div>
+      </div>
     </header>
-    
+
     <div class="dashboard-grid">
-      <!-- 上方：时间轴 -->
-      <div class="chart-panel panel-timeline">
-        <h2 class="panel-title">历代建筑著作时间线</h2>
+      <!-- 上方：著作朝代分布 -->
+      <div class="chart-panel panel-full">
+        <h2 class="panel-title">历代建筑著作朝代分布</h2>
         <div id="timeline-chart" class="chart-container"></div>
       </div>
-      
-      <!-- 左下：旭日图 -->
+
+      <!-- 中左：旭日图 -->
       <div class="chart-panel">
-        <h2 class="panel-title">著作分类体系</h2>
+        <h2 class="panel-title">著作朝代分布</h2>
         <div id="sunburst-chart" class="chart-container"></div>
       </div>
-      
-      <!-- 右下：词云 -->
+
+      <!-- 中右：著作类型分布 -->
       <div class="chart-panel">
-        <h2 class="panel-title">著作核心内容关键词</h2>
+        <h2 class="panel-title">著作类型分布</h2>
+        <div id="type-chart" class="chart-container"></div>
+      </div>
+
+      <!-- 下方：关键词词云 -->
+      <div class="chart-panel panel-full">
+        <h2 class="panel-title">建筑著作核心关键词</h2>
         <div id="wordcloud-chart" class="chart-container"></div>
       </div>
     </div>
   </div>
-  
+
   <script type="module" src="./main.js"></script>
 </body>
 </html>

@@ -6,6 +6,7 @@ import * as echarts from 'echarts';
 import { gsap } from 'gsap';
 import { showInfoModal } from '../../js/common/infoModal.js';
 import { cultureInsights, generateInsightHTML } from '../../js/common/insights.js';
+import { getDataUrl, loadJson, matchDynastyGroup } from '../../js/common/utils.js';
 
 const COLORS = ['#C8A96E', '#4ECDC4', '#E07B54', '#9B59B6', '#3498DB', '#2ECC71', '#F38181', '#AA96DA'];
 
@@ -13,17 +14,165 @@ let cultureData = {};
 const chartInstances = new Map();
 const initializedTabs = new Set();
 
-function safeInitChart(domId, option) {
+function safeInitChart(domId, option, onClick) {
   const dom = document.getElementById(domId);
   if (!dom) return null;
   let chart = echarts.getInstanceByDom(dom);
-  if (!chart) {
+  if (!chart || chart.isDisposed()) {
+    dom.removeAttribute('_echarts_instance');
     chart = echarts.init(dom);
     chartInstances.set(domId, chart);
   }
-  // 使用 notMerge=false 避免清空重绘导致的闪烁
-  chart.setOption(option, false);
+  chart.setOption(option, true);
+  if (onClick) {
+    chart.off('click');
+    chart.on('click', onClick);
+  }
   return chart;
+}
+
+function showEmptyState(domId, message) {
+  const dom = document.getElementById(domId);
+  if (!dom) return;
+  const chart = echarts.getInstanceByDom(dom);
+  if (chart) chart.dispose();
+  dom.removeAttribute('_echarts_instance');
+  dom.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#888;font-size:0.14rem;flex-direction:column;gap:0.1rem;"><span style="font-size:0.3rem;opacity:0.5;">📭</span><span>${message}</span></div>`;
+}
+
+function clearEmptyState(domId) {
+  const dom = document.getElementById(domId);
+  if (dom) dom.innerHTML = '';
+}
+
+// 从detail数组的某字段统计频次
+function countByField(detail, field, topN = 10) {
+  const map = {};
+  detail.forEach(d => {
+    const v = d[field] || '未知';
+    map[v] = (map[v] || 0) + 1;
+  });
+  return Object.entries(map)
+    .map(([name, value]) => ({ name, value }))
+    .sort((a, b) => b.value - a.value)
+    .slice(0, topN);
+}
+
+// 从detail的"朝代"字段提取朝代分组分布
+function extractDynastyDist(detail) {
+  const groups = { '先秦': 0, '秦汉': 0, '魏晋': 0, '隋唐': 0, '宋元': 0, '明清': 0 };
+  detail.forEach(d => {
+    const dynastyField = d['朝代'] || d['dynasty'] || '';
+    Object.keys(groups).forEach(g => {
+      if (matchDynastyGroup(dynastyField, g)) groups[g]++;
+    });
+  });
+  return Object.entries(groups)
+    .filter(([, v]) => v > 0)
+    .map(([name, value]) => ({ name, value }));
+}
+
+// 从数组字段中统计元素频次（自动flatten数组）
+function countArrayField(detail, field, topN = 10) {
+  const map = {};
+  detail.forEach(d => {
+    const val = d[field];
+    if (Array.isArray(val)) {
+      val.forEach(v => {
+        const key = v || '未知';
+        map[key] = (map[key] || 0) + 1;
+      });
+    } else {
+      const key = val || '未知';
+      map[key] = (map[key] || 0) + 1;
+    }
+  });
+  return Object.entries(map)
+    .map(([name, value]) => ({ name, value }))
+    .sort((a, b) => b.value - a.value)
+    .slice(0, topN);
+}
+
+// 从建筑名称/描述中提取建筑元素词频
+function extractBuildingElements(detail, field) {
+  const elements = ['殿', '堂', '楼', '阁', '亭', '台', '门', '桥', '廊', '舍', '池', '碑', '城', '鼓', '钟', '狱', '库', '庙', '寺', '塔', '宫', '苑', '院', '墙', '城', '坊'];
+  const map = {};
+  elements.forEach(e => map[e] = 0);
+  detail.forEach(d => {
+    const arr = d[field] || [];
+    if (!Array.isArray(arr)) return;
+    arr.forEach(item => {
+      elements.forEach(e => {
+        if (item && item.includes(e)) map[e]++;
+      });
+    });
+  });
+  return Object.entries(map)
+    .filter(([, v]) => v > 0)
+    .map(([name, value]) => ({ name, value }))
+    .sort((a, b) => b.value - a.value);
+}
+
+// 从文本中提取数字（用于遗存数量等文本字段）
+function extractNumberFromText(detail, field) {
+  return detail.map(d => {
+    const text = d[field] || '';
+    const match = text.match(/([\d,]+)\s*(余)?[座处]/);
+    let num = 0;
+    if (match) {
+      num = parseInt(match[1].replace(/,/g, ''));
+    } else {
+      const m2 = text.match(/([\d,]+)/);
+      if (m2) num = parseInt(m2[1].replace(/,/g, ''));
+    }
+    return { name: d['名称'] || '未知', value: num || 0, text };
+  }).filter(d => d.value > 0).sort((a, b) => b.value - a.value);
+}
+
+// 从字符串中提取关键词命中次数
+function extractKeywordFreq(detail, field, keywords) {
+  const counts = {};
+  keywords.forEach(k => counts[k] = 0);
+  detail.forEach(d => {
+    const text = (d[field] || '').toLowerCase();
+    keywords.forEach(k => {
+      if (text.includes(k.toLowerCase())) counts[k]++;
+    });
+  });
+  return Object.entries(counts)
+    .filter(([, v]) => v > 0)
+    .map(([name, value]) => ({ name, value }));
+}
+
+// 生成弹窗HTML
+function buildDetailHTML(item, category) {
+  const rows = [];
+  const priority = ['名称', '类型', '朝代', '建造年代', '功能', '规制等级', '规模', '地点', '主要材料', '设计者', '屋顶形式', '布局特征', '建筑特色', '文化内涵', '世界遗产', '全国重点文物', '世界纪录'];
+  priority.forEach(key => {
+    if (item[key] !== undefined && item[key] !== '' && item[key] !== null) {
+      let val = item[key];
+      if (Array.isArray(val)) val = val.join('、');
+      rows.push(`<div style="display:flex;justify-content:space-between;padding:0.06rem 0;border-bottom:1px solid rgba(255,255,255,0.05);"><span style="color:#888;">${key}</span><span style="color:#C8A96E;max-width:70%;text-align:right;">${val}</span></div>`);
+    }
+  });
+  // 再补充其他字段
+  Object.keys(item).forEach(key => {
+    if (priority.includes(key)) return;
+    if (['detail', 'type_distribution', 'region_distribution'].includes(key)) return;
+    let val = item[key];
+    if (val === undefined || val === '' || val === null) return;
+    if (Array.isArray(val)) val = val.join('、');
+    rows.push(`<div style="display:flex;justify-content:space-between;padding:0.06rem 0;border-bottom:1px solid rgba(255,255,255,0.05);"><span style="color:#888;">${key}</span><span style="color:#fff;max-width:70%;text-align:right;">${val}</span></div>`);
+  });
+  return `<div style="max-height:60vh;overflow-y:auto;padding-right:0.1rem;">${rows.join('')}</div>`;
+}
+
+function showDetailModal(item, category) {
+  const title = item['名称'] || item['类型'] || '详细信息';
+  showInfoModal({
+    title: `${category} · ${title}`,
+    content: buildDetailHTML(item, category)
+  });
 }
 
 function initTabs() {
@@ -33,22 +182,17 @@ function initTabs() {
   tabBtns.forEach(btn => {
     btn.addEventListener('click', () => {
       const tabId = btn.dataset.tab;
-      if (btn.classList.contains('active')) return; // 避免重复点击当前tab
+      if (btn.classList.contains('active')) return;
 
       tabBtns.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       contents.forEach(c => c.classList.remove('active'));
       document.getElementById(tabId).classList.add('active');
 
-      // 懒加载：只有第一次切换到该tab时才初始化图表
       if (!initializedTabs.has(tabId)) {
         initializedTabs.add(tabId);
-        // 在下一帧确保容器已渲染后再初始化
-        requestAnimationFrame(() => {
-          initChartsForTab(tabId);
-        });
+        requestAnimationFrame(() => initChartsForTab(tabId));
       } else {
-        // 已初始化过的tab，只需要resize
         requestAnimationFrame(() => {
           const activeContent = document.getElementById(tabId);
           if (activeContent) {
@@ -59,6 +203,7 @@ function initTabs() {
           }
         });
       }
+      updateInsightPanel(tabId);
     });
   });
 }
@@ -75,56 +220,91 @@ function initChartsForTab(tabId) {
 // ========== 民居文化 ==========
 function initResidenceCharts() {
   const data = cultureData.residence || {};
-  const regionDist = data.region_distribution || [];
   const detail = data.detail || [];
+  if (detail.length === 0) {
+    ['residenceMap','residenceRadar','residenceType','residenceMaterial','residenceCraft','residenceSymbol']
+      .forEach(id => showEmptyState(id, '暂无民居数据'));
+    return;
+  }
+  ['residenceMap','residenceRadar','residenceType','residenceMaterial','residenceCraft','residenceSymbol']
+    .forEach(id => clearEmptyState(id));
 
-  // 地域分布饼图
+  const regionData = detail.map(d => ({
+    name: d['类型'] || '未知',
+    value: parseInt(d['遗存数量_全国重点']) || 1
+  }));
   safeInitChart('residenceMap', {
     tooltip: { trigger: 'item', formatter: '{b}: {c}处<br/>点击查看详情' },
     series: [{ type: 'pie', radius: ['40%', '70%'],
-      data: regionDist.map((d, i) => ({ value: d.value, name: d.name, itemStyle: { color: COLORS[i % COLORS.length] } })),
+      data: regionData.map((d, i) => ({ value: d.value, name: d.name, itemStyle: { color: COLORS[i % COLORS.length] } })),
       label: { color: '#fff', fontSize: 10 }
     }]
+  }, (params) => {
+    const item = detail.find(d => (d['类型'] || '未知') === params.name);
+    if (item) showDetailModal(item, '民居文化');
   });
 
-  // 性能雷达
+  // 气候适应特征统计（从气候适应字段提取关键词）
+  const climateKeywords = ['保温', '防风', '防潮', '通风', '防虫', '防盗', '防匪', '节能', '迁移', '排水', '防火'];
+  const climateDist = extractKeywordFreq(detail, '气候适应', climateKeywords);
   safeInitChart('residenceRadar', {
-    tooltip: { trigger: 'item' },
-    radar: { indicator: [
-      { name: '通风', max: 100 }, { name: '采光', max: 100 }, { name: '保温', max: 100 },
-      { name: '抗震', max: 100 }, { name: '防潮', max: 100 }
-    ], axisName: { color: '#4ECDC4', fontSize: 10 } },
-    series: [{ type: 'radar', data: [
-      { value: [70, 85, 60, 75, 90], name: '南方民居', itemStyle: { color: '#4ECDC4' }, areaStyle: { opacity: 0.3 } },
-      { value: [60, 70, 90, 80, 50], name: '北方民居', itemStyle: { color: '#C8A96E' }, areaStyle: { opacity: 0.3 } }
-    ] }]
+    tooltip: { trigger: 'axis' },
+    grid: { top: '10%', bottom: '25%', left: '15%', right: '10%' },
+    xAxis: { type: 'category', data: climateDist.map(d => d.name), axisLabel: { color: '#fff', fontSize: 10, rotate: 20, interval: 0 } },
+    yAxis: { type: 'value', name: '提及次数', axisLabel: { color: '#fff', fontSize: 10 } },
+    series: [{ type: 'bar', data: climateDist.map(d => d.value), itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: '#4ECDC4' }, { offset: 1, color: '#C8A96E' }]) } }]
+  }, (params) => {
+    const keyword = params.name;
+    const items = detail.filter(d => {
+      const text = (d['气候适应'] || '').toLowerCase();
+      return text.includes(keyword.toLowerCase());
+    });
+    if (items.length > 0) {
+      const list = items.map(d => `<li style="margin-bottom:0.06rem;"><strong style="color:#C8A96E;">${d['类型'] || '未知'}</strong> — ${d['气候适应'] || ''}</li>`).join('');
+      showInfoModal({
+        title: `气候适应 · ${keyword}（${items.length}种民居）`,
+        content: `<ul style="padding-left:0.2rem;line-height:1.6;">${list}</ul>`
+      });
+    }
   });
 
-  // 结构类型 - 从detail中的"类型"字段
-  const types = detail.map(d => d['类型'] || d['type'] || '未知');
+  const types = detail.map(d => d['类型'] || '未知');
+  const typeValues = detail.map(d => parseInt(d['遗存数量_全国重点']) || 1);
   safeInitChart('residenceType', {
     tooltip: { trigger: 'axis' },
-    grid: { top: '10%', bottom: '20%', left: '15%', right: '10%' },
-    xAxis: { type: 'category', data: types, axisLabel: { color: '#fff', fontSize: 10, rotate: 20 } },
-    yAxis: { type: 'value', axisLabel: { color: '#fff', fontSize: 10 } },
-    series: [{ type: 'bar', data: types.map(() => 1), itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: '#C8A96E' }, { offset: 1, color: '#4ECDC4' }]) } }]
+    grid: { top: '10%', bottom: '25%', left: '15%', right: '10%' },
+    xAxis: { type: 'category', data: types, axisLabel: { color: '#fff', fontSize: 10, rotate: 20, interval: 0 } },
+    yAxis: { type: 'value', name: '遗存数量', axisLabel: { color: '#fff', fontSize: 10 } },
+    series: [{ type: 'bar', data: typeValues, itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: '#C8A96E' }, { offset: 1, color: '#4ECDC4' }]) } }]
+  }, (params) => {
+    const item = detail[params.dataIndex];
+    if (item) showDetailModal(item, '民居文化');
   });
 
-  // 材料构成 - 从detail统计
-  const materialCount = {};
+  const materialMap = {};
   detail.forEach(d => {
     const m = d['主要材料'] || '其他';
-    materialCount[m] = (materialCount[m] || 0) + 1;
+    const v = parseInt(d['遗存数量_全国重点']) || 1;
+    materialMap[m] = (materialMap[m] || 0) + v;
   });
   safeInitChart('residenceMaterial', {
-    tooltip: { trigger: 'item' },
+    tooltip: { trigger: 'item', formatter: '{b}: {c}处' },
     series: [{ type: 'pie', radius: ['50%', '70%'],
-      data: Object.entries(materialCount).map(([name, value], i) => ({ name, value, itemStyle: { color: COLORS[i % COLORS.length] } })),
+      data: Object.entries(materialMap).map(([name, value], i) => ({ name, value, itemStyle: { color: COLORS[i % COLORS.length] } })),
       label: { color: '#fff', fontSize: 10 }
     }]
+  }, (params) => {
+    const material = params.name;
+    const items = detail.filter(d => (d['主要材料'] || '其他') === material);
+    if (items.length > 0) {
+      const list = items.map(d => `<li style="margin-bottom:0.06rem;"><strong style="color:#C8A96E;">${d['类型'] || '未知'}</strong> — ${d['主要材料'] || ''}${d['建筑特色'] ? '，' + d['建筑特色'] : ''}</li>`).join('');
+      showInfoModal({
+        title: `材料构成 · ${material}（${items.length}种民居）`,
+        content: `<ul style="padding-left:0.2rem;line-height:1.6;">${list}</ul>`
+      });
+    }
   });
 
-  // 全国重点遗存数量
   const heritage = detail.map(d => ({
     name: d['类型'] || '未知',
     value: parseInt(d['遗存数量_全国重点']) || 0
@@ -132,33 +312,33 @@ function initResidenceCharts() {
 
   safeInitChart('residenceCraft', {
     tooltip: { trigger: 'axis' },
-    grid: { top: '10%', bottom: '15%', left: '20%', right: '10%' },
+    grid: { top: '10%', bottom: '15%', left: '30%', right: '10%' },
     yAxis: { type: 'category', data: heritage.map(d => d.name), axisLabel: { color: '#fff', fontSize: 10 } },
     xAxis: { type: 'value', axisLabel: { color: '#fff', fontSize: 10 } },
     series: [{ type: 'bar', data: heritage.map(d => d.value), itemStyle: { color: '#C8A96E' } }]
+  }, (params) => {
+    const item = detail.find(d => (d['类型'] || '未知') === params.name);
+    if (item) showDetailModal(item, '民居文化');
   });
 
-  // 文化符号 - 关键词散点
-  const keywords = [];
-  detail.forEach(d => {
-    const c = d['文化内涵'] || '';
-    if (c.includes('风水')) keywords.push({ name: '风水', value: [20, 70], size: 35 });
-    if (c.includes('宗族') || c.includes('家族')) keywords.push({ name: '宗族', value: [60, 40], size: 30 });
-    if (c.includes('防御')) keywords.push({ name: '防御', value: [40, 80], size: 28 });
-    if (c.includes('礼')) keywords.push({ name: '礼制', value: [75, 55], size: 32 });
-    if (c.includes('自然') || c.includes('和谐')) keywords.push({ name: '天人合一', value: [30, 30], size: 26 });
-  });
-  if (keywords.length === 0) {
-    keywords.push({ name: '风水', value: [30, 50], size: 35 }, { name: '宗族', value: [60, 40], size: 30 }, { name: '防御', value: [40, 80], size: 28 });
-  }
+  // 地区分布饼图（替代无意义的散点图）
+  const regionDist = countByField(detail, '地区');
   safeInitChart('residenceSymbol', {
-    tooltip: { trigger: 'item' },
-    xAxis: { show: false, min: 0, max: 100 },
-    yAxis: { show: false, min: 0, max: 100 },
-    series: [{ type: 'scatter',
-      data: keywords.map(k => ({ name: k.name, value: k.value, symbolSize: k.size, itemStyle: { color: COLORS[keywords.indexOf(k) % COLORS.length] } })),
-      label: { show: true, formatter: '{b}', color: '#fff', fontSize: 11 }
+    tooltip: { trigger: 'item', formatter: '{b}: {c}类民居' },
+    series: [{ type: 'pie', radius: ['40%', '70%'],
+      data: regionDist.map((d, i) => ({ value: d.value, name: d.name, itemStyle: { color: COLORS[i % COLORS.length] } })),
+      label: { color: '#fff', fontSize: 10 }
     }]
+  }, (params) => {
+    const region = params.name;
+    const items = detail.filter(d => (d['地区'] || '') === region);
+    if (items.length > 0) {
+      const list = items.map(d => `<li style="margin-bottom:0.06rem;"><strong style="color:#C8A96E;">${d['类型'] || '未知'}</strong> — ${d['地区'] || ''}${d['气候适应'] ? '，' + d['气候适应'] : ''}</li>`).join('');
+      showInfoModal({
+        title: `地区分布 · ${region}（${items.length}种民居）`,
+        content: `<ul style="padding-left:0.2rem;line-height:1.6;">${list}</ul>`
+      });
+    }
   });
 }
 
@@ -167,65 +347,135 @@ function initOfficialCharts() {
   const data = cultureData.official || {};
   const detail = data.detail || [];
 
+  if (detail.length === 0) {
+    ['officialMap','officialLevel','officialLayout','officialRepresent','officialFeature','officialEvolution']
+      .forEach(id => showEmptyState(id, '该朝代暂无官府数据'));
+    return;
+  }
+  ['officialMap','officialLevel','officialLayout','officialRepresent','officialFeature','officialEvolution']
+    .forEach(id => clearEmptyState(id));
+
+  // 1. 历代分布 - 从detail的"朝代"字段动态统计
+  const dynastyDist = extractDynastyDist(detail);
   safeInitChart('officialMap', {
-    tooltip: { trigger: 'item' },
+    tooltip: { trigger: 'item', formatter: '{b}: {c}类官府建筑' },
     series: [{ type: 'pie', radius: ['40%', '70%'],
-      data: [
-        { value: 8, name: '明清', itemStyle: { color: '#C8A96E' } },
-        { value: 6, name: '宋元', itemStyle: { color: '#4ECDC4' } },
-        { value: 5, name: '唐代', itemStyle: { color: '#E07B54' } },
-        { value: 4, name: '汉代', itemStyle: { color: '#9B59B6' } },
-        { value: 3, name: '魏晋', itemStyle: { color: '#3498DB' } }
-      ],
+      data: dynastyDist.map((d, i) => ({ value: d.value, name: d.name, itemStyle: { color: COLORS[i % COLORS.length] } })),
       label: { color: '#fff', fontSize: 10 }
     }]
+  }, (params) => {
+    const dynasty = params.name;
+    const items = detail.filter(d => {
+      const dField = d['朝代'] || d['dynasty'] || '';
+      return matchDynastyGroup(dField, dynasty);
+    });
+    if (items.length > 0) {
+      const list = items.map(d => `<li style="margin-bottom:0.06rem;"><strong style="color:#C8A96E;">${d['名称'] || d['类型'] || '未知'}</strong> — ${d['朝代'] || ''}${d['功能'] ? '，' + d['功能'] : ''}</li>`).join('');
+      showInfoModal({
+        title: `历代分布 · ${dynasty}（${items.length}类官府建筑）`,
+        content: `<ul style="padding-left:0.2rem;line-height:1.6;">${list}</ul>`
+      });
+    }
   });
 
+  // 2. 主要建筑元素统计（从主要建筑数组提取，替代无意义的名称统计）
+  const elementDist = extractBuildingElements(detail, '主要建筑');
   safeInitChart('officialLevel', {
     tooltip: { trigger: 'axis' },
-    grid: { top: '10%', bottom: '20%', left: '15%', right: '10%' },
-    xAxis: { type: 'category', data: ['一品', '二品', '三品', '四品', '五品', '六品以下'], axisLabel: { color: '#fff', fontSize: 10 } },
-    yAxis: { type: 'value', name: '开间数', axisLabel: { color: '#fff', fontSize: 10 } },
-    series: [{ type: 'bar', data: [9, 7, 5, 5, 3, 3], itemStyle: { color: (p) => COLORS[p.dataIndex % COLORS.length] } }]
+    grid: { top: '10%', bottom: '25%', left: '15%', right: '10%' },
+    xAxis: { type: 'category', data: elementDist.map(d => d.name), axisLabel: { color: '#fff', fontSize: 10, interval: 0 } },
+    yAxis: { type: 'value', name: '出现次数', axisLabel: { color: '#fff', fontSize: 10 } },
+    series: [{ type: 'bar', data: elementDist.map(d => d.value), itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: '#C8A96E' }, { offset: 1, color: '#E07B54' }]) } }]
+  }, (params) => {
+    const element = params.name;
+    const items = detail.filter(d => {
+      const arr = d['主要建筑'] || [];
+      return arr.some(item => item && item.includes(element));
+    });
+    if (items.length > 0) {
+      const list = items.map(d => `<li style="margin-bottom:0.06rem;"><strong style="color:#C8A96E;">${d['名称'] || d['类型'] || '未知'}</strong> — ${d['主要建筑'] ? d['主要建筑'].join('、') : ''}</li>`).join('');
+      showInfoModal({
+        title: `建筑元素 · ${element}（${items.length}类官府建筑含此元素）`,
+        content: `<ul style="padding-left:0.2rem;line-height:1.6;">${list}</ul>`
+      });
+    }
   });
 
+  // 3. 文化内涵关键词（替代无意义的功能饼图）
+  const cultureKeywords = ['制度', '文化', '防御', '权力', '秩序', '教化', '司法', '礼制', '管理', '城市'];
+  const cultureDist = extractKeywordFreq(detail, '文化内涵', cultureKeywords);
   safeInitChart('officialLayout', {
-    tooltip: { trigger: 'item' },
-    radar: { indicator: [
-      { name: '礼仪性', max: 100 }, { name: '实用性', max: 100 }, { name: '防御性', max: 100 },
-      { name: '对称性', max: 100 }, { name: '规制化', max: 100 }
-    ], axisName: { color: '#4ECDC4', fontSize: 10 } },
-    series: [{ type: 'radar', data: [
-      { value: [95, 60, 40, 90, 95], name: '官署建筑', itemStyle: { color: '#C8A96E' }, areaStyle: { opacity: 0.3 } },
-      { value: [50, 85, 30, 60, 40], name: '民居建筑', itemStyle: { color: '#4ECDC4' }, areaStyle: { opacity: 0.3 } }
-    ] }]
+    tooltip: { trigger: 'axis' },
+    grid: { top: '10%', bottom: '25%', left: '15%', right: '10%' },
+    xAxis: { type: 'category', data: cultureDist.map(d => d.name), axisLabel: { color: '#fff', fontSize: 10, interval: 0 } },
+    yAxis: { type: 'value', name: '提及次数', axisLabel: { color: '#fff', fontSize: 10 } },
+    series: [{ type: 'bar', data: cultureDist.map(d => d.value), itemStyle: { color: (p) => COLORS[p.dataIndex % COLORS.length] } }]
+  }, (params) => {
+    const keyword = params.name;
+    const items = detail.filter(d => {
+      const text = (d['文化内涵'] || '').toLowerCase();
+      return text.includes(keyword.toLowerCase());
+    });
+    if (items.length > 0) {
+      const list = items.map(d => `<li style="margin-bottom:0.06rem;"><strong style="color:#C8A96E;">${d['名称'] || d['类型'] || '未知'}</strong> — ${d['文化内涵'] || ''}</li>`).join('');
+      showInfoModal({
+        title: `文化内涵 · ${keyword}（${items.length}类官府建筑）`,
+        content: `<ul style="padding-left:0.2rem;line-height:1.6;">${list}</ul>`
+      });
+    }
   });
 
-  const reps = detail.slice(0, 5).map((d, i) => ({ name: d['名称'] || `案例${i+1}`, value: 90 - i * 8 }));
+  // 4. 现存代表 - 从detail真实数据
+  const reps = detail.map(d => ({
+    name: d['名称'] || '未知',
+    value: parseInt((d['总数_全国'] || '').replace(/[^0-9]/g, '')) || 50
+  })).sort((a, b) => b.value - a.value);
   safeInitChart('officialRepresent', {
     tooltip: { trigger: 'axis' },
-    grid: { left: '25%', right: '5%', top: '5%', bottom: '5%' },
+    grid: { left: '30%', right: '5%', top: '5%', bottom: '5%' },
     yAxis: { type: 'category', data: reps.map(d => d.name), axisLabel: { color: '#fff', fontSize: 10 } },
     xAxis: { type: 'value', axisLabel: { show: false } },
     series: [{ type: 'bar', data: reps.map(d => d.value), itemStyle: { color: (p) => COLORS[p.dataIndex % COLORS.length] }, label: { show: true, position: 'right', color: '#fff', fontSize: 10 } }]
+  }, (params) => {
+    const item = detail.find(d => (d['名称'] || '') === params.name);
+    if (item) showDetailModal(item, '官府文化');
   });
 
+  // 5. 建筑特色关键词（替代原来的特征柱状图）
+  const featureKeywords = ['轴线', '对称', '等级', '琉璃', '重檐', '歇山', '庑殿', '防御', '封闭', '威严'];
+  const featureDist = extractKeywordFreq(detail, '建筑特色', featureKeywords);
   safeInitChart('officialFeature', {
     tooltip: { trigger: 'axis' },
-    grid: { top: '10%', bottom: '20%', left: '15%', right: '10%' },
-    xAxis: { type: 'category', data: ['威严', '对称', '轴线', '等级', '封闭'], axisLabel: { color: '#fff', fontSize: 10 } },
-    yAxis: { type: 'value', max: 100, axisLabel: { color: '#fff', fontSize: 10 } },
-    series: [{ type: 'bar', data: [92, 88, 95, 90, 75], itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: '#C8A96E' }, { offset: 1, color: '#E07B54' }]) } }]
+    grid: { top: '10%', bottom: '25%', left: '15%', right: '10%' },
+    xAxis: { type: 'category', data: featureDist.map(d => d.name), axisLabel: { color: '#fff', fontSize: 10, interval: 0 } },
+    yAxis: { type: 'value', name: '提及次数', axisLabel: { color: '#fff', fontSize: 10 } },
+    series: [{ type: 'bar', data: featureDist.map(d => d.value), itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: '#C8A96E' }, { offset: 1, color: '#E07B54' }]) } }]
+  }, (params) => {
+    const keyword = params.name;
+    const items = detail.filter(d => {
+      const text = (d['建筑特色'] || '').toLowerCase();
+      return text.includes(keyword.toLowerCase());
+    });
+    if (items.length > 0) {
+      const list = items.map(d => `<li style="margin-bottom:0.06rem;"><strong style="color:#C8A96E;">${d['名称'] || d['类型'] || '未知'}</strong> — ${d['建筑特色'] || ''}</li>`).join('');
+      showInfoModal({
+        title: `建筑特色 · ${keyword}（${items.length}类官府建筑）`,
+        content: `<ul style="padding-left:0.2rem;line-height:1.6;">${list}</ul>`
+      });
+    }
   });
 
+  // 6. 全国遗存数量对比（从总数_全国文本提取数字，替代无意义的规制等级折线）
+  const heritageNums = extractNumberFromText(detail, '总数_全国');
   safeInitChart('officialEvolution', {
-    tooltip: { trigger: 'axis' },
-    grid: { top: '10%', bottom: '20%', left: '15%', right: '10%' },
-    xAxis: { type: 'category', data: ['先秦', '秦汉', '魏晋', '隋唐', '宋元', '明清'], axisLabel: { color: '#fff', fontSize: 10 } },
-    yAxis: { type: 'value', name: '规制化程度', axisLabel: { color: '#fff', fontSize: 10 } },
-    series: [{ type: 'line', data: [10, 30, 45, 65, 80, 95], smooth: true, lineStyle: { color: '#C8A96E', width: 3 },
-      areaStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: 'rgba(200,169,110,0.4)' }, { offset: 1, color: 'rgba(200,169,110,0)' }]) },
-      itemStyle: { color: '#C8A96E' } }]
+    tooltip: { trigger: 'axis', formatter: (params) => `${params[0].name}<br/>全国遗存约: ${params[0].value}座` },
+    grid: { left: '30%', right: '10%', top: '5%', bottom: '5%' },
+    yAxis: { type: 'category', data: heritageNums.map(d => d.name), axisLabel: { color: '#fff', fontSize: 10 } },
+    xAxis: { type: 'value', axisLabel: { color: '#fff', fontSize: 10 } },
+    series: [{ type: 'bar', data: heritageNums.map(d => d.value), itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [{ offset: 0, color: '#C8A96E' }, { offset: 1, color: '#4ECDC4' }]) }, label: { show: true, position: 'right', color: '#fff', fontSize: 10, formatter: '{c}' } }]
+  }, (params) => {
+    const item = detail.find(d => (d['名称'] || '') === params.name);
+    if (item) showDetailModal(item, '官府文化');
   });
 }
 
@@ -234,67 +484,133 @@ function initPalaceCharts() {
   const data = cultureData.palace || {};
   const detail = data.detail || [];
 
+  if (detail.length === 0) {
+    ['palaceScale','palaceLayout','palaceLevel','palaceColor','palaceDecor','palaceExist']
+      .forEach(id => showEmptyState(id, '该朝代暂无皇宫数据'));
+    return;
+  }
+  ['palaceScale','palaceLayout','palaceLevel','palaceColor','palaceDecor','palaceExist']
+    .forEach(id => clearEmptyState(id));
+
+  const scaleNames = detail.map(d => (d['名称'] || '未知').replace(/（.*）/, ''));
+  const scaleValues = detail.map(d => {
+    const scale = d['规模'] || '';
+    const match = scale.match(/([\d.]+)\s*万/);
+    return match ? parseFloat(match[1]) : 0;
+  });
   safeInitChart('palaceScale', {
-    tooltip: { trigger: 'axis' },
-    grid: { top: '10%', bottom: '20%', left: '15%', right: '10%' },
-    xAxis: { type: 'category', data: detail.map(d => d['名称'] || '未知').slice(0, 6), axisLabel: { color: '#fff', fontSize: 10, rotate: 20 } },
+    tooltip: { trigger: 'axis', formatter: (params) => `${params[0].name}<br/>占地: ${params[0].value}万平方米` },
+    grid: { top: '10%', bottom: '25%', left: '15%', right: '10%' },
+    xAxis: { type: 'category', data: scaleNames, axisLabel: { color: '#fff', fontSize: 9, rotate: 20, interval: 0 } },
     yAxis: { type: 'value', name: '占地(万m²)', axisLabel: { color: '#fff', fontSize: 10 } },
-    series: [{ type: 'bar', data: detail.map(() => 1).slice(0, 6), itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: '#C8A96E' }, { offset: 1, color: '#9B59B6' }]) } }]
+    series: [{ type: 'bar', data: scaleValues, itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: '#C8A96E' }, { offset: 1, color: '#9B59B6' }]) },
+      label: { show: true, position: 'top', formatter: '{c}', color: '#fff', fontSize: 9 } }]
+  }, (params) => {
+    const item = detail[params.dataIndex];
+    if (item) showDetailModal(item, '皇宫文化');
   });
 
+  // 核心建筑类型统计（从核心建筑数组提取，替代无意义的布局饼图）
+  const coreTypeDist = extractBuildingElements(detail, '核心建筑');
   safeInitChart('palaceLayout', {
-    tooltip: { trigger: 'item' },
-    series: [{ type: 'pie', radius: ['40%', '70%'],
-      data: [
-        { value: 40, name: '前朝', itemStyle: { color: '#C8A96E' } },
-        { value: 30, name: '后寝', itemStyle: { color: '#E07B54' } },
-        { value: 15, name: '东西六宫', itemStyle: { color: '#4ECDC4' } },
-        { value: 15, name: '御花园', itemStyle: { color: '#9B59B6' } }
-      ],
-      label: { color: '#fff', fontSize: 10 }
-    }]
-  });
-
-  safeInitChart('palaceLevel', {
     tooltip: { trigger: 'axis' },
-    grid: { top: '10%', bottom: '20%', left: '15%', right: '10%' },
-    xAxis: { type: 'category', data: ['庑殿顶', '歇山顶', '悬山顶', '硬山顶', '攒尖顶'], axisLabel: { color: '#fff', fontSize: 10 } },
-    yAxis: { type: 'value', name: '等级值', axisLabel: { color: '#fff', fontSize: 10 } },
-    series: [{ type: 'bar', data: [100, 80, 60, 40, 50], itemStyle: { color: (p) => COLORS[p.dataIndex % COLORS.length] } }]
+    grid: { top: '10%', bottom: '25%', left: '15%', right: '10%' },
+    xAxis: { type: 'category', data: coreTypeDist.map(d => d.name), axisLabel: { color: '#fff', fontSize: 10, interval: 0 } },
+    yAxis: { type: 'value', name: '出现次数', axisLabel: { color: '#fff', fontSize: 10 } },
+    series: [{ type: 'bar', data: coreTypeDist.map(d => d.value), itemStyle: { color: (p) => COLORS[p.dataIndex % COLORS.length] } }]
+  }, (params) => {
+    const element = params.name;
+    const items = detail.filter(d => {
+      const arr = d['核心建筑'] || [];
+      return arr.some(item => item && item.includes(element));
+    });
+    if (items.length > 0) {
+      const list = items.map(d => `<li style="margin-bottom:0.06rem;"><strong style="color:#C8A96E;">${d['名称'] || '未知'}</strong> — ${d['核心建筑'] ? d['核心建筑'].join('、') : ''}</li>`).join('');
+      showInfoModal({
+        title: `核心建筑 · ${element}（${items.length}座皇宫含此建筑）`,
+        content: `<ul style="padding-left:0.2rem;line-height:1.6;">${list}</ul>`
+      });
+    }
   });
 
+  // 世界遗产时间线（从世界遗产字段提取年份，替代无意义的屋顶形式柱状图）
+  const whData = detail.map(d => {
+    const text = d['世界遗产'] || '';
+    const match = text.match(/(\d{4})/);
+    return { name: (d['名称'] || '未知').replace(/（.*）/, ''), year: match ? parseInt(match[1]) : 0, text: text || '未申报' };
+  }).filter(d => d.year > 0).sort((a, b) => a.year - b.year);
+  safeInitChart('palaceLevel', {
+    tooltip: { trigger: 'axis', formatter: (params) => `${params[0].name}<br/>${params[0].data.text}` },
+    grid: { left: '30%', right: '10%', top: '5%', bottom: '5%' },
+    yAxis: { type: 'category', data: whData.map(d => d.name), axisLabel: { color: '#fff', fontSize: 10 } },
+    xAxis: { type: 'value', name: '列入年份', min: 1980, axisLabel: { color: '#fff', fontSize: 10 } },
+    series: [{ type: 'bar', data: whData.map(d => ({ value: d.year, text: d.text })), itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [{ offset: 0, color: '#9B59B6' }, { offset: 1, color: '#C8A96E' }]) }, label: { show: true, position: 'right', color: '#fff', fontSize: 10, formatter: '{c}' } }]
+  }, (params) => {
+    const item = detail.find(d => (d['名称'] || '').includes(params.name.replace('…', '')));
+    if (item) showDetailModal(item, '皇宫文化');
+  });
+
+  // 世界遗产状态（替代原来的色彩象征）
+  const worldHeritage = countByField(detail, '世界遗产');
   safeInitChart('palaceColor', {
-    tooltip: { trigger: 'item', formatter: '{b}: {c}%' },
+    tooltip: { trigger: 'item', formatter: '{b}: {c}处 ({d}%)' },
     series: [{ type: 'pie', radius: ['40%', '70%'],
-      data: [
-        { value: 35, name: '黄色(皇权)', itemStyle: { color: '#FFD700' } },
-        { value: 25, name: '红色(吉祥)', itemStyle: { color: '#E07B54' } },
-        { value: 20, name: '绿色(寓意)', itemStyle: { color: '#2ECC71' } },
-        { value: 20, name: '蓝色(天意)', itemStyle: { color: '#3498DB' } }
-      ],
+      data: worldHeritage.map((d, i) => ({ value: d.value, name: d.name || '未申报', itemStyle: { color: COLORS[i % COLORS.length] } })),
       label: { color: '#fff', fontSize: 10 }
     }]
+  }, (params) => {
+    const whStatus = params.name;
+    const items = detail.filter(d => {
+      const text = d['世界遗产'] || '';
+      return whStatus === '未申报' ? !text : text.includes(whStatus);
+    });
+    if (items.length > 0) {
+      const list = items.map(d => `<li style="margin-bottom:0.06rem;"><strong style="color:#C8A96E;">${d['名称'] || '未知'}</strong> — ${d['世界遗产'] || '未申报世界遗产'}</li>`).join('');
+      showInfoModal({
+        title: `世界遗产 · ${whStatus}（${items.length}座皇宫）`,
+        content: `<ul style="padding-left:0.2rem;line-height:1.6;">${list}</ul>`
+      });
+    }
   });
 
+  // 规模vs建筑数量散点图（替代无意义的雷达图）
+  const scatterData = detail.map(d => {
+    const scale = d['规模'] || '';
+    const match = scale.match(/([\d.]+)\s*万/);
+    const area = match ? parseFloat(match[1]) : 0;
+    const count = parseInt((d['建筑数量'] || '').replace(/[^0-9]/g, '')) || 0;
+    const core = (d['核心建筑'] || []).length;
+    return { name: (d['名称'] || '未知').replace(/（.*）/, ''), value: [area, count, core] };
+  }).filter(d => d.value[0] > 0 || d.value[1] > 0);
   safeInitChart('palaceDecor', {
-    tooltip: { trigger: 'item' },
-    radar: { indicator: [
-      { name: '龙纹', max: 100 }, { name: '云纹', max: 100 }, { name: '瑞兽', max: 100 },
-      { name: '彩画', max: 100 }, { name: '藻井', max: 100 }, { name: '琉璃', max: 100 }
-    ], axisName: { color: '#C8A96E', fontSize: 10 } },
-    series: [{ type: 'radar', data: [
-      { value: [95, 85, 80, 90, 70, 85], name: '紫禁城', itemStyle: { color: '#C8A96E' }, areaStyle: { opacity: 0.3 } },
-      { value: [60, 50, 40, 65, 45, 55], name: '沈阳故宫', itemStyle: { color: '#4ECDC4' }, areaStyle: { opacity: 0.3 } }
-    ] }]
+    tooltip: { trigger: 'item', formatter: (params) => `${params.name}<br/>占地: ${params.value[0]}万m²<br/>建筑: ${params.value[1]}间<br/>核心建筑: ${params.value[2]}座` },
+    grid: { top: '15%', bottom: '15%', left: '15%', right: '15%' },
+    xAxis: { type: 'value', name: '占地(万m²)', axisLabel: { color: '#fff', fontSize: 10 }, splitLine: { lineStyle: { color: 'rgba(255,255,255,0.05)' } } },
+    yAxis: { type: 'value', name: '建筑数量(间)', axisLabel: { color: '#fff', fontSize: 10 }, splitLine: { lineStyle: { color: 'rgba(255,255,255,0.05)' } } },
+    series: [{ type: 'scatter',
+      data: scatterData.map((d, i) => ({ name: d.name, value: d.value, symbolSize: 15 + d.value[2] * 4, itemStyle: { color: COLORS[i % COLORS.length] } })),
+      label: { show: true, formatter: '{b}', color: '#fff', fontSize: 10, position: 'top' }
+    }]
+  }, (params) => {
+    const item = detail.find(d => (d['名称'] || '').includes(params.name.replace('…', '')));
+    if (item) showDetailModal(item, '皇宫文化');
   });
 
-  const exist = detail.slice(0, 5).map((d, i) => ({ name: d['名称'] || `宫殿${i+1}`, value: 95 - i * 15 }));
+  const exist = detail.map((d, i) => {
+    const scale = d['规模'] || '';
+    const match = scale.match(/([\d.]+)\s*万/);
+    const area = match ? parseFloat(match[1]) : 0;
+    return { name: (d['名称'] || `宫殿${i+1}`).replace(/（.*）/, ''), value: Math.min(100, Math.round(area / 72 * 100)) };
+  });
   safeInitChart('palaceExist', {
     tooltip: { trigger: 'axis' },
-    grid: { top: '10%', bottom: '20%', left: '20%', right: '10%' },
-    xAxis: { type: 'category', data: exist.map(d => d.name), axisLabel: { color: '#fff', fontSize: 10, rotate: 15 } },
-    yAxis: { type: 'value', name: '保存完整度', axisLabel: { color: '#fff', fontSize: 10 } },
+    grid: { top: '10%', bottom: '25%', left: '20%', right: '10%' },
+    xAxis: { type: 'category', data: exist.map(d => d.name), axisLabel: { color: '#fff', fontSize: 10, rotate: 20, interval: 0 } },
+    yAxis: { type: 'value', name: '规模指数', axisLabel: { color: '#fff', fontSize: 10 } },
     series: [{ type: 'bar', data: exist.map(d => d.value), itemStyle: { color: (p) => COLORS[p.dataIndex % COLORS.length] } }]
+  }, (params) => {
+    const item = detail[params.dataIndex];
+    if (item) showDetailModal(item, '皇宫文化');
   });
 }
 
@@ -302,87 +618,246 @@ function initPalaceCharts() {
 function initBridgeCharts() {
   const data = cultureData.bridge || {};
   const detail = data.detail || [];
-  const typeDist = data.type_distribution || [];
 
+  if (detail.length === 0) {
+    ['bridgeMap','bridgeType','bridgeMaterial','bridgeWorld','bridgeCulture','bridgeProtect']
+      .forEach(id => showEmptyState(id, '该朝代暂无桥梁数据'));
+    return;
+  }
+  ['bridgeMap','bridgeType','bridgeMaterial','bridgeWorld','bridgeCulture','bridgeProtect']
+    .forEach(id => clearEmptyState(id));
+
+  const bridgeTypeData = detail.map(d => ({
+    name: d['类型'] || '未知',
+    value: parseFloat(d['总长_米']) || 1
+  }));
   safeInitChart('bridgeMap', {
-    tooltip: { trigger: 'item' },
+    tooltip: { trigger: 'item', formatter: '{b}: 总长{c}m' },
     series: [{ type: 'pie', radius: ['40%', '70%'],
-      data: typeDist.map((d, i) => ({ name: d.name, value: d.value, itemStyle: { color: COLORS[i % COLORS.length] } })),
+      data: bridgeTypeData.map((d, i) => ({ name: d.name, value: d.value, itemStyle: { color: COLORS[i % COLORS.length] } })),
       label: { color: '#fff', fontSize: 10 }
     }]
+  }, (params) => {
+    const bType = params.name;
+    const items = detail.filter(d => (d['类型'] || '未知') === bType);
+    if (items.length > 0) {
+      const list = items.map(d => `<li style="margin-bottom:0.06rem;"><strong style="color:#C8A96E;">${d['名称'] || '未知'}</strong> — 总长${d['总长_米'] || '?'}m，跨度${d['跨度_米'] || '?'}m${d['世界纪录'] ? '，' + d['世界纪录'] : ''}</li>`).join('');
+      showInfoModal({
+        title: `结构类型 · ${bType}（${items.length}座古桥）`,
+        content: `<ul style="padding-left:0.2rem;line-height:1.6;">${list}</ul>`
+      });
+    }
   });
 
+  // 各桥跨度对比（替代无意义的类型分布，每种类型只有1个）
+  const spanData = detail.map(d => ({
+    name: d['名称'] || '未知',
+    value: parseFloat(d['跨度_米']) || 0
+  })).sort((a, b) => b.value - a.value);
   safeInitChart('bridgeType', {
-    tooltip: { trigger: 'axis' },
-    grid: { top: '10%', bottom: '20%', left: '15%', right: '10%' },
-    xAxis: { type: 'category', data: ['梁桥', '拱桥', '索桥', '浮桥'], axisLabel: { color: '#fff', fontSize: 10 } },
-    yAxis: { type: 'value', axisLabel: { color: '#fff', fontSize: 10 } },
-    series: [{ type: 'bar', data: [40, 35, 15, 10], itemStyle: { color: (p) => COLORS[p.dataIndex % COLORS.length] } }]
+    tooltip: { trigger: 'axis', formatter: (params) => `${params[0].name}<br/>跨度: ${params[0].value}米` },
+    grid: { left: '30%', right: '10%', top: '5%', bottom: '5%' },
+    yAxis: { type: 'category', data: spanData.map(d => d.name), axisLabel: { color: '#fff', fontSize: 10 } },
+    xAxis: { type: 'value', name: '跨度(米)', axisLabel: { color: '#fff', fontSize: 10 } },
+    series: [{ type: 'bar', data: spanData.map(d => d.value), itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [{ offset: 0, color: '#4ECDC4' }, { offset: 1, color: '#C8A96E' }]) }, label: { show: true, position: 'right', color: '#fff', fontSize: 10, formatter: '{c}m' } }]
+  }, (params) => {
+    const item = detail.find(d => (d['名称'] || '') === params.name);
+    if (item) showDetailModal(item, '桥梁文化');
   });
 
+  // 材料统计 - 从detail统计
+  const materialDist = countByField(detail, '主要材料');
   safeInitChart('bridgeMaterial', {
     tooltip: { trigger: 'axis' },
-    grid: { top: '10%', bottom: '20%', left: '15%', right: '10%' },
-    xAxis: { type: 'category', data: ['木桥', '石桥', '砖桥', '铁索桥', '混合'], axisLabel: { color: '#fff', fontSize: 10 } },
-    yAxis: { type: 'value', name: '现存数量', axisLabel: { color: '#fff', fontSize: 10 } },
-    series: [{ type: 'bar', data: [15, 45, 8, 12, 10], itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: '#4ECDC4' }, { offset: 1, color: '#C8A96E' }]) } }]
+    grid: { top: '10%', bottom: '25%', left: '15%', right: '10%' },
+    xAxis: { type: 'category', data: materialDist.map(d => d.name), axisLabel: { color: '#fff', fontSize: 10, rotate: 20, interval: 0 } },
+    yAxis: { type: 'value', name: '数量', axisLabel: { color: '#fff', fontSize: 10 } },
+    series: [{ type: 'bar', data: materialDist.map(d => d.value), itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: '#4ECDC4' }, { offset: 1, color: '#C8A96E' }]) } }]
+  }, (params) => {
+    const material = params.name;
+    const items = detail.filter(d => (d['主要材料'] || '') === material);
+    if (items.length > 0) {
+      const list = items.map(d => `<li style="margin-bottom:0.06rem;"><strong style="color:#C8A96E;">${d['名称'] || '未知'}</strong> — ${d['主要材料'] || ''}${d['技术特色'] ? '，' + d['技术特色'] : ''}</li>`).join('');
+      showInfoModal({
+        title: `材料演进 · ${material}（${items.length}座古桥）`,
+        content: `<ul style="padding-left:0.2rem;line-height:1.6;">${list}</ul>`
+      });
+    }
   });
 
-  const worlds = detail.slice(0, 5).map((d, i) => ({ name: d['名称'] || `古桥${i+1}`, value: parseInt(d['建造年代'] || d['建造年代']) || (600 + i * 200) }));
+  const worlds = detail.map((d, i) => {
+    const yearStr = d['建造年代'] || '';
+    const match = yearStr.match(/(\d{3,4})/);
+    return { name: d['名称'] || `古桥${i+1}`, value: match ? parseInt(match[1]) : (600 + i * 200) };
+  }).sort((a, b) => a.value - b.value);
   safeInitChart('bridgeWorld', {
     tooltip: { trigger: 'axis', formatter: (params) => `${params[0].name}<br/>建造年份: ${params[0].value}年` },
-    grid: { left: '25%', right: '5%', top: '5%', bottom: '5%' },
+    grid: { left: '30%', right: '5%', top: '5%', bottom: '5%' },
     yAxis: { type: 'category', data: worlds.map(d => d.name), axisLabel: { color: '#fff', fontSize: 10 } },
     xAxis: { type: 'value', name: '建造年份', axisLabel: { color: '#fff', fontSize: 10 } },
     series: [{ type: 'bar', data: worlds.map(d => d.value), itemStyle: { color: (p) => COLORS[p.dataIndex % COLORS.length] }, label: { show: true, position: 'right', color: '#fff', fontSize: 10 } }]
+  }, (params) => {
+    const item = detail.find(d => (d['名称'] || '') === params.name);
+    if (item) showDetailModal(item, '桥梁文化');
   });
 
+  // 技术特色关键词（从技术特色字段提取，替代无意义的文化散点图）
+  const techKeywords = ['拱', '梁', '基础', '榫卯', '铁链', '浮桥', '启闭', '联拱', '敞肩', '筏形', '石梁'];
+  const techDist = extractKeywordFreq(detail, '技术特色', techKeywords);
   safeInitChart('bridgeCulture', {
-    tooltip: { trigger: 'item' },
-    xAxis: { show: false, min: 0, max: 100 },
-    yAxis: { show: false, min: 0, max: 100 },
-    series: [{ type: 'scatter',
-      data: [
-        { name: '连通', value: [20, 70], symbolSize: 30, itemStyle: { color: '#C8A96E' } },
-        { name: '诗意', value: [50, 40], symbolSize: 26, itemStyle: { color: '#4ECDC4' } },
-        { name: '风水', value: [75, 55], symbolSize: 24, itemStyle: { color: '#E07B54' } },
-        { name: '工程', value: [35, 80], symbolSize: 22, itemStyle: { color: '#9B59B6' } },
-        { name: '便民', value: [60, 25], symbolSize: 20, itemStyle: { color: '#3498DB' } },
-        { name: '防御', value: [85, 60], symbolSize: 18, itemStyle: { color: '#2ECC71' } }
-      ],
-      label: { show: true, formatter: '{b}', color: '#fff', fontSize: 11 }
-    }]
+    tooltip: { trigger: 'axis' },
+    grid: { top: '10%', bottom: '25%', left: '15%', right: '10%' },
+    xAxis: { type: 'category', data: techDist.map(d => d.name), axisLabel: { color: '#fff', fontSize: 10, interval: 0 } },
+    yAxis: { type: 'value', name: '提及次数', axisLabel: { color: '#fff', fontSize: 10 } },
+    series: [{ type: 'bar', data: techDist.map(d => d.value), itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: '#E07B54' }, { offset: 1, color: '#C8A96E' }]) } }]
+  }, (params) => {
+    const keyword = params.name;
+    const items = detail.filter(d => {
+      const text = (d['技术特色'] || '').toLowerCase();
+      return text.includes(keyword.toLowerCase());
+    });
+    if (items.length > 0) {
+      const list = items.map(d => `<li style="margin-bottom:0.06rem;"><strong style="color:#C8A96E;">${d['名称'] || '未知'}</strong> — ${d['技术特色'] || ''}</li>`).join('');
+      showInfoModal({
+        title: `技术特色 · ${keyword}（${items.length}座古桥）`,
+        content: `<ul style="padding-left:0.2rem;line-height:1.6;">${list}</ul>`
+      });
+    }
   });
 
+  // 保护现状 - 从"全国重点文物"批次统计
+  const protectDist = countByField(detail, '全国重点文物');
   safeInitChart('bridgeProtect', {
     tooltip: { trigger: 'item', formatter: '{b}: {c}处 ({d}%)' },
     series: [{ type: 'pie', radius: ['40%', '70%'],
-      data: [
-        { value: 15, name: '世界遗产', itemStyle: { color: '#C8A96E' } },
-        { value: 35, name: '国保单位', itemStyle: { color: '#4ECDC4' } },
-        { value: 25, name: '省保单位', itemStyle: { color: '#E07B54' } },
-        { value: 25, name: '待保护', itemStyle: { color: '#9B59B6' } }
-      ],
+      data: protectDist.map((d, i) => ({ value: d.value, name: d.name || '其他', itemStyle: { color: COLORS[i % COLORS.length] } })),
       label: { color: '#fff', fontSize: 10 }
     }]
+  }, (params) => {
+    const batch = params.name;
+    const items = detail.filter(d => (d['全国重点文物'] || '') === batch);
+    if (items.length > 0) {
+      const list = items.map(d => `<li style="margin-bottom:0.06rem;"><strong style="color:#C8A96E;">${d['名称'] || '未知'}</strong> — ${d['全国重点文物'] || ''}${d['世界遗产'] ? '，' + d['世界遗产'] : ''}</li>`).join('');
+      showInfoModal({
+        title: `保护现状 · ${batch}（${items.length}座古桥）`,
+        content: `<ul style="padding-left:0.2rem;line-height:1.6;">${list}</ul>`
+      });
+    }
   });
+}
+
+// ========== 朝代筛选联动 ==========
+function getDynastyFilter() {
+  const params = new URLSearchParams(window.location.search);
+  const dynasty = params.get('dynasty');
+  return dynasty ? dynasty.split(',') : [];
+}
+
+function initDynastyButtons() {
+  const btns = document.querySelectorAll('.dynasty-btn');
+  const urlParams = new URLSearchParams(window.location.search);
+  const currentDynasties = urlParams.get('dynasty');
+
+  if (currentDynasties) {
+    const selected = currentDynasties.split(',');
+    btns.forEach(btn => {
+      if (selected.includes(btn.dataset.dynasty)) btn.classList.add('active');
+    });
+  }
+
+  btns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      btn.classList.toggle('active');
+
+      const selected = [];
+      btns.forEach(b => {
+        if (b.classList.contains('active')) selected.push(b.dataset.dynasty);
+      });
+
+      if (selected.length > 0) {
+        const param = selected.join(',');
+        window.history.replaceState({}, '', window.location.pathname + '?dynasty=' + encodeURIComponent(param));
+        reinitWithFilter(param);
+      } else {
+        window.history.replaceState({}, '', window.location.pathname);
+        reinitWithFilter(null);
+      }
+    });
+  });
+}
+
+async function reinitWithFilter(dynastyParam) {
+  console.log('[reinitWithFilter] 筛选朝代:', dynastyParam);
+  chartInstances.forEach((chart, domId) => {
+    if (chart && !chart.isDisposed()) chart.dispose();
+    const dom = document.getElementById(domId);
+    if (dom) dom.removeAttribute('_echarts_instance');
+  });
+  chartInstances.clear();
+  initializedTabs.clear();
+  const dynasties = dynastyParam ? dynastyParam.split(',') : [];
+  await initData(dynasties);
+}
+
+function filterByDynasty(cultureData, dynasties) {
+  if (!dynasties || dynasties.length === 0) return cultureData;
+  const filtered = {};
+  for (const key of Object.keys(cultureData)) {
+    const section = cultureData[key];
+    if (!section || typeof section !== 'object') { filtered[key] = section; continue; }
+    const detail = section.detail;
+    if (!Array.isArray(detail)) { filtered[key] = section; continue; }
+    filtered[key] = { ...section };
+    filtered[key].detail = detail.filter(d => {
+      const dynastyField = d['朝代'] || d['dynasty'] || '';
+      return dynasties.some(fd => matchDynastyGroup(dynastyField, fd));
+    });
+    console.log(`[filterByDynasty] ${key}: ${filtered[key].detail.length}/${detail.length} 条匹配 ${dynasties.join(',')}`);
+  }
+  return filtered;
+}
+
+async function initData(filterDynasties) {
+  let rawData = {};
+  try {
+    rawData = await loadJson('culture_processed.json') || {};
+  } catch(e) { console.warn('加载文化数据失败', e); }
+
+  cultureData = filterDynasties && filterDynasties.length > 0 ? filterByDynasty(rawData, filterDynasties) : rawData;
+
+  const activeTab = document.querySelector('.tab-btn.active');
+  if (activeTab) {
+    const tabId = activeTab.dataset.tab;
+    initializedTabs.add(tabId);
+    initChartsForTab(tabId);
+    updateInsightPanel(tabId);
+  }
+}
+
+// 更新洞察面板
+function updateInsightPanel(tabId) {
+  const container = document.getElementById('culture-insights');
+  if (!container) return;
+  const insightMap = {
+    residence: cultureInsights.residence,
+    official: cultureInsights.official,
+    palace: cultureInsights.palace,
+    bridge: cultureInsights.bridge
+  };
+  const insight = insightMap[tabId];
+  if (insight) {
+    container.innerHTML = generateInsightHTML(insight);
+  }
 }
 
 // ========== 启动 ==========
 async function init() {
   initTabs();
+  initDynastyButtons();
 
-  try {
-    const resp = await fetch('../../data/culture_processed.json');
-    if (resp.ok) cultureData = await resp.json();
-  } catch(e) { console.warn('加载文化数据失败', e); }
+  const filterDynasty = getDynastyFilter();
+  await initData(filterDynasty);
 
-  // 先初始化默认tab（民居）的图表，此时容器已经是 active 状态
-  initializedTabs.add('residence');
-  initResidenceCharts();
-
-  // GSAP动画：使用 fromTo 而不是 from，确保元素初始状态正确
-  // 并且只在 header 和 tab 上做动画，避免卡片动画干扰图表渲染
   gsap.fromTo('.page-header',
     { opacity: 0, y: -30 },
     { opacity: 1, y: 0, duration: 1 }
@@ -397,7 +872,6 @@ async function init() {
   );
 }
 
-// 全局resize：只resize当前active tab中的图表，避免操作隐藏tab的实例
 window.addEventListener('resize', () => {
   const activeContent = document.querySelector('.culture-content.active');
   if (!activeContent) return;

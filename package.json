@@ -7,7 +7,10 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview --base /ancient-architecture-viz/",
+    "deploy": "deploy.bat",
+    "deploy:sh": "bash deploy.sh",
+    "start": "build.bat"
   },
   "devDependencies": {
     "vite": "^4.5.0"

@@ -50,19 +50,37 @@
 - 弹窗交互逻辑
 - 流星/粒子背景动效
 
-### 当前项目状态（2026-04-22）
+### 当前项目状态（2026-04-29）
 **技术栈**：Vite 4.5 + ECharts 5.4 + GSAP 3.12 + flexible.js（rem适配）
 **构建配置**：MPA多页面，echarts/gsap单独chunk打包
 **flexible.js**：存放于`public/js/`目录，通过`<script src="/js/flexible.js">`引入（非module脚本必须放public目录才能被Vite构建）
 **新增模块**：
 - `infoModal.js` - 通用信息弹窗（支持ESC/点击背景关闭/动画）
 - `insights.js` - 数据分析结论模块（4个页面的洞察数据）
+**数据体系**：所有图表数据源统一为 `public/data/*.json`（buildings.json **115条**、architects_processed.json 20人、books_processed.json 14部、culture_processed.json 4类文化）
 **交互功能**：
 - 所有图表支持点击显示详细信息弹窗
 - 首页时间轴/雷达图点击显示朝代/建筑类型详情
 - 成就页面积图点击可跳转至文化页面对应标签
 - 各子页面底部添加数据洞察面板（含分析结论+关键词标签）
+- 首页引导页支持选择不同时代进入并过滤数据
 **页面结构**：首页 + 4个子页（achievement/scientist/literature/culture）+ 过渡页
+
+**2026-04-29重大修复**：
+- 统一全项目图表数据来源，全部从JSON加载，消除硬编码图表数据
+- 首页统计数字、时间轴、雷达图动态计算
+- 成就页修复地理分布图空白bug（变量名错误）、玫瑰图合并六大朝代、布局改为可滚动
+- 著作页旭日图改为按朝代分类（原数据type全为"其他"）、时间轴改为横向条形图
+- 文化页修复图表初始化后消失问题（延迟初始化+移除overflow:hidden）
+- 科学家页时间轴改为横向条形图（替代150px超大泡泡）、重点人物改为信息卡片
+
+**2026-05-05重大更新**：
+- buildings.json 从88条扩充到**115条**，新增桥梁8条、皇宫3条、官府4条、民居6条、城址4条、寺庙2条
+- 首页雷达图修复：维度从虚假公式改为真实数据计算（省份分布、朝代跨度等）
+- categoryMap扩展：支持桥梁/民居/大院/庄园/衙门/大明宫/未央等新类别
+- CSS视觉增强：多层背景光晕、装饰线、hover动画效果
+- 文化页图表全部改为动态数据+有分析意义的内容
+- 文化页筛选修复：民居筛选不生效、坐标轴截断、无意义图表替换
 
 ## PCB缺陷检测项目
 - 软件：VisionMaster 4.3
@@ -74,3 +92,14 @@
 - 数据来源：偏好政府网站（如国家文物局），要求真实可溯源
 - 代码风格：直接可执行，先验证模块是否存在再推进
 - 工程整洁：主动清理冗余文件，定期整理目录
+- **Skill优先策略**：遇到问题时，按以下顺序查找解决方案：
+  1. 先查本地 `~/.workbuddy/skills/` 和 `~/.workbuddy/skills-marketplace/skills/` 有无对应 skill
+  2. 有则直接安装使用（`cp -r` 到 `~/.workbuddy/skills/`）
+  3. 没有则通过 SkillHub（`lightmake.site`）或 Vercel Skills / ClawHub 搜索
+  4. 找到后下载安装，找不到才告知用户
+- **浏览器限制**：未经用户允许，只能使用 Edge 浏览器（`--executable-path "C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe"`），禁止使用 Chrome 或其他浏览器
+- **⚠️ 浏览器安全规则（2026-04-29教训）**：
+  - **绝对禁止** `taskkill` 杀用户的 Edge/msedge 进程，会丢失 cookie 和会话数据
+  - **禁止**强制关闭用户正在使用的浏览器
+  - 如需连接已打开的浏览器，使用 `--auto-connect` 或 `--cdp` 端口方式，不要重启浏览器
+  - 启动新浏览器实例时使用 `Start-Process` + `--remote-debugging-port`，不要先杀旧进程

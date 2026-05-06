@@ -3,7 +3,7 @@
  * 所有图表数据从 /data/buildings.json 聚合生成
  */
 import * as echarts from 'echarts';
-import { loadData, COLORS, ECHARTS_THEME } from '../../js/common/utils.js';
+import { loadData, COLORS, ECHARTS_THEME, getDataUrl, loadJson, matchDynastyGroup } from '../../js/common/utils.js';
 import { pageEnterAnimation } from '../../js/common/animation.js';
 import { showInfoModal, generateDataHTML, addChartClickHandler } from '../../js/common/infoModal.js';
 import { achievementInsights, generateInsightHTML } from '../../js/common/insights.js';
@@ -25,9 +25,9 @@ function dynastyGroup(d) {
 function categoryMap(c) {
   if (!c) return '其他';
   const s = String(c);
-  if (/民居|住宅|寨|土楼|窑洞|干栏|吊脚|四合院|蒙古包|碉楼|船型屋/.test(s)) return '民居';
-  if (/官府|县衙|府衙|官署|孔庙|贡院|城楼/.test(s)) return '官府';
-  if (/皇宫|宫|故宫|避暑山庄|布达拉|宫殿/.test(s)) return '皇宫';
+  if (/民居|住宅|寨|土楼|窑洞|干栏|吊脚|四合院|蒙古包|碉楼|船型屋|大院|庄园/.test(s)) return '民居';
+  if (/官府|县衙|府衙|官署|孔庙|贡院|城楼|总督|衙门|衙署/.test(s)) return '官府';
+  if (/皇宫|宫|故宫|避暑山庄|布达拉|宫殿|大明宫|未央/.test(s)) return '皇宫';
   if (/桥/.test(s)) return '桥梁';
   return '其他';
 }
@@ -45,33 +45,68 @@ function extractProvince(loc) {
 
 function getDynastyFilter() {
   const params = new URLSearchParams(window.location.search);
-  return params.get('dynasty');
+  const dynasty = params.get('dynasty');
+  return dynasty ? dynasty.split(',') : [];
 }
 
-function showDynastyFilter(dynasty) {
-  const filterEl = document.getElementById('dynasty-filter');
-  const labelEl = document.getElementById('dynasty-label');
-  if (filterEl && labelEl && dynasty) {
-    labelEl.textContent = `当前筛选：${dynasty}`;
-    filterEl.style.display = 'block';
+// 图表实例追踪
+const chartInstances = [];
+
+function initDynastyButtons() {
+  const btns = document.querySelectorAll('.dynasty-btn');
+  const urlParams = new URLSearchParams(window.location.search);
+  const currentDynasties = urlParams.get('dynasty');
+
+  if (currentDynasties) {
+    const selected = currentDynasties.split(',');
+    btns.forEach(btn => {
+      if (selected.includes(btn.dataset.dynasty)) btn.classList.add('active');
+    });
   }
+
+  btns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      btn.classList.toggle('active');
+
+      const selected = [];
+      btns.forEach(b => {
+        if (b.classList.contains('active')) selected.push(b.dataset.dynasty);
+      });
+
+      if (selected.length > 0) {
+        const param = selected.join(',');
+        window.history.replaceState({}, '', window.location.pathname + '?dynasty=' + encodeURIComponent(param));
+        reinitWithFilter(param);
+      } else {
+        window.history.replaceState({}, '', window.location.pathname);
+        reinitWithFilter(null);
+      }
+    });
+  });
 }
 
-async function init() {
+async function reinitWithFilter(dynastyParam) {
+  chartInstances.forEach(chart => { if (chart) chart.dispose(); });
+  chartInstances.length = 0;
+  const dynasties = dynastyParam ? dynastyParam.split(',') : [];
+  await initData(dynasties);
+}
+
+function initUI() {
   pageEnterAnimation();
+  initDynastyButtons();
+}
 
-  const filterDynasty = getDynastyFilter();
-  showDynastyFilter(filterDynasty);
-
+async function initData(filterDynasties) {
   let buildingData = [];
   try {
-    const resp = await fetch('../../data/buildings.json');
-    if (resp.ok) buildingData = await resp.json();
+    buildingData = await loadJson('buildings.json');
   } catch(e) { console.warn('加载建筑数据失败', e); }
 
-  // 按朝代过滤
-  if (filterDynasty) {
-    buildingData = buildingData.filter(b => dynastyGroup(b.dynasty) === filterDynasty);
+  if (filterDynasties && filterDynasties.length > 0) {
+    buildingData = buildingData.filter(b => 
+      filterDynasties.some(fd => matchDynastyGroup(b.dynasty, fd))
+    );
   }
 
   await initRoseChart(buildingData);
@@ -79,8 +114,15 @@ async function init() {
   await initMapChart(buildingData);
   await initAreaChart(buildingData);
   await initRankChart(buildingData);
+  await initProtectionChart(buildingData);
+  await initYearChart(buildingData);
 
   addInsightPanels();
+}
+
+async function init() {
+  initUI();
+  await initData(getDynastyFilter());
 }
 
 function addInsightPanels() {
@@ -101,6 +143,7 @@ async function initRoseChart(buildingData) {
   const chartDom = document.getElementById('rose-chart');
   if (!chartDom) return;
   const chart = echarts.init(chartDom);
+  chartInstances.push(chart);
 
   const dynastyCount = {};
   buildingData.forEach(b => {
@@ -137,6 +180,7 @@ async function initPolarChart(buildingData) {
   const chartDom = document.getElementById('polar-chart');
   if (!chartDom) return;
   const chart = echarts.init(chartDom);
+  chartInstances.push(chart);
 
   const catCount = {};
   buildingData.forEach(b => {
@@ -187,6 +231,7 @@ async function initMapChart(buildingData) {
   const chartDom = document.getElementById('map-chart');
   if (!chartDom) return;
   const chart = echarts.init(chartDom);
+  chartInstances.push(chart);
 
   const provinceCount = {};
   buildingData.forEach(b => {
@@ -235,6 +280,15 @@ async function initMapChart(buildingData) {
   };
 
   chart.setOption(option);
+  chart.on('click', (params) => {
+    const province = params.name;
+    const items = buildingData.filter(b => extractProvince(b.location) === province).slice(0, 8);
+    const list = items.map(b => `<li style="margin-bottom:0.06rem;">${b.name}（${b.dynasty}·${b.category}）</li>`).join('');
+    showInfoModal({
+      title: `${province}古建筑（${params.value}处）`,
+      content: `<ul style="padding-left:0.2rem;line-height:1.6;">${list}${items.length < params.value ? `<li style="color:#888;">...等共${params.value}处</li>` : ''}</ul>`
+    });
+  });
   window.addEventListener('resize', () => chart.resize());
 }
 
@@ -243,6 +297,7 @@ async function initAreaChart(buildingData) {
   const chartDom = document.getElementById('area-chart');
   if (!chartDom) return;
   const chart = echarts.init(chartDom);
+  chartInstances.push(chart);
 
   const dynasties = ['先秦', '秦汉', '魏晋', '隋唐', '宋元', '明清'];
 
@@ -341,6 +396,7 @@ async function initRankChart(buildingData) {
   const chartDom = document.getElementById('rank-chart');
   if (!chartDom) return;
   const chart = echarts.init(chartDom);
+  chartInstances.push(chart);
 
   const provinceCount = {};
   buildingData.forEach(b => {
@@ -396,6 +452,15 @@ async function initRankChart(buildingData) {
   };
 
   chart.setOption(option);
+  chart.on('click', (params) => {
+    const province = params.name;
+    const items = buildingData.filter(b => extractProvince(b.location) === province).slice(0, 8);
+    const list = items.map(b => `<li style="margin-bottom:0.06rem;">${b.name}（${b.dynasty}·${b.category}）</li>`).join('');
+    showInfoModal({
+      title: `${province}古建筑TOP10（第${params.dataIndex + 1}名，${params.value}处）`,
+      content: `<ul style="padding-left:0.2rem;line-height:1.6;">${list}${items.length < params.value ? `<li style="color:#888;">...等共${params.value}处</li>` : ''}</ul>`
+    });
+  });
   window.addEventListener('resize', () => chart.resize());
 }
 
@@ -421,6 +486,177 @@ function showDynastyDetail(dynasty) {
       `
     });
   }
+}
+
+// 世界遗产分布 - 按建筑类别统计世界遗产占比
+async function initProtectionChart(buildingData) {
+  const chartDom = document.getElementById('protection-chart');
+  if (!chartDom) return;
+  const chart = echarts.init(chartDom);
+  chartInstances.push(chart);
+
+  // 按类别统计世界遗产和非世界遗产
+  const categoryStats = {};
+  buildingData.forEach(b => {
+    const cat = b.category || '其他';
+    if (!categoryStats[cat]) categoryStats[cat] = { total: 0, heritage: 0 };
+    categoryStats[cat].total++;
+    const desc = (b.description || '') + (b.significance || '');
+    if (desc.includes('世界文化') || desc.includes('世界遗产')) {
+      categoryStats[cat].heritage++;
+    }
+  });
+
+  // 取前8个类别，生成堆叠柱状图
+  const categories = Object.entries(categoryStats)
+    .sort((a, b) => b[1].total - a[1].total)
+    .slice(0, 8);
+
+  const option = {
+    ...ECHARTS_THEME,
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: { type: 'shadow' },
+      formatter: (params) => {
+        const cat = categories[params[0].dataIndex];
+        if (!cat) return '';
+        const heritage = cat[1].heritage;
+        const total = cat[1].total;
+        const nonHeritage = total - heritage;
+        let result = `<strong>${cat[0]}</strong><br/>`;
+        result += `总计: ${total}处<br/>`;
+        result += `世界遗产: <strong style="color:#C8A96E;">${heritage}处</strong><br/>`;
+        result += `非世界遗产: ${nonHeritage}处`;
+        return result;
+      }
+    },
+    legend: {
+      data: ['世界遗产', '其他全国重点'],
+      top: 0,
+      textStyle: { color: 'rgba(255,255,255,0.8)', fontSize: 11 }
+    },
+    grid: { left: '3%', right: '4%', bottom: '15%', top: '15%', containLabel: true },
+    xAxis: {
+      type: 'category',
+      data: categories.map(([name]) => name),
+      axisLabel: { color: 'rgba(255,255,255,0.7)', fontSize: 10, rotate: 20 }
+    },
+    yAxis: {
+      type: 'value',
+      name: '数量',
+      axisLabel: { color: 'rgba(255,255,255,0.6)' },
+      splitLine: { lineStyle: { color: 'rgba(255,255,255,0.1)' } }
+    },
+    series: [
+      {
+        name: '世界遗产',
+        type: 'bar',
+        stack: 'total',
+        data: categories.map(([, s]) => s.heritage),
+        itemStyle: { color: '#C8A96E', borderRadius: [0, 0, 0, 0] },
+        label: {
+          show: true,
+          position: 'inside',
+          formatter: (params) => params.value > 0 ? params.value : '',
+          color: '#fff',
+          fontSize: 10
+        }
+      },
+      {
+        name: '其他全国重点',
+        type: 'bar',
+        stack: 'total',
+        data: categories.map(([, s]) => s.total - s.heritage),
+        itemStyle: { color: 'rgba(78, 205, 196, 0.6)', borderRadius: [4, 4, 0, 0] }
+      }
+    ]
+  };
+
+  chart.setOption(option);
+  chart.on('click', (params) => {
+    const cat = categories[params.dataIndex];
+    if (!cat) return;
+    const isHeritage = params.seriesName === '世界遗产';
+    const items = buildingData.filter(b => {
+      if ((b.category || '其他') !== cat[0]) return false;
+      const desc = (b.description || '') + (b.significance || '');
+      const hasHeritage = desc.includes('世界文化') || desc.includes('世界遗产');
+      return isHeritage ? hasHeritage : !hasHeritage;
+    }).slice(0, 6);
+    const list = items.map(b => `<li style="margin-bottom:0.06rem;">${b.name}（${b.dynasty}·${b.location}）${(b.description||'').includes('世界') ? '🌍' : ''}</li>`).join('');
+    showInfoModal({
+      title: `${cat[0]} - ${params.seriesName}（${params.value}处）`,
+      content: `<ul style="padding-left:0.2rem;line-height:1.6;">${list}${items.length < params.value ? `<li style="color:#888;">...等共${params.value}处</li>` : ''}</ul>`
+    });
+  });
+  window.addEventListener('resize', () => chart.resize());
+}
+
+// 建造年代分布柱状图
+async function initYearChart(buildingData) {
+  const chartDom = document.getElementById('year-chart');
+  if (!chartDom) return;
+  const chart = echarts.init(chartDom);
+  chartInstances.push(chart);
+
+  const yearCount = {};
+  buildingData.forEach(b => {
+    const year = b.builtYear || '未知';
+    // 取 builtYear 的前4位数字作为年代分组
+    const match = String(year).match(/(\d{3,4})/);
+    const period = match ? `${Math.floor(parseInt(match[1]) / 100) * 100}年代` : '未知';
+    yearCount[period] = (yearCount[period] || 0) + 1;
+  });
+
+  const data = Object.entries(yearCount)
+    .map(([name, value]) => ({ name, value }))
+    .sort((a, b) => {
+      const ay = parseInt(a.name) || 0;
+      const by = parseInt(b.name) || 0;
+      return ay - by;
+    });
+
+  const option = {
+    ...ECHARTS_THEME,
+    tooltip: { trigger: 'axis' },
+    grid: { left: '3%', right: '4%', bottom: '3%', top: '10%', containLabel: true },
+    xAxis: {
+      type: 'category',
+      data: data.map(d => d.name),
+      axisLabel: { color: 'rgba(255,255,255,0.7)', fontSize: 10, rotate: 20 }
+    },
+    yAxis: {
+      type: 'value',
+      axisLabel: { color: 'rgba(255,255,255,0.6)' },
+      splitLine: { lineStyle: { color: 'rgba(255,255,255,0.1)' } }
+    },
+    series: [{
+      type: 'bar',
+      data: data.map(d => d.value),
+      itemStyle: {
+        color: {
+          type: 'linear', x: 0, y: 0, x2: 0, y2: 1,
+          colorStops: [{ offset: 0, color: '#C8A96E' }, { offset: 1, color: '#4ECDC4' }]
+        },
+        borderRadius: [4, 4, 0, 0]
+      }
+    }]
+  };
+
+  chart.setOption(option);
+  chart.on('click', (params) => {
+    const items = buildingData.filter(b => {
+      const match = String(b.builtYear || '').match(/(\d{3,4})/);
+      const period = match ? `${Math.floor(parseInt(match[1]) / 100) * 100}年代` : '未知';
+      return period === params.name;
+    }).slice(0, 5);
+    const list = items.map(b => `<li style="margin-bottom:0.06rem;">${b.name}（${b.dynasty}·${b.builtYear}）</li>`).join('');
+    showInfoModal({
+      title: `${params.name}建造的建筑（${params.value}处）`,
+      content: `<ul style="padding-left:0.2rem;line-height:1.6;">${list}${items.length < params.value ? `<li style="color:#888;">...等共${params.value}处</li>` : ''}</ul>`
+    });
+  });
+  window.addEventListener('resize', () => chart.resize());
 }
 
 init();

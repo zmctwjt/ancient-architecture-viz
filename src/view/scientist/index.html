@@ -6,7 +6,7 @@
   <title>杰出科学家 - 千年营造·华夏砖木</title>
   <link rel="stylesheet" href="../../css/common.css">
   <link rel="stylesheet" href="../../css/responsive.css">
-  <script src="/js/flexible.js"></script>
+  <script>(function(){var d=document.documentElement;var r=window.devicePixelRatio||1;d.setAttribute('data-dpr',r);function s(){var w=d.clientWidth;var rem=(w/1920)*100;rem=Math.max(rem,54);d.style.fontSize=rem+'px'}s();window.addEventListener('resize',s);window.addEventListener('pageshow',function(e){if(e.persisted)s()});window.flexible={dpr:r,rem:function(){return parseFloat(d.style.fontSize)},refreshRem:s}})();</script>
   <script type="importmap">
   {
     "imports": {
@@ -18,76 +18,167 @@
   <style>
     .dashboard-grid {
       display: grid;
-      grid-template-columns: 1fr 2fr 1fr;
-      grid-template-rows: 1fr 1fr;
+      grid-template-columns: 1fr;
       gap: 0.15rem;
-      height: calc(100vh - 1.5rem);
       padding: 0.15rem;
+      max-width: 14rem;
+      margin: 0 auto;
     }
-    .panel-timeline {
-      grid-row: span 2;
-    }
-    .panel-graph {
-      grid-column: span 1;
-    }
-    .back-link {
-      position: fixed;
-      top: 0.2rem;
-      left: 0.2rem;
-      color: var(--color-primary);
-      text-decoration: none;
-      font-size: 0.14rem;
-      z-index: 100;
-      padding: 0.08rem 0.15rem;
+    .chart-panel {
+      background: var(--bg-panel);
       border: 1px solid var(--border-color);
-      border-radius: 4px;
-      background: var(--bg-card);
+      border-radius: 8px;
+      padding: 0.15rem;
+      min-height: 4.5rem;
     }
-    .back-link:hover {
+    .panel-full {
+      grid-column: 1 / -1;
+    }
+    .chart-container {
+      width: 100%;
+      height: 5rem;
+    }
+    .panel-full .chart-container {
+      height: 6rem;
+    }
+    .person-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 0.12rem;
+      height: 100%;
+      overflow-y: auto;
+    }
+    .person-card {
+      background: rgba(200, 169, 110, 0.08);
+      border: 1px solid rgba(200, 169, 110, 0.2);
+      border-radius: 6px;
+      padding: 0.12rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .person-card:hover {
+      background: rgba(200, 169, 110, 0.15);
+      border-color: rgba(200, 169, 110, 0.4);
+    }
+    .person-card h4 {
+      color: #C8A96E;
+      font-size: 0.15rem;
+      margin-bottom: 0.06rem;
+    }
+    .person-card .meta {
+      font-size: 0.11rem;
+      color: #4ECDC4;
+      margin-bottom: 0.06rem;
+    }
+    .person-card .desc {
+      font-size: 0.11rem;
+      color: rgba(255,255,255,0.65);
+      line-height: 1.5;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    @media (max-width: 768px) {
+      .dashboard-grid { grid-template-columns: 1fr; }
+    }
+    .dynasty-btn {
+      padding: 0.06rem 0.16rem;
       background: rgba(200, 169, 110, 0.1);
+      border: 1px solid rgba(200, 169, 110, 0.3);
+      border-radius: 20px;
+      color: #C8A96E;
+      font-size: 0.12rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      outline: none;
+    }
+    .dynasty-btn:hover {
+      background: rgba(200, 169, 110, 0.25);
+      border-color: #C8A96E;
+      transform: translateY(-2px);
+    }
+    .dynasty-btn.active {
+      background: linear-gradient(135deg, rgba(200, 169, 110, 0.4), rgba(78, 205, 196, 0.2));
+      border-color: #C8A96E;
+      color: #fff;
+      font-weight: 600;
+      box-shadow: 0 0 12px rgba(200, 169, 110, 0.3);
     }
   </style>
 </head>
 <body>
-  <a href="../../../index.html" class="back-link">← 返回首页</a>
-  
+  <a href="../home/index.html" class="back-link" id="back-link">← 返回首页</a>
+
+  <script>
+    // 返回首页时带上 dynasty 参数
+    (function() {
+      const params = new URLSearchParams(window.location.search);
+      const dynasty = params.get('dynasty');
+      if (dynasty) {
+        const backLink = document.getElementById('back-link');
+        if (backLink) {
+          backLink.href = '../home/index.html?dynasty=' + encodeURIComponent(dynasty);
+        }
+      }
+    })();
+  </script>
+
   <div class="page-container">
     <header class="page-header">
       <h1 class="page-title">中国古代建筑领域杰出科学家</h1>
       <p class="page-subtitle">从鲁班到样式雷，跨越两千五百年的建筑巨匠</p>
-    </header>
-    
-    <div class="dashboard-grid">
-      <!-- 左侧：时间轴 -->
-      <div class="chart-panel panel-timeline">
-        <h2 class="panel-title">建筑科学家时间轴</h2>
-        <div id="timeline-chart" class="chart-container"></div>
-      </div>
-      
-      <!-- 中间：关系图 -->
-      <div class="chart-panel panel-graph">
-        <h2 class="panel-title">人物-作品-朝代关联网络</h2>
-        <div id="graph-chart" class="chart-container"></div>
-      </div>
-      
-      <!-- 右上：人物卡片 -->
-      <div class="chart-panel">
-        <h2 class="panel-title">重点人物</h2>
-        <div id="person-card" class="chart-container">
-          <div class="person-info">
-            <h3>点击左侧图表查看详情</h3>
-          </div>
+      <div id="dynasty-filter" style="margin-top: 0.15rem; text-align: center;">
+        <div id="dynasty-selector" style="display: flex; justify-content: center; gap: 0.1rem; flex-wrap: wrap;">
+          <button class="dynasty-btn" data-dynasty="先秦">先秦</button>
+          <button class="dynasty-btn" data-dynasty="秦汉">秦汉</button>
+          <button class="dynasty-btn" data-dynasty="魏晋">魏晋</button>
+          <button class="dynasty-btn" data-dynasty="隋唐">隋唐</button>
+          <button class="dynasty-btn" data-dynasty="宋元">宋元</button>
+          <button class="dynasty-btn" data-dynasty="明清">明清</button>
         </div>
       </div>
-      
-      <!-- 右下：影响力统计 -->
-      <div class="chart-panel">
+    </header>
+
+    <div class="dashboard-grid">
+      <!-- 影响力排行 -->
+      <div class="chart-panel panel-full">
+        <h2 class="panel-title">建筑科学家影响力排行</h2>
+        <div id="timeline-chart" class="chart-container"></div>
+      </div>
+
+      <!-- 关系网络 -->
+      <div class="chart-panel panel-full">
+        <h2 class="panel-title">人物-朝代关联网络</h2>
+        <div id="graph-chart" class="chart-container"></div>
+      </div>
+
+      <!-- 重点人物 -->
+      <div class="chart-panel panel-full">
+        <h2 class="panel-title">重点人物简介</h2>
+        <div id="person-card" class="chart-container person-cards">
+          <!-- JS动态生成 -->
+        </div>
+      </div>
+
+      <!-- 影响力统计 -->
+      <div class="chart-panel panel-full">
         <h2 class="panel-title">人物影响力指标</h2>
         <div id="bar-chart" class="chart-container"></div>
+        <div style="margin-top: 0.1rem; padding: 0.1rem; background: rgba(255,255,255,0.05); border-radius: 6px; font-size: 0.11rem; color: rgba(255,255,255,0.6); line-height: 1.6;">
+          <strong style="color: #C8A96E;">影响力指数计算方式：</strong>综合考量历史贡献度（著作/工程数量与重要性）、技术开创性（是否首创某种技术或规范）、历史知名度（后世引用与记载频次）、时代跨度（活跃时期长度）四个维度，由领域专家按1-10分制评分后加权汇总得出。满分10分。
+        </div>
       </div>
     </div>
+
+    <div class="decorative-bar"></div>
+
+    <footer class="page-footer">
+      <p style="font-size: 0.14rem; color: rgba(255, 255, 255, 0.6); margin-bottom: 0.05rem;">2026年中国大学生计算机设计大赛 | 数据可视化与交互信息设计</p>
+      <p style="font-size: 0.12rem; color: rgba(255, 255, 255, 0.4);">数据来源：中国古代建筑史、建筑学家传记资料</p>
+    </footer>
   </div>
-  
+
   <script type="module" src="./main.js"></script>
 </body>
 </html>

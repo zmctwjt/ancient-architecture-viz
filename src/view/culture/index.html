@@ -6,7 +6,7 @@
   <title>建筑文化 - 千年营造·华夏砖木</title>
   <link rel="stylesheet" href="../../css/common.css">
   <link rel="stylesheet" href="../../css/responsive.css">
-  <script src="/js/flexible.js"></script>
+  <script>(function(){var d=document.documentElement;var r=window.devicePixelRatio||1;d.setAttribute('data-dpr',r);function s(){var w=d.clientWidth;var rem=(w/1920)*100;rem=Math.max(rem,54);d.style.fontSize=rem+'px'}s();window.addEventListener('resize',s);window.addEventListener('pageshow',function(e){if(e.persisted)s()});window.flexible={dpr:r,rem:function(){return parseFloat(d.style.fontSize)},refreshRem:s}})();</script>
   <script type="importmap">
   {
     "imports": {
@@ -16,12 +16,11 @@
   }
   </script>
   <style>
-    .page-wrapper {
+    html, body { background-color: #0a0e14 !important; }
+    .content-wrapper {
+      max-width: 14rem;
+      margin: 0 auto;
       width: 100%;
-      min-height: 100vh;
-      background: var(--bg-dark);
-      position: relative;
-      padding: 0.2rem;
     }
     .tab-container {
       display: flex;
@@ -29,6 +28,7 @@
       margin-bottom: 0.2rem;
       justify-content: center;
       flex-wrap: wrap;
+      min-height: 0.5rem;
     }
     .tab-btn {
       padding: 0.1rem 0.24rem;
@@ -44,6 +44,7 @@
       background: linear-gradient(135deg, var(--color-primary) 0%, #D4B896 100%);
       color: var(--bg-dark);
       border-color: var(--color-primary);
+      box-shadow: 0 0 15px rgba(200, 169, 110, 0.3);
     }
     .culture-content {
       display: none;
@@ -51,10 +52,9 @@
     .culture-content.active {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      grid-template-rows: repeat(2, 1fr);
+      grid-template-rows: repeat(2, minmax(4.2rem, auto));
       gap: 0.15rem;
-      height: calc(100vh - 2.5rem);
-      padding: 0 0.15rem;
+      padding: 0 0.15rem 0.3rem;
     }
     .culture-card {
       background: var(--bg-panel);
@@ -65,10 +65,14 @@
       flex-direction: column;
       transition: all 0.3s ease;
       position: relative;
+      overflow: hidden;
+      min-height: 4.2rem;
+      backdrop-filter: blur(10px);
     }
     .culture-card:hover {
-      box-shadow: var(--border-glow);
+      box-shadow: 0 0 25px rgba(200, 169, 110, 0.2);
       border-color: rgba(200, 169, 110, 0.5);
+      transform: translateY(-2px);
     }
     .culture-card::before {
       content: '';
@@ -78,7 +82,11 @@
       right: 0;
       height: 2px;
       background: linear-gradient(90deg, transparent, var(--color-primary), var(--color-secondary), transparent);
-      opacity: 0.6;
+      opacity: 0.5;
+      transition: opacity 0.3s ease;
+    }
+    .culture-card:hover::before {
+      opacity: 0.8;
     }
     .culture-card h4 {
       color: var(--color-primary);
@@ -90,33 +98,8 @@
     }
     .culture-card .chart {
       flex: 1;
-      min-height: 0;
-    }
-    .culture-desc {
-      margin-top: 0.1rem;
-      padding: 0.1rem;
-      background: rgba(13, 17, 23, 0.5);
-      border-radius: 5px;
-      font-size: 0.12rem;
-      color: var(--text-muted);
-      line-height: 1.6;
-    }
-    .back-link {
-      position: fixed;
-      top: 0.2rem;
-      left: 0.2rem;
-      color: var(--color-primary);
-      text-decoration: none;
-      font-size: 0.14rem;
-      z-index: 100;
-      padding: 0.08rem 0.15rem;
-      border: 1px solid var(--border-color);
-      border-radius: 4px;
-      background: var(--bg-card);
-      transition: all 0.3s ease;
-    }
-    .back-link:hover {
-      background: rgba(200, 169, 110, 0.1);
+      min-height: 3.4rem;
+      height: 3.4rem;
     }
     .chart-hint {
       position: absolute;
@@ -125,153 +108,213 @@
       font-size: 0.1rem;
       color: var(--text-muted);
       opacity: 0.7;
+      pointer-events: none;
+    }
+    .dynasty-btn {
+      padding: 0.06rem 0.16rem;
+      background: rgba(200, 169, 110, 0.1);
+      border: 1px solid rgba(200, 169, 110, 0.3);
+      border-radius: 20px;
+      color: #C8A96E;
+      font-size: 0.12rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      outline: none;
+    }
+    .dynasty-btn:hover {
+      background: rgba(200, 169, 110, 0.25);
+      border-color: #C8A96E;
+      transform: translateY(-2px);
+    }
+    .dynasty-btn.active {
+      background: linear-gradient(135deg, rgba(200, 169, 110, 0.4), rgba(78, 205, 196, 0.2));
+      border-color: #C8A96E;
+      color: #fff;
+      font-weight: 600;
+      box-shadow: 0 0 12px rgba(200, 169, 110, 0.3);
+    }
+    /* 中式装饰分隔符 */
+    .culture-divider {
+      text-align: center;
+      padding: 0.15rem 0;
+      color: rgba(200, 169, 110, 0.4);
+      font-size: 0.16rem;
+      letter-spacing: 0.3rem;
     }
     @media (max-width: 768px) {
-      .culture-content.active {
-        grid-template-columns: 1fr;
-        grid-template-rows: auto;
-        height: auto;
-      }
-      .culture-card {
-        min-height: 3rem;
-      }
+      .culture-content.active { grid-template-columns: 1fr; grid-template-rows: auto; }
+      .culture-card { min-height: 4rem; }
+      .culture-card .chart { min-height: 3.2rem; height: 3.2rem; }
     }
   </style>
 </head>
 <body>
-  <!-- 返回按钮 -->
-  <a href="../../../index.html" class="back-link">← 返回首页</a>
+  <a href="../home/index.html" class="back-link" id="back-link">← 返回首页</a>
 
-  <!-- 主容器 -->
-  <div class="page-wrapper">
-    <!-- 顶部标题 -->
-    <header class="page-header">
-      <h1 class="page-title">建筑文化</h1>
-      <p class="page-subtitle">民居·官府·皇宫·桥梁 - 华夏建筑文明传承</p>
-    </header>
+  <script>
+    // 返回首页时带上 dynasty 参数
+    (function() {
+      const params = new URLSearchParams(window.location.search);
+      const dynasty = params.get('dynasty');
+      if (dynasty) {
+        const backLink = document.getElementById('back-link');
+        if (backLink) {
+          backLink.href = '../home/index.html?dynasty=' + encodeURIComponent(dynasty);
+        }
+      }
+    })();
+  </script>
 
-    <!-- 标签切换 -->
-    <div class="tab-container">
-      <button class="tab-btn active" data-tab="residence">🏠 民居文化</button>
-      <button class="tab-btn" data-tab="official">🏛️ 官府文化</button>
-      <button class="tab-btn" data-tab="palace">👑 皇宫文化</button>
-      <button class="tab-btn" data-tab="bridge">🌉 桥梁文化</button>
-    </div>
+  <div class="page-container">
+    <div class="content-wrapper">
+      <header class="page-header">
+        <h1 class="page-title">建筑文化</h1>
+        <p class="page-subtitle">民居 · 官府 · 皇宫 · 桥梁 — 华夏建筑文明传承</p>
+        <div id="dynasty-filter" style="margin-top: 0.15rem; text-align: center;">
+          <div id="dynasty-selector" style="display: flex; justify-content: center; gap: 0.1rem; flex-wrap: wrap;">
+            <button class="dynasty-btn" data-dynasty="先秦">先秦</button>
+            <button class="dynasty-btn" data-dynasty="秦汉">秦汉</button>
+            <button class="dynasty-btn" data-dynasty="魏晋">魏晋</button>
+            <button class="dynasty-btn" data-dynasty="隋唐">隋唐</button>
+            <button class="dynasty-btn" data-dynasty="宋元">宋元</button>
+            <button class="dynasty-btn" data-dynasty="明清">明清</button>
+          </div>
+        </div>
+      </header>
 
-    <!-- 民居文化 -->
-    <div id="residence" class="culture-content active">
-      <div class="culture-card">
-        <h4>地域分布</h4>
-        <div id="residenceMap" class="chart"></div>
-        <span class="chart-hint">点击查看详情</span>
+      <div class="tab-container">
+        <button class="tab-btn active" data-tab="residence">🏠 民居文化</button>
+        <button class="tab-btn" data-tab="official">🏛️ 官府文化</button>
+        <button class="tab-btn" data-tab="palace">👑 皇宫文化</button>
+        <button class="tab-btn" data-tab="bridge">🌉 桥梁文化</button>
       </div>
-      <div class="culture-card">
-        <h4>性能对比</h4>
-        <div id="residenceRadar" class="chart"></div>
-      </div>
-      <div class="culture-card">
-        <h4>结构类型</h4>
-        <div id="residenceType" class="chart"></div>
-      </div>
-      <div class="culture-card">
-        <h4>材料构成</h4>
-        <div id="residenceMaterial" class="chart"></div>
-      </div>
-      <div class="culture-card">
-        <h4>工艺特色</h4>
-        <div id="residenceCraft" class="chart"></div>
-      </div>
-      <div class="culture-card">
-        <h4>文化符号</h4>
-        <div id="residenceSymbol" class="chart"></div>
-      </div>
-    </div>
 
-    <!-- 官府文化 -->
-    <div id="official" class="culture-content">
-      <div class="culture-card">
-        <h4>历代分布</h4>
-        <div id="officialMap" class="chart"></div>
-      </div>
-      <div class="culture-card">
-        <h4>等级制度</h4>
-        <div id="officialLevel" class="chart"></div>
-      </div>
-      <div class="culture-card">
-        <h4>功能布局</h4>
-        <div id="officialLayout" class="chart"></div>
-      </div>
-      <div class="culture-card">
-        <h4>现存代表</h4>
-        <div id="officialRepresent" class="chart"></div>
-      </div>
-      <div class="culture-card">
-        <h4>建筑特征</h4>
-        <div id="officialFeature" class="chart"></div>
-      </div>
-      <div class="culture-card">
-        <h4>历史演变</h4>
-        <div id="officialEvolution" class="chart"></div>
-      </div>
-    </div>
+      <div class="culture-divider">◆ ◇ ◆ ◇ ◆</div>
 
-    <!-- 皇宫文化 -->
-    <div id="palace" class="culture-content">
-      <div class="culture-card">
-        <h4>历代规模</h4>
-        <div id="palaceScale" class="chart"></div>
+      <!-- 民居文化 -->
+      <div id="residence" class="culture-content active">
+        <div class="culture-card">
+          <h4>遗存数量分布</h4>
+          <div id="residenceMap" class="chart"></div>
+          <span class="chart-hint">点击查看详情</span>
+        </div>
+        <div class="culture-card">
+          <h4>气候适应特征</h4>
+          <div id="residenceRadar" class="chart"></div>
+        </div>
+        <div class="culture-card">
+          <h4>结构类型</h4>
+          <div id="residenceType" class="chart"></div>
+        </div>
+        <div class="culture-card">
+          <h4>材料构成</h4>
+          <div id="residenceMaterial" class="chart"></div>
+        </div>
+        <div class="culture-card">
+          <h4>全国重点遗存</h4>
+          <div id="residenceCraft" class="chart"></div>
+        </div>
+        <div class="culture-card">
+          <h4>地区分布</h4>
+          <div id="residenceSymbol" class="chart"></div>
+        </div>
       </div>
-      <div class="culture-card">
-        <h4>布局形制</h4>
-        <div id="palaceLayout" class="chart"></div>
-      </div>
-      <div class="culture-card">
-        <h4>建筑等级</h4>
-        <div id="palaceLevel" class="chart"></div>
-      </div>
-      <div class="culture-card">
-        <h4>色彩象征</h4>
-        <div id="palaceColor" class="chart"></div>
-      </div>
-      <div class="culture-card">
-        <h4>装饰艺术</h4>
-        <div id="palaceDecor" class="chart"></div>
-      </div>
-      <div class="culture-card">
-        <h4>现存宫殿</h4>
-        <div id="palaceExist" class="chart"></div>
-      </div>
-    </div>
 
-    <!-- 桥梁文化 -->
-    <div id="bridge" class="culture-content">
-      <div class="culture-card">
-        <h4>地域分布</h4>
-        <div id="bridgeMap" class="chart"></div>
+      <!-- 官府文化 -->
+      <div id="official" class="culture-content">
+        <div class="culture-card">
+          <h4>历代分布</h4>
+          <div id="officialMap" class="chart"></div>
+        </div>
+        <div class="culture-card">
+          <h4>主要建筑元素</h4>
+          <div id="officialLevel" class="chart"></div>
+        </div>
+        <div class="culture-card">
+          <h4>文化内涵关键词</h4>
+          <div id="officialLayout" class="chart"></div>
+        </div>
+        <div class="culture-card">
+          <h4>现存代表</h4>
+          <div id="officialRepresent" class="chart"></div>
+        </div>
+        <div class="culture-card">
+          <h4>建筑特征</h4>
+          <div id="officialFeature" class="chart"></div>
+        </div>
+        <div class="culture-card">
+          <h4>全国遗存数量</h4>
+          <div id="officialEvolution" class="chart"></div>
+        </div>
       </div>
-      <div class="culture-card">
-        <h4>结构类型</h4>
-        <div id="bridgeType" class="chart"></div>
+
+      <!-- 皇宫文化 -->
+      <div id="palace" class="culture-content">
+        <div class="culture-card">
+          <h4>历代规模</h4>
+          <div id="palaceScale" class="chart"></div>
+        </div>
+        <div class="culture-card">
+          <h4>核心建筑类型</h4>
+          <div id="palaceLayout" class="chart"></div>
+        </div>
+        <div class="culture-card">
+          <h4>世界遗产时间线</h4>
+          <div id="palaceLevel" class="chart"></div>
+        </div>
+        <div class="culture-card">
+          <h4>色彩象征</h4>
+          <div id="palaceColor" class="chart"></div>
+        </div>
+        <div class="culture-card">
+          <h4>规模与建筑数量</h4>
+          <div id="palaceDecor" class="chart"></div>
+        </div>
+        <div class="culture-card">
+          <h4>现存宫殿</h4>
+          <div id="palaceExist" class="chart"></div>
+        </div>
       </div>
-      <div class="culture-card">
-        <h4>材料演进</h4>
-        <div id="bridgeMaterial" class="chart"></div>
+
+      <!-- 桥梁文化 -->
+      <div id="bridge" class="culture-content">
+        <div class="culture-card">
+          <h4>结构类型</h4>
+          <div id="bridgeMap" class="chart"></div>
+        </div>
+        <div class="culture-card">
+          <h4>跨度对比</h4>
+          <div id="bridgeType" class="chart"></div>
+        </div>
+        <div class="culture-card">
+          <h4>材料演进</h4>
+          <div id="bridgeMaterial" class="chart"></div>
+        </div>
+        <div class="culture-card">
+          <h4>世界之最</h4>
+          <div id="bridgeWorld" class="chart"></div>
+        </div>
+        <div class="culture-card">
+          <h4>技术特色关键词</h4>
+          <div id="bridgeCulture" class="chart"></div>
+        </div>
+        <div class="culture-card">
+          <h4>保护现状</h4>
+          <div id="bridgeProtect" class="chart"></div>
+        </div>
       </div>
-      <div class="culture-card">
-        <h4>世界之最</h4>
-        <div id="bridgeWorld" class="chart"></div>
-      </div>
-      <div class="culture-card">
-        <h4>文化意义</h4>
-        <div id="bridgeCulture" class="chart"></div>
-      </div>
-      <div class="culture-card">
-        <h4>保护现状</h4>
-        <div id="bridgeProtect" class="chart"></div>
-      </div>
+
+      <div class="culture-divider">◆ ◇ ◆ ◇ ◆</div>
+
+      <!-- 数据洞察面板 -->
+      <div id="culture-insights" style="padding: 0 0.15rem 0.2rem;"></div>
+
+      <footer style="text-align: center; padding: 0.2rem 0; border-top: 1px solid rgba(200, 169, 110, 0.2);">
+        <p style="font-size: 0.12rem; color: rgba(255,255,255,0.4);">数据来源：中国非物质文化遗产网、国家文物局、学术文献</p>
+      </footer>
     </div>
   </div>
-  
+
   <script type="module" src="./main.js"></script>
 </body>
 </html>

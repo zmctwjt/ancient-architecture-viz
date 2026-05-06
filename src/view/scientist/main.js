@@ -3,7 +3,7 @@
  * 数据来源：/data/architects_processed.json
  */
 import * as echarts from 'echarts';
-import { loadData, COLORS, ECHARTS_THEME } from '../../js/common/utils.js';
+import { loadData, COLORS, ECHARTS_THEME, getDataUrl, loadJson, matchDynastyGroup } from '../../js/common/utils.js';
 import { pageEnterAnimation } from '../../js/common/animation.js';
 import { showInfoModal, generateDataHTML } from '../../js/common/infoModal.js';
 import { scientistInsights, generateInsightHTML } from '../../js/common/insights.js';
@@ -12,45 +12,93 @@ const dynastyOrder = { '春秋': 1, '汉': 2, '隋': 3, '唐': 4, '北魏': 5, '
 
 function getDynastyFilter() {
   const params = new URLSearchParams(window.location.search);
-  return params.get('dynasty');
+  const dynasty = params.get('dynasty');
+  return dynasty ? dynasty.split(',') : [];
 }
 
-function showDynastyFilter(dynasty) {
-  const filterEl = document.getElementById('dynasty-filter');
-  const labelEl = document.getElementById('dynasty-label');
-  if (filterEl && labelEl && dynasty) {
-    labelEl.textContent = `当前筛选：${dynasty}`;
-    filterEl.style.display = 'block';
+// 图表实例追踪
+const chartInstances = [];
+
+function initDynastyButtons() {
+  const btns = document.querySelectorAll('.dynasty-btn');
+  const urlParams = new URLSearchParams(window.location.search);
+  const currentDynasties = urlParams.get('dynasty');
+
+  if (currentDynasties) {
+    const selected = currentDynasties.split(',');
+    btns.forEach(btn => {
+      if (selected.includes(btn.dataset.dynasty)) btn.classList.add('active');
+    });
   }
+
+  btns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      btn.classList.toggle('active');
+
+      const selected = [];
+      btns.forEach(b => {
+        if (b.classList.contains('active')) selected.push(b.dataset.dynasty);
+      });
+
+      if (selected.length > 0) {
+        const param = selected.join(',');
+        window.history.replaceState({}, '', window.location.pathname + '?dynasty=' + encodeURIComponent(param));
+        reinitWithFilter(param);
+      } else {
+        window.history.replaceState({}, '', window.location.pathname);
+        reinitWithFilter(null);
+      }
+    });
+  });
 }
 
-async function init() {
-  let architectData = { timeline_data: [], graph_data: { nodes: [], links: [] } };
+async function reinitWithFilter(dynastyParam) {
+  chartInstances.forEach(chart => { if (chart) chart.dispose(); });
+  chartInstances.length = 0;
+  const dynasties = dynastyParam ? dynastyParam.split(',') : [];
+  await initData(dynasties);
+}
+
+function initUI() {
+  pageEnterAnimation();
+  initDynastyButtons();
+}
+
+// 按朝代过滤科学家数据的辅助函数
+function filterArchitectData(rawData, filterDynasties) {
+  let architectData = JSON.parse(JSON.stringify(rawData));
+  if (!filterDynasties || filterDynasties.length === 0) return architectData;
+
+  const allDynasties = architectData.timeline_data || [];
+  architectData.timeline_data = allDynasties.filter(s => 
+    filterDynasties.some(fd => matchDynastyGroup(s.dynasty, fd))
+  );
+  const keptNames = new Set(architectData.timeline_data.map(s => s.name));
+  architectData.graph_data.nodes = (architectData.graph_data.nodes || []).filter(n => {
+    if (n.category === 0) return keptNames.has(n.name);
+    return true;
+  });
+  const keptNodeIds = new Set(architectData.graph_data.nodes.map(n => n.id));
+  architectData.graph_data.links = (architectData.graph_data.links || []).filter(l => {
+    return keptNodeIds.has(l.source) || keptNodeIds.has(l.target);
+  });
+  const linkedIds = new Set();
+  architectData.graph_data.links.forEach(l => { linkedIds.add(l.source); linkedIds.add(l.target); });
+  keptNames.forEach(name => {
+    const node = architectData.graph_data.nodes.find(n => n.name === name);
+    if (node) linkedIds.add(node.id);
+  });
+  architectData.graph_data.nodes = architectData.graph_data.nodes.filter(n => linkedIds.has(n.id));
+  return architectData;
+}
+
+async function initData(filterDynasties) {
+  let rawData = { timeline_data: [], graph_data: { nodes: [], links: [] } };
   try {
-    const resp = await fetch('../../data/architects_processed.json');
-    if (resp.ok) architectData = await resp.json();
+    rawData = await loadJson('architects_processed.json') || rawData;
   } catch(e) { console.warn('加载科学家数据失败', e); }
 
-  const filterDynasty = getDynastyFilter();
-  showDynastyFilter(filterDynasty);
-
-  // 按朝代过滤科学家数据
-  if (filterDynasty) {
-    const allDynasties = architectData.timeline_data || [];
-    architectData.timeline_data = allDynasties.filter(s => s.dynasty === filterDynasty || (filterDynasty === '明' && s.dynasty === '明末清初'));
-    // graph_data 也过滤：只保留匹配朝代的科学家节点和对应的朝代节点
-    const keptIds = new Set(architectData.timeline_data.map((_, i) => `arch_${i}`));
-    const dynastyIds = new Set();
-    architectData.graph_data.links = (architectData.graph_data.links || []).filter(l => {
-      if (keptIds.has(l.source)) { dynastyIds.add(l.target); return true; }
-      return false;
-    });
-    architectData.graph_data.nodes = (architectData.graph_data.nodes || []).filter(n => {
-      return keptIds.has(n.id) || dynastyIds.has(n.id);
-    });
-  }
-
-  pageEnterAnimation();
+  const architectData = filterArchitectData(rawData, filterDynasties);
 
   await initTimelineChart(architectData);
   await initGraphChart(architectData);
@@ -58,6 +106,11 @@ async function init() {
   await initBarChart(architectData);
 
   addInsightPanels();
+}
+
+async function init() {
+  initUI();
+  await initData(getDynastyFilter());
 }
 
 function addInsightPanels() {
@@ -80,6 +133,7 @@ async function initTimelineChart(data) {
   const chartDom = document.getElementById('timeline-chart');
   if (!chartDom) return;
   const chart = echarts.init(chartDom);
+  chartInstances.push(chart);
 
   const scientists = (data.timeline_data || []).slice().sort((a, b) => {
     const oa = dynastyOrder[a.dynasty] || 99;
@@ -136,48 +190,91 @@ async function initTimelineChart(data) {
 
 /**
  * 力导向关系图
+ * 数据中 category=0 是科学家, category=1 是朝代
+ * 动态添加 category=2 代表作品节点（从 timeline_data 的 major_works 提取）
  */
 async function initGraphChart(data) {
   const chartDom = document.getElementById('graph-chart');
   if (!chartDom) return;
   const chart = echarts.init(chartDom);
+  chartInstances.push(chart);
 
   const graphData = data.graph_data || { nodes: [], links: [] };
+  const timelineData = data.timeline_data || [];
+
+  // 深拷贝节点和链接，避免修改原始数据
+  const nodes = graphData.nodes.map(n => ({ ...n }));
+  const links = graphData.links.map(l => ({ ...l }));
+
+  // 从 timeline_data 中提取代表作品，作为 category=2 节点
+  let workId = 0;
+  const workNodeMap = {}; // workName -> nodeId
+  timelineData.forEach((person, pIdx) => {
+    const works = person.major_works || [];
+    // 找到该科学家在 nodes 中的 id（arch_0, arch_1, ...）
+    const archNode = nodes.find(n => n.name === person.name);
+    const archId = archNode ? archNode.id : null;
+    works.forEach(work => {
+      if (!work) return;
+      // 去重：同一作品只创建一个节点
+      if (!workNodeMap[work]) {
+        const nodeId = `work_${workId++}`;
+        workNodeMap[work] = nodeId;
+        nodes.push({
+          id: nodeId,
+          name: work,
+          category: 2,
+          symbolSize: 18
+        });
+      }
+      // 科学家 -> 作品 链接
+      if (archId) {
+        links.push({ source: archId, target: workNodeMap[work], value: 1 });
+      }
+    });
+  });
 
   const option = {
     ...ECHARTS_THEME,
     tooltip: {
       formatter: (params) => {
         if (params.dataType === 'node') {
-          const types = ['建筑科学家', '代表作品', '历史时期'];
+          const types = ['建筑科学家', '历史时期', '代表作品'];
           return `${params.name}<br/>类型: ${types[params.data.category] || '未知'}`;
         }
         return '';
       }
     },
     legend: {
-      data: ['建筑科学家', '代表作品', '历史时期'],
+      data: ['建筑科学家', '历史时期', '代表作品'],
       textStyle: { color: 'rgba(255,255,255,0.8)' },
       bottom: 0
     },
     series: [{
       type: 'graph',
       layout: 'force',
-      data: graphData.nodes.map(n => ({
+      data: nodes.map(n => ({
         ...n,
-        // 朝代节点在JSON中symbolSize已是30，直接取用；科学家节点按影响力缩放
-        symbolSize: n.category === 1 ? Math.min(25, n.symbolSize || 20) : Math.min(35, (n.symbolSize || 1) * 12 + 8),
-        label: { show: true, position: n.category === 1 ? 'inside' : 'bottom', color: 'rgba(255,255,255,0.8)', fontSize: 10 }
+        // category=0 科学家: 按影响力缩放; category=1 朝代: 固定大小; category=2 作品: 固定大小
+        symbolSize: n.category === 0 ? Math.min(35, (n.symbolSize || 1) * 12 + 8)
+                  : n.category === 1 ? Math.min(25, n.symbolSize || 20)
+                  : 18,
+        label: {
+          show: true,
+          position: n.category === 1 ? 'inside' : 'bottom',
+          color: 'rgba(255,255,255,0.8)',
+          fontSize: n.category === 1 ? 11 : 10
+        }
       })),
-      links: graphData.links,
+      links: links,
       categories: [
-        { name: '建筑科学家' },
-        { name: '代表作品' },
-        { name: '历史时期' }
+        { name: '建筑科学家', itemStyle: { color: '#C8A96E' } },
+        { name: '历史时期', itemStyle: { color: '#4ECDC4' } },
+        { name: '代表作品', itemStyle: { color: '#E07B54' } }
       ],
       roam: true,
       label: { show: true, position: 'bottom', color: 'rgba(255,255,255,0.8)' },
-      force: { repulsion: 200, edgeLength: [60, 120] },
+      force: { repulsion: 150, edgeLength: [40, 100] },
       lineStyle: { color: 'source', curveness: 0.3, opacity: 0.6 },
       emphasis: { focus: 'adjacency', lineStyle: { width: 4 } }
     }]
@@ -187,7 +284,7 @@ async function initGraphChart(data) {
   chart.on('click', (params) => {
     if (params.dataType === 'node' && params.data.category === 0) {
       const name = params.name;
-      const person = (data.timeline_data || []).find(p => p.name === name);
+      const person = timelineData.find(p => p.name === name);
       if (person) showPersonDetail(person);
     }
   });
@@ -230,6 +327,7 @@ async function initBarChart(data) {
   const chartDom = document.getElementById('bar-chart');
   if (!chartDom) return;
   const chart = echarts.init(chartDom);
+  chartInstances.push(chart);
 
   const scientists = (data.timeline_data || [])
     .slice()

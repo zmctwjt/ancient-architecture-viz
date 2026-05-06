@@ -118,6 +118,27 @@ export const COLORS = {
 };
 
 /**
+ * 检查某个朝代字符串是否属于目标六大朝代
+ * @param {string} dynastyStr - 数据中的朝代字符串（如"隋"、"唐"、"明末清初"）
+ * @param {string} targetGroup - 目标六大朝代（如"隋唐"、"明清"）
+ * @returns {boolean}
+ */
+export function matchDynastyGroup(dynastyStr, targetGroup) {
+  if (!dynastyStr || !targetGroup) return false;
+  const s = String(dynastyStr);
+  const map = {
+    '先秦': /商|周|夏|春秋|战国|先秦/,
+    '秦汉': /秦|汉/,
+    '魏晋': /魏|晋|南北朝|曹魏|北魏|东魏|西魏|北齐|北周|前秦|后秦|西秦|北汉|西夏|三国/,
+    '隋唐': /隋|唐/,
+    '宋元': /宋|元|辽|金/,
+    '明清': /明|清/
+  };
+  const regex = map[targetGroup];
+  return regex ? regex.test(s) : s.includes(targetGroup);
+}
+
+/**
  * ECharts 主题配置
  */
 export const ECHARTS_THEME = {

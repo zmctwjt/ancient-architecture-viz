@@ -3,86 +3,79 @@ import { resolve } from 'path';
 
 /**
  * Vite 配置 - 多页面应用 (MPA)
- * 参考 4-c-web 项目结构
  *
- * 路径说明：子页面在 src/view/xxx/ 层级，
- * fetch 数据路径使用 ../../data/ 相对路径（上溯两级到项目根）
+ * base 路径规则：
+ *   开发时用 '/'（本地 localhost 根）
+ *   构建时用 '/ancient-architecture-viz/'（GitHub Pages 仓库子路径）
+ *   通过 defineConfig 的函数形式根据 command 自动判断
  */
-export default defineConfig({
-  // 基础配置
-  base: './',
-  
-  // 路径别名
-  resolve: {
-    alias: {
-      '@': resolve(__dirname, 'src'),
-      '@js': resolve(__dirname, 'src/js'),
-      '@css': resolve(__dirname, 'src/css'),
-      '@data': resolve(__dirname, 'data'),
-      '@public': resolve(__dirname, 'public')
-    }
-  },
-  
-  // 多页面入口配置
-  build: {
-    rollupOptions: {
-      input: {
-        // 首页
-        index: resolve(__dirname, 'index.html'),
-        // 建筑成就页
-        achievement: resolve(__dirname, 'src/view/achievement/index.html'),
-        // 杰出科学家页
-        scientist: resolve(__dirname, 'src/view/scientist/index.html'),
-        // 建筑著作页
-        literature: resolve(__dirname, 'src/view/literature/index.html'),
-        // 建筑文化页
-        culture: resolve(__dirname, 'src/view/culture/index.html'),
-        // 过渡动画页
-        transition: resolve(__dirname, 'src/view/transition/index.html')
-      },
-      output: {
-        // 输出目录结构
-        entryFileNames: 'js/[name]-[hash].js',
-        chunkFileNames: 'js/[name]-[hash].js',
-        manualChunks: {
-          echarts: ['echarts'],
-          gsap: ['gsap']
-        },
-        assetFileNames: (assetInfo) => {
-          if (/\.(png|jpe?g|gif|svg|webp|ico)$/i.test(assetInfo.name)) {
-            return 'images/[name]-[hash][extname]';
-          }
-          if (/\.css$/i.test(assetInfo.name)) {
-            return 'css/[name]-[hash][extname]';
-          }
-          return 'assets/[name]-[hash][extname]';
-        }
+export default defineConfig(({ command }) => {
+  // command = 'serve'（npm run dev）或 'build'（npm run build）
+  const base = command === 'serve' ? '/' : '/ancient-architecture-viz/';
+
+  return {
+    base,
+
+    // 路径别名
+    resolve: {
+      alias: {
+        '@': resolve(__dirname, 'src'),
+        '@js': resolve(__dirname, 'src/js'),
+        '@css': resolve(__dirname, 'src/css'),
+        '@data': resolve(__dirname, 'data'),
+        '@public': resolve(__dirname, 'public')
       }
     },
-    // 输出目录
-    outDir: 'dist',
-    // 清空输出目录
-    emptyOutDir: true,
-    // 启用 source map
-    sourcemap: true
-  },
-  
-  // 开发服务器配置
-  server: {
-    port: 5173,
-    open: true,
-    cors: true,
-    // 代理配置（如需请求外部API）
-    proxy: {}
-  },
-  
-  // CSS 配置
-  css: {
-    devSourcemap: true
-  },
-  
-  // 优化依赖
-  optimizeDeps: {
-    include: ['echarts', 'gsap']
-  }
+
+    // 多页面入口配置
+    build: {
+      // CSS 内联到 HTML 中，避免 MPA 模式下 CSS 文件引用丢失
+      cssCodeSplit: false,
+      rollupOptions: {
+        input: {
+          index: resolve(__dirname, 'index.html'),
+          home: resolve(__dirname, 'src/view/home/index.html'),
+          achievement: resolve(__dirname, 'src/view/achievement/index.html'),
+          scientist: resolve(__dirname, 'src/view/scientist/index.html'),
+          literature: resolve(__dirname, 'src/view/literature/index.html'),
+          culture: resolve(__dirname, 'src/view/culture/index.html')
+        },
+        output: {
+          entryFileNames: 'js/[name]-[hash].js',
+          chunkFileNames: 'js/[name]-[hash].js',
+          manualChunks: {
+            echarts: ['echarts'],
+            gsap: ['gsap']
+          },
+          assetFileNames: (assetInfo) => {
+            if (/\.(png|jpe?g|gif|svg|webp|ico)$/i.test(assetInfo.name)) {
+              return 'images/[name]-[hash][extname]';
+            }
+            return 'assets/[name]-[hash][extname]';
+          }
+        }
+      },
+      outDir: 'dist',
+      emptyOutDir: true,
+      sourcemap: true
+    },
+
+    // 开发服务器配置
+    server: {
+      port: 5173,
+      open: true,
+      cors: true,
+      proxy: {}
+    },
+
+    // CSS 配置
+    css: {
+      devSourcemap: true
+    },
+
+    // 优化依赖
+    optimizeDeps: {
+      include: ['echarts', 'gsap']
+    }
+  };
 });

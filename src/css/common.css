@@ -28,21 +28,21 @@ body {
   --color-primary: #C8A96E;
   --color-secondary: #4ECDC4;
   --color-accent: #E07B54;
-  
+
   /* 背景色 - 确保深色背景不闪烁 */
   --bg-dark: #0a0e14;
   --bg-card: rgba(13, 17, 23, 0.95);
   --bg-panel: rgba(20, 25, 35, 0.95);
-  
+
   /* 边框 */
   --border-color: rgba(200, 169, 110, 0.3);
   --border-glow: 0 0 20px rgba(200, 169, 110, 0.2);
-  
+
   /* 文字 */
   --text-primary: rgba(255, 255, 255, 0.9);
   --text-secondary: rgba(255, 255, 255, 0.7);
   --text-muted: rgba(255, 255, 255, 0.5);
-  
+
   /* 图表配色 */
   --chart-gold: #C8A96E;
   --chart-cyan: #4ECDC4;
@@ -50,6 +50,13 @@ body {
   --chart-purple: #9B59B6;
   --chart-blue: #3498DB;
   --chart-green: #2ECC71;
+
+  /* z-index 层级管理 */
+  --z-base: 1;
+  --z-chart: 10;
+  --z-header: 50;
+  --z-back-link: 100;
+  --z-modal: 1000;
 }
 
 /* ==================== 页面布局 ==================== */
@@ -57,12 +64,79 @@ body {
   width: 100%;
   min-height: 100vh;
   padding: 0.2rem;
-  background: 
-    radial-gradient(ellipse at top, rgba(200, 169, 110, 0.05) 0%, transparent 50%),
-    radial-gradient(ellipse at bottom, rgba(78, 205, 196, 0.05) 0%, transparent 50%),
+  background:
+    /* 顶部古铜金光晕 */
+    radial-gradient(ellipse 80% 50% at 50% 0%, rgba(200, 169, 110, 0.1) 0%, transparent 60%),
+    /* 底部青瓦光晕 */
+    radial-gradient(ellipse 80% 50% at 50% 100%, rgba(78, 205, 196, 0.08) 0%, transparent 60%),
+    /* 左上角装饰光 */
+    radial-gradient(circle at 0% 0%, rgba(200, 169, 110, 0.06) 0%, transparent 30%),
+    /* 右下角装饰光 */
+    radial-gradient(circle at 100% 100%, rgba(78, 205, 196, 0.06) 0%, transparent 30%),
+    /* 中间微光 */
+    radial-gradient(circle at 50% 50%, rgba(200, 169, 110, 0.02) 0%, transparent 50%),
+    /* 微妙网格纹理 */
+    linear-gradient(rgba(200, 169, 110, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(200, 169, 110, 0.03) 1px, transparent 1px),
     #0a0e14;
+  background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 0.4rem 0.4rem, 0.4rem 0.4rem;
   position: relative;
-  overflow: hidden;
+  /* 允许垂直滚动，防止内容被截断；仅禁止水平滚动 */
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+/* 页面顶部装饰横线 */
+.page-container::before,
+.page-wrapper::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 5%;
+  right: 5%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(200, 169, 110, 0.6), rgba(78, 205, 196, 0.4), rgba(200, 169, 110, 0.6), transparent);
+  pointer-events: none;
+}
+
+/* 页面底部装饰线 */
+.page-container::after,
+.page-wrapper::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 5%;
+  right: 5%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(78, 205, 196, 0.3), transparent);
+  pointer-events: none;
+}
+
+/* page-wrapper: 用于需要独立控制滚动策略的页面 */
+.page-wrapper {
+  width: 100%;
+  min-height: 100vh;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% 0%, rgba(200, 169, 110, 0.1) 0%, transparent 60%),
+    radial-gradient(ellipse 80% 50% at 50% 100%, rgba(78, 205, 196, 0.08) 0%, transparent 60%),
+    radial-gradient(circle at 0% 0%, rgba(200, 169, 110, 0.06) 0%, transparent 30%),
+    radial-gradient(circle at 100% 100%, rgba(78, 205, 196, 0.06) 0%, transparent 30%),
+    radial-gradient(circle at 50% 50%, rgba(200, 169, 110, 0.02) 0%, transparent 50%),
+    linear-gradient(rgba(200, 169, 110, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(200, 169, 110, 0.03) 1px, transparent 1px),
+    var(--bg-dark);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 0.4rem 0.4rem, 0.4rem 0.4rem;
+  position: relative;
+  padding: 0.2rem;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+/* 内容区最大宽度限制，防止大屏下内容过宽 */
+.content-wrapper {
+  max-width: 14rem;
+  margin: 0 auto;
+  width: 100%;
 }
 
 /* 页面标题 */
@@ -71,6 +145,17 @@ body {
   padding: 0.3rem 0;
   margin-bottom: 0.2rem;
   position: relative;
+}
+
+/* 页面标题装饰框 */
+.page-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 25%;
+  right: 25%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(200, 169, 110, 0.3), rgba(78, 205, 196, 0.2), rgba(200, 169, 110, 0.3), transparent);
 }
 
 .page-title {
@@ -109,6 +194,14 @@ body {
   position: relative;
   backdrop-filter: blur(10px);
   transition: all 0.3s ease;
+  /* 默认不裁剪，避免图表提示/标签被截断；需要裁剪的场景单独加 .overflow-hidden */
+  overflow: visible;
+  min-height: 3.5rem;
+}
+
+/* 当面板内有固定高度图表且需要边界控制时，可额外添加此类 */
+.chart-panel.overflow-hidden {
+  overflow: hidden;
 }
 
 .chart-panel::before {
@@ -118,17 +211,22 @@ body {
   left: 0;
   right: 0;
   height: 2px;
-  background: linear-gradient(90deg, 
-    transparent, 
-    var(--color-primary), 
+  background: linear-gradient(90deg,
+    transparent,
+    var(--color-primary),
     var(--color-secondary),
     transparent
   );
-  opacity: 0.6;
+  opacity: 0.5;
+  transition: opacity 0.3s ease;
+}
+
+.chart-panel:hover::before {
+  opacity: 0.8;
 }
 
 .chart-panel:hover {
-  box-shadow: var(--border-glow);
+  box-shadow: var(--border-glow), 0 0 40px rgba(200, 169, 110, 0.1);
   border-color: rgba(200, 169, 110, 0.5);
 }
 
@@ -143,9 +241,39 @@ body {
 /* ==================== 图表容器 ==================== */
 .chart-container {
   width: 100%;
-  height: 100%;
+  /* 默认自适应高度，页面可通过覆写指定固定高度 */
+  height: auto;
+  min-height: 3.2rem;
+}
+
+/* 文化页等使用 .chart 类而非 .chart-container 的图表 */
+.chart {
+  width: 100%;
+  height: 2.5rem;
   min-height: 2.5rem;
 }
+
+/* ==================== 全局大屏网格 ==================== */
+.dashboard-grid {
+  display: grid;
+  gap: 0.15rem;
+  /* 移除固定 height 与 overflow:hidden，防止图表被截断 */
+  min-height: calc(100vh - 1.2rem);
+  padding: 0.1rem 0.15rem;
+  /* 允许网格自身在需要时滚动 */
+  overflow: visible;
+}
+
+/* 网格列数工具类 */
+.grid-cols-1 { grid-template-columns: 1fr; }
+.grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+.grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+.grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
+
+/* 面板跨列工具类（替代各页面重复定义的 .panel-full） */
+.panel-full  { grid-column: 1 / -1; }
+.panel-half  { grid-column: span 1; }
+.panel-third { grid-column: span 1; }
 
 /* ==================== 统计卡片网格 ==================== */
 .stats-grid {
@@ -180,12 +308,30 @@ body {
   text-decoration: none;
   color: var(--text-secondary);
   min-width: 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.nav-item:hover::before {
+  opacity: 1;
 }
 
 .nav-item:hover {
   transform: translateY(-5px);
   border-color: var(--color-primary);
-  box-shadow: 0 10px 30px rgba(200, 169, 110, 0.2);
+  box-shadow: 0 10px 30px rgba(200, 169, 110, 0.2), 0 0 20px rgba(200, 169, 110, 0.1);
 }
 
 .nav-item.active {
@@ -211,11 +357,30 @@ body {
   padding: 0.2rem;
   text-align: center;
   transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--color-primary), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.stat-card:hover::before {
+  opacity: 1;
 }
 
 .stat-card:hover {
   transform: scale(1.02);
-  box-shadow: var(--border-glow);
+  box-shadow: var(--border-glow), 0 0 30px rgba(200, 169, 110, 0.15);
+  border-color: rgba(200, 169, 110, 0.5);
 }
 
 .stat-number {
@@ -242,7 +407,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  z-index: var(--z-modal);
   opacity: 0;
   visibility: hidden;
   transition: all 0.3s ease;
@@ -365,26 +530,6 @@ body {
   to { transform: rotate(360deg); }
 }
 
-/* ==================== 响应式布局 ==================== */
-@media (max-width: 768px) {
-  html {
-    font-size: 50px !important;
-  }
-  
-  .page-title {
-    font-size: 0.24rem;
-  }
-  
-  .nav-container {
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .nav-item {
-    width: 80%;
-  }
-}
-
 /* ==================== 滚动条样式 ==================== */
 ::-webkit-scrollbar {
   width: 6px;
@@ -411,6 +556,25 @@ body {
   border-radius: 8px;
   padding: 0.15rem;
   margin-top: 0.1rem;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.insight-panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(200, 169, 110, 0.5), rgba(78, 205, 196, 0.3), transparent);
+  opacity: 0.5;
+}
+
+.insight-panel:hover {
+  border-color: rgba(200, 169, 110, 0.5);
+  box-shadow: 0 0 20px rgba(200, 169, 110, 0.1);
 }
 
 .insight-title {
@@ -436,6 +600,7 @@ body {
   font-size: 0.1rem;
   color: var(--text-muted);
   opacity: 0.7;
+  pointer-events: none;
 }
 
 /* ==================== 信息弹窗内容样式 ==================== */
@@ -486,4 +651,280 @@ body {
   font-size: 0.1rem;
   color: var(--text-muted);
   margin-top: 0.03rem;
+}
+
+/* ==================== 返回按钮 ==================== */
+.back-link {
+  position: fixed;
+  top: 0.15rem;
+  left: 0.15rem;
+  color: var(--color-primary);
+  text-decoration: none;
+  font-size: 0.13rem;
+  z-index: var(--z-back-link);
+  padding: 0.06rem 0.14rem;
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  background: var(--bg-card);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.back-link:hover {
+  background: rgba(200, 169, 110, 0.15);
+  border-color: var(--color-primary);
+  transform: translateX(-3px);
+}
+
+/* ==================== 文本截断工具类 ==================== */
+.text-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.text-ellipsis-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.text-ellipsis-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ==================== flex 工具类 ==================== */
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.items-center { align-items: center; }
+.justify-center { justify-content: center; }
+.justify-between { justify-content: space-between; }
+.flex-wrap { flex-wrap: wrap; }
+.flex-1 { flex: 1; }
+.gap-sm { gap: 0.1rem; }
+.gap-md { gap: 0.15rem; }
+.gap-lg { gap: 0.2rem; }
+
+/* ==================== 响应式布局 ==================== */
+@media (max-width: 768px) {
+  html {
+    font-size: 50px !important;
+  }
+
+  .page-title {
+    font-size: 0.24rem;
+  }
+
+  .nav-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .nav-item {
+    width: 80%;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* 小屏下网格自动降为1列，避免内容被挤压 */
+  .dashboard-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .grid-cols-2,
+  .grid-cols-3,
+  .grid-cols-4 {
+    grid-template-columns: 1fr !important;
+  }
+
+  .panel-full,
+  .panel-half,
+  .panel-third {
+    grid-column: 1 / -1 !important;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1200px) {
+  .grid-cols-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ==================== 中式装饰元素 ==================== */
+
+/* 页面角落祥云装饰 */
+.page-container::after,
+.page-wrapper::after {
+  content: '';
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 2rem;
+  height: 2rem;
+  background: radial-gradient(circle at 0% 100%, rgba(200, 169, 110, 0.04) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* 标题发光脉冲动画 */
+@keyframes titlePulse {
+  0%, 100% { text-shadow: 0 0 20px rgba(200, 169, 110, 0.2); }
+  50% { text-shadow: 0 0 40px rgba(200, 169, 110, 0.4), 0 0 60px rgba(200, 169, 110, 0.1); }
+}
+
+.page-title {
+  animation: titlePulse 4s ease-in-out infinite;
+}
+
+/* 面板边框呼吸动画 */
+@keyframes borderGlow {
+  0%, 100% { border-color: rgba(200, 169, 110, 0.3); }
+  50% { border-color: rgba(200, 169, 110, 0.5); }
+}
+
+.chart-panel:hover {
+  animation: borderGlow 2s ease-in-out infinite;
+}
+
+/* 统计数字悬浮光效 */
+@keyframes numberFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+.stat-card:hover .stat-number {
+  animation: numberFloat 1s ease-in-out infinite;
+  color: #fff;
+  text-shadow: 0 0 15px rgba(200, 169, 110, 0.6);
+}
+
+/* 飘浮粒子动画（CSS实现，与首页JS叶片互补） */
+@keyframes particleFloat {
+  0% {
+    opacity: 0;
+    transform: translateY(0) rotate(0deg);
+  }
+  20% {
+    opacity: 0.3;
+  }
+  80% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-100vh) rotate(360deg);
+  }
+}
+
+.particle {
+  position: fixed;
+  width: 3px;
+  height: 3px;
+  background: var(--color-primary);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  animation: particleFloat linear infinite;
+}
+
+/* 回纹装饰条 */
+.decorative-bar {
+  position: relative;
+  height: 2px;
+  margin: 0.15rem 0;
+  background: linear-gradient(90deg,
+    transparent,
+    rgba(200, 169, 110, 0.2) 10%,
+    rgba(200, 169, 110, 0.4) 30%,
+    rgba(78, 205, 196, 0.3) 50%,
+    rgba(200, 169, 110, 0.4) 70%,
+    rgba(200, 169, 110, 0.2) 90%,
+    transparent
+  );
+}
+
+.decorative-bar::before,
+.decorative-bar::after {
+  content: '◇';
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(200, 169, 110, 0.4);
+  font-size: 0.12rem;
+}
+
+.decorative-bar::before {
+  left: 20%;
+}
+
+.decorative-bar::after {
+  right: 20%;
+}
+
+/* 面板标题左侧竖线脉冲 */
+@keyframes leftBorderPulse {
+  0%, 100% { border-left-color: var(--color-primary); }
+  50% { border-left-color: var(--color-secondary); }
+}
+
+.panel-title {
+  animation: leftBorderPulse 6s ease-in-out infinite;
+}
+
+/* 导航图标悬浮弹跳 */
+.nav-icon {
+  transition: transform 0.3s ease;
+}
+
+.nav-item:hover .nav-icon {
+  transform: scale(1.2);
+}
+
+/* 页面footer样式统一 */
+.page-footer {
+  text-align: center;
+  padding: 0.2rem 0;
+  margin-top: 0.2rem;
+  border-top: 1px solid rgba(200, 169, 110, 0.15);
+  position: relative;
+}
+
+.page-footer::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: 20%;
+  right: 20%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(200, 169, 110, 0.3), transparent);
+}
+
+/* ==================== 选项卡/标签通用增强 ==================== */
+.tab-btn, .dynasty-btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.tab-btn::after, .dynasty-btn::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.3s ease, height 0.3s ease;
+}
+
+.tab-btn:active::after, .dynasty-btn:active::after {
+  width: 200%;
+  height: 200%;
 }
