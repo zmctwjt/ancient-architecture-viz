@@ -1,0 +1,305 @@
+{
+  "meta": {
+    "title": "中国古代建筑著作数据",
+    "source": "百度百科、故宫博物院、权威文献",
+    "total": 14,
+    "generated_at": "2026-04-21T09:33:35.386158"
+  },
+  "dynasty_distribution": [
+    {
+      "name": "明",
+      "value": 5,
+      "books": [
+        "园冶",
+        "鲁班经",
+        "天工开物",
+        "长物志",
+        "髹饰录"
+      ]
+    },
+    {
+      "name": "北宋",
+      "value": 3,
+      "books": [
+        "营造法式",
+        "木经",
+        "梦溪笔谈"
+      ]
+    },
+    {
+      "name": "清",
+      "value": 3,
+      "books": [
+        "工程做法",
+        "闲情偶寄",
+        "工段营造录"
+      ]
+    },
+    {
+      "name": "春秋—战国",
+      "value": 1,
+      "books": [
+        "考工记"
+      ]
+    },
+    {
+      "name": "唐",
+      "value": 1,
+      "books": [
+        "营缮令"
+      ]
+    },
+    {
+      "name": "元",
+      "value": 1,
+      "books": [
+        "经世大典"
+      ]
+    }
+  ],
+  "type_distribution": [
+    {
+      "name": "其他",
+      "value": 14
+    }
+  ],
+  "survival_distribution": [
+    {
+      "name": "未知",
+      "value": 14
+    }
+  ],
+  "sunburst_data": [
+    {
+      "name": "其他",
+      "children": [
+        {
+          "name": "考工记",
+          "value": 1,
+          "dynasty": "春秋—战国",
+          "author": "齐国工匠（佚名）",
+          "survival": "未知"
+        },
+        {
+          "name": "营造法式",
+          "value": 1,
+          "dynasty": "北宋",
+          "author": "李诫",
+          "survival": "未知"
+        },
+        {
+          "name": "木经",
+          "value": 1,
+          "dynasty": "北宋",
+          "author": "喻皓",
+          "survival": "未知"
+        },
+        {
+          "name": "园冶",
+          "value": 1,
+          "dynasty": "明",
+          "author": "计成",
+          "survival": "未知"
+        },
+        {
+          "name": "鲁班经",
+          "value": 1,
+          "dynasty": "明",
+          "author": "午荣（汇编）",
+          "survival": "未知"
+        },
+        {
+          "name": "工程做法",
+          "value": 1,
+          "dynasty": "清",
+          "author": "工部（官修）",
+          "survival": "未知"
+        },
+        {
+          "name": "梦溪笔谈",
+          "value": 1,
+          "dynasty": "北宋",
+          "author": "沈括",
+          "survival": "未知"
+        },
+        {
+          "name": "营缮令",
+          "value": 1,
+          "dynasty": "唐",
+          "author": "唐朝工部（官修）",
+          "survival": "未知"
+        },
+        {
+          "name": "天工开物",
+          "value": 1,
+          "dynasty": "明",
+          "author": "宋应星",
+          "survival": "未知"
+        },
+        {
+          "name": "长物志",
+          "value": 1,
+          "dynasty": "明",
+          "author": "文震亨",
+          "survival": "未知"
+        },
+        {
+          "name": "闲情偶寄",
+          "value": 1,
+          "dynasty": "清",
+          "author": "李渔",
+          "survival": "未知"
+        },
+        {
+          "name": "工段营造录",
+          "value": 1,
+          "dynasty": "清",
+          "author": "李斗",
+          "survival": "未知"
+        },
+        {
+          "name": "经世大典",
+          "value": 1,
+          "dynasty": "元",
+          "author": "脱脱等（官修）",
+          "survival": "未知"
+        },
+        {
+          "name": "髹饰录",
+          "value": 1,
+          "dynasty": "明",
+          "author": "黄成（著）、杨明（注）",
+          "survival": "未知"
+        }
+      ]
+    }
+  ],
+  "timeline_data": [
+    {
+      "title": "考工记",
+      "author": "齐国工匠（佚名）",
+      "dynasty": "春秋—战国",
+      "period": "",
+      "type": "其他",
+      "survival_status": "未知",
+      "significance": ""
+    },
+    {
+      "title": "营造法式",
+      "author": "李诫",
+      "dynasty": "北宋",
+      "period": "",
+      "type": "其他",
+      "survival_status": "未知",
+      "significance": ""
+    },
+    {
+      "title": "木经",
+      "author": "喻皓",
+      "dynasty": "北宋",
+      "period": "",
+      "type": "其他",
+      "survival_status": "未知",
+      "significance": ""
+    },
+    {
+      "title": "园冶",
+      "author": "计成",
+      "dynasty": "明",
+      "period": "",
+      "type": "其他",
+      "survival_status": "未知",
+      "significance": ""
+    },
+    {
+      "title": "鲁班经",
+      "author": "午荣（汇编）",
+      "dynasty": "明",
+      "period": "",
+      "type": "其他",
+      "survival_status": "未知",
+      "significance": ""
+    },
+    {
+      "title": "工程做法",
+      "author": "工部（官修）",
+      "dynasty": "清",
+      "period": "",
+      "type": "其他",
+      "survival_status": "未知",
+      "significance": ""
+    },
+    {
+      "title": "梦溪笔谈",
+      "author": "沈括",
+      "dynasty": "北宋",
+      "period": "",
+      "type": "其他",
+      "survival_status": "未知",
+      "significance": ""
+    },
+    {
+      "title": "营缮令",
+      "author": "唐朝工部（官修）",
+      "dynasty": "唐",
+      "period": "",
+      "type": "其他",
+      "survival_status": "未知",
+      "significance": ""
+    },
+    {
+      "title": "天工开物",
+      "author": "宋应星",
+      "dynasty": "明",
+      "period": "",
+      "type": "其他",
+      "survival_status": "未知",
+      "significance": ""
+    },
+    {
+      "title": "长物志",
+      "author": "文震亨",
+      "dynasty": "明",
+      "period": "",
+      "type": "其他",
+      "survival_status": "未知",
+      "significance": ""
+    },
+    {
+      "title": "闲情偶寄",
+      "author": "李渔",
+      "dynasty": "清",
+      "period": "",
+      "type": "其他",
+      "survival_status": "未知",
+      "significance": ""
+    },
+    {
+      "title": "工段营造录",
+      "author": "李斗",
+      "dynasty": "清",
+      "period": "",
+      "type": "其他",
+      "survival_status": "未知",
+      "significance": ""
+    },
+    {
+      "title": "经世大典",
+      "author": "脱脱等（官修）",
+      "dynasty": "元",
+      "period": "",
+      "type": "其他",
+      "survival_status": "未知",
+      "significance": ""
+    },
+    {
+      "title": "髹饰录",
+      "author": "黄成（著）、杨明（注）",
+      "dynasty": "明",
+      "period": "",
+      "type": "其他",
+      "survival_status": "未知",
+      "significance": ""
+    }
+  ]
+}

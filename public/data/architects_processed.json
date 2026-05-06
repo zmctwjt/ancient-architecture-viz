@@ -1,0 +1,713 @@
+{
+  "meta": {
+    "title": "中国古代建筑科学家数据",
+    "source": "百度百科、权威文献",
+    "total": 20,
+    "generated_at": "2026-04-21T09:33:35.383505"
+  },
+  "dynasty_distribution": [
+    {
+      "name": "元",
+      "value": 3,
+      "architects": [
+        "刘秉忠",
+        "也黑迭儿",
+        "张志纯"
+      ]
+    },
+    {
+      "name": "明",
+      "value": 3,
+      "architects": [
+        "蒯祥",
+        "阮安",
+        "计成"
+      ]
+    },
+    {
+      "name": "清",
+      "value": 3,
+      "architects": [
+        "梁九",
+        "雷发达",
+        "张然"
+      ]
+    },
+    {
+      "name": "北魏",
+      "value": 2,
+      "architects": [
+        "蒋少游",
+        "李冲"
+      ]
+    },
+    {
+      "name": "隋",
+      "value": 2,
+      "architects": [
+        "宇文恺",
+        "李春"
+      ]
+    },
+    {
+      "name": "宋",
+      "value": 2,
+      "architects": [
+        "喻皓",
+        "李诫"
+      ]
+    },
+    {
+      "name": "明末清初",
+      "value": 2,
+      "architects": [
+        "冯巧",
+        "张涟"
+      ]
+    },
+    {
+      "name": "春秋",
+      "value": 1,
+      "architects": [
+        "鲁班"
+      ]
+    },
+    {
+      "name": "汉",
+      "value": 1,
+      "architects": [
+        "阳城延"
+      ]
+    },
+    {
+      "name": "唐",
+      "value": 1,
+      "architects": [
+        "阎立德"
+      ]
+    }
+  ],
+  "influence_distribution": [
+    {
+      "name": "极高(90-100)",
+      "value": 0
+    },
+    {
+      "name": "高(80-89)",
+      "value": 0
+    },
+    {
+      "name": "中(60-79)",
+      "value": 0
+    },
+    {
+      "name": "低(<60)",
+      "value": 20
+    }
+  ],
+  "graph_data": {
+    "nodes": [
+      {
+        "id": "arch_0",
+        "name": "鲁班",
+        "category": 0,
+        "symbolSize": 2.0,
+        "value": 10,
+        "dynasty": "春秋",
+        "draggable": true
+      },
+      {
+        "id": "arch_1",
+        "name": "阳城延",
+        "category": 0,
+        "symbolSize": 1.0,
+        "value": 5,
+        "dynasty": "汉",
+        "draggable": true
+      },
+      {
+        "id": "arch_2",
+        "name": "蒋少游",
+        "category": 0,
+        "symbolSize": 1.2,
+        "value": 6,
+        "dynasty": "北魏",
+        "draggable": true
+      },
+      {
+        "id": "arch_3",
+        "name": "宇文恺",
+        "category": 0,
+        "symbolSize": 1.8,
+        "value": 9,
+        "dynasty": "隋",
+        "draggable": true
+      },
+      {
+        "id": "arch_4",
+        "name": "阎立德",
+        "category": 0,
+        "symbolSize": 1.4,
+        "value": 7,
+        "dynasty": "唐",
+        "draggable": true
+      },
+      {
+        "id": "arch_5",
+        "name": "李春",
+        "category": 0,
+        "symbolSize": 2.0,
+        "value": 10,
+        "dynasty": "隋",
+        "draggable": true
+      },
+      {
+        "id": "arch_6",
+        "name": "喻皓",
+        "category": 0,
+        "symbolSize": 1.8,
+        "value": 9,
+        "dynasty": "宋",
+        "draggable": true
+      },
+      {
+        "id": "arch_7",
+        "name": "李诫",
+        "category": 0,
+        "symbolSize": 2.0,
+        "value": 10,
+        "dynasty": "宋",
+        "draggable": true
+      },
+      {
+        "id": "arch_8",
+        "name": "刘秉忠",
+        "category": 0,
+        "symbolSize": 1.8,
+        "value": 9,
+        "dynasty": "元",
+        "draggable": true
+      },
+      {
+        "id": "arch_9",
+        "name": "也黑迭儿",
+        "category": 0,
+        "symbolSize": 1.4,
+        "value": 7,
+        "dynasty": "元",
+        "draggable": true
+      },
+      {
+        "id": "arch_10",
+        "name": "蒯祥",
+        "category": 0,
+        "symbolSize": 2.0,
+        "value": 10,
+        "dynasty": "明",
+        "draggable": true
+      },
+      {
+        "id": "arch_11",
+        "name": "阮安",
+        "category": 0,
+        "symbolSize": 1.6,
+        "value": 8,
+        "dynasty": "明",
+        "draggable": true
+      },
+      {
+        "id": "arch_12",
+        "name": "计成",
+        "category": 0,
+        "symbolSize": 2.0,
+        "value": 10,
+        "dynasty": "明",
+        "draggable": true
+      },
+      {
+        "id": "arch_13",
+        "name": "冯巧",
+        "category": 0,
+        "symbolSize": 1.2,
+        "value": 6,
+        "dynasty": "明末清初",
+        "draggable": true
+      },
+      {
+        "id": "arch_14",
+        "name": "梁九",
+        "category": 0,
+        "symbolSize": 1.8,
+        "value": 9,
+        "dynasty": "清",
+        "draggable": true
+      },
+      {
+        "id": "arch_15",
+        "name": "雷发达",
+        "category": 0,
+        "symbolSize": 2.0,
+        "value": 10,
+        "dynasty": "清",
+        "draggable": true
+      },
+      {
+        "id": "arch_16",
+        "name": "张涟",
+        "category": 0,
+        "symbolSize": 1.4,
+        "value": 7,
+        "dynasty": "明末清初",
+        "draggable": true
+      },
+      {
+        "id": "arch_17",
+        "name": "张然",
+        "category": 0,
+        "symbolSize": 1.4,
+        "value": 7,
+        "dynasty": "清",
+        "draggable": true
+      },
+      {
+        "id": "arch_18",
+        "name": "李冲",
+        "category": 0,
+        "symbolSize": 1.4,
+        "value": 7,
+        "dynasty": "北魏",
+        "draggable": true
+      },
+      {
+        "id": "arch_19",
+        "name": "张志纯",
+        "category": 0,
+        "symbolSize": 1.4,
+        "value": 7,
+        "dynasty": "元",
+        "draggable": true
+      },
+      {
+        "id": "dynasty_0",
+        "name": "春秋",
+        "category": 1,
+        "symbolSize": 30,
+        "value": 1,
+        "draggable": true
+      },
+      {
+        "id": "dynasty_1",
+        "name": "汉",
+        "category": 1,
+        "symbolSize": 30,
+        "value": 1,
+        "draggable": true
+      },
+      {
+        "id": "dynasty_2",
+        "name": "北魏",
+        "category": 1,
+        "symbolSize": 30,
+        "value": 2,
+        "draggable": true
+      },
+      {
+        "id": "dynasty_3",
+        "name": "隋",
+        "category": 1,
+        "symbolSize": 30,
+        "value": 2,
+        "draggable": true
+      },
+      {
+        "id": "dynasty_4",
+        "name": "唐",
+        "category": 1,
+        "symbolSize": 30,
+        "value": 1,
+        "draggable": true
+      },
+      {
+        "id": "dynasty_5",
+        "name": "宋",
+        "category": 1,
+        "symbolSize": 30,
+        "value": 2,
+        "draggable": true
+      },
+      {
+        "id": "dynasty_6",
+        "name": "元",
+        "category": 1,
+        "symbolSize": 30,
+        "value": 3,
+        "draggable": true
+      },
+      {
+        "id": "dynasty_7",
+        "name": "明",
+        "category": 1,
+        "symbolSize": 30,
+        "value": 3,
+        "draggable": true
+      },
+      {
+        "id": "dynasty_8",
+        "name": "明末清初",
+        "category": 1,
+        "symbolSize": 30,
+        "value": 2,
+        "draggable": true
+      },
+      {
+        "id": "dynasty_9",
+        "name": "清",
+        "category": 1,
+        "symbolSize": 30,
+        "value": 3,
+        "draggable": true
+      }
+    ],
+    "links": [
+      {
+        "source": "arch_0",
+        "target": "dynasty_0",
+        "value": 1
+      },
+      {
+        "source": "arch_1",
+        "target": "dynasty_1",
+        "value": 1
+      },
+      {
+        "source": "arch_2",
+        "target": "dynasty_2",
+        "value": 1
+      },
+      {
+        "source": "arch_18",
+        "target": "dynasty_2",
+        "value": 1
+      },
+      {
+        "source": "arch_3",
+        "target": "dynasty_3",
+        "value": 1
+      },
+      {
+        "source": "arch_5",
+        "target": "dynasty_3",
+        "value": 1
+      },
+      {
+        "source": "arch_4",
+        "target": "dynasty_4",
+        "value": 1
+      },
+      {
+        "source": "arch_6",
+        "target": "dynasty_5",
+        "value": 1
+      },
+      {
+        "source": "arch_7",
+        "target": "dynasty_5",
+        "value": 1
+      },
+      {
+        "source": "arch_8",
+        "target": "dynasty_6",
+        "value": 1
+      },
+      {
+        "source": "arch_9",
+        "target": "dynasty_6",
+        "value": 1
+      },
+      {
+        "source": "arch_19",
+        "target": "dynasty_6",
+        "value": 1
+      },
+      {
+        "source": "arch_10",
+        "target": "dynasty_7",
+        "value": 1
+      },
+      {
+        "source": "arch_11",
+        "target": "dynasty_7",
+        "value": 1
+      },
+      {
+        "source": "arch_12",
+        "target": "dynasty_7",
+        "value": 1
+      },
+      {
+        "source": "arch_13",
+        "target": "dynasty_8",
+        "value": 1
+      },
+      {
+        "source": "arch_16",
+        "target": "dynasty_8",
+        "value": 1
+      },
+      {
+        "source": "arch_14",
+        "target": "dynasty_9",
+        "value": 1
+      },
+      {
+        "source": "arch_15",
+        "target": "dynasty_9",
+        "value": 1
+      },
+      {
+        "source": "arch_17",
+        "target": "dynasty_9",
+        "value": 1
+      }
+    ],
+    "categories": [
+      {
+        "name": "建筑科学家"
+      },
+      {
+        "name": "朝代"
+      }
+    ]
+  },
+  "timeline_data": [
+    {
+      "name": "鲁班",
+      "dynasty": "春秋",
+      "period": "约公元前507年—约公元前444年",
+      "influence_score": 10,
+      "major_works": [
+        "鲁班锁",
+        "云梯",
+        "磨",
+        "石磨"
+      ],
+      "achievements": "春秋时期鲁国工匠，被尊为中国木工、建筑业的祖师爷，发明了锯子、刨子、钻子等木工工具，传说创造了云梯和木鸢。"
+    },
+    {
+      "name": "李春",
+      "dynasty": "隋",
+      "period": "生卒年不详（隋代）",
+      "influence_score": 10,
+      "major_works": [
+        "赵州桥（安济桥）"
+      ],
+      "achievements": "隋代著名工匠，设计并主持建造了世界上现存最早的石拱桥——赵州桥（安济桥）。赵州桥建于公元605—617年，净跨37.02米，采用创新的敞肩拱结构，比欧洲同类结构早700余年，是世界桥梁史上的里程碑。"
+    },
+    {
+      "name": "李诫",
+      "dynasty": "宋",
+      "period": "1065年—1110年",
+      "influence_score": 10,
+      "major_works": [
+        "辟雍宫",
+        "龙德宫",
+        "棣华室",
+        "五侯府",
+        "朱雀门",
+        "开封府衙"
+      ],
+      "achievements": "北宋著名建筑师和建筑学家，官至将作监（相当于建设部部长）。主持编写《营造法式》，这是中国现存最完整的古代建筑技术规范，涵盖建筑设计、施工技术、材料规格、劳动定额等，是古代建筑史上的划时代巨著。"
+    },
+    {
+      "name": "蒯祥",
+      "dynasty": "明",
+      "period": "1397年—1481年",
+      "influence_score": 10,
+      "major_works": [
+        "北京故宫承天门（天安门）",
+        "北京故宫三大殿",
+        "裕陵"
+      ],
+      "achievements": "明代著名建筑工匠，以木工起家，凭借精湛技艺升至工部左侍郎。主持设计和建造了北京故宫的承天门（天安门前身）、三大殿等核心建筑，被明英宗赞誉为'蒯鲁班'，是北京故宫建筑群的最重要设计者之一。"
+    },
+    {
+      "name": "计成",
+      "dynasty": "明",
+      "period": "1582年—约1642年",
+      "influence_score": 10,
+      "major_works": [
+        "东第园（扬州）",
+        "寤园（常州）",
+        "影园（扬州）"
+      ],
+      "achievements": "明代著名造园家，撰写了中国第一部系统论述造园艺术的专著《园冶》（1634年），涵盖造园的立意、相地、布局、叠山、理水、建筑等全方位理论，被誉为世界造园学的经典之作，对日本、欧洲园林艺术均产生影响。"
+    },
+    {
+      "name": "雷发达",
+      "dynasty": "清",
+      "period": "1619年—1693年",
+      "influence_score": 10,
+      "major_works": [
+        "圆明园",
+        "颐和园",
+        "避暑山庄",
+        "清西陵",
+        "清东陵"
+      ],
+      "achievements": "清代著名建筑师，样式雷世家创始人，凭精湛技艺得到康熙赏识，进入宫廷样式房任掌案。此后雷氏家族历经八代（约200年），负责几乎所有清代皇家建筑的设计，留下的建筑图档（烫样）是中国建筑史上无与伦比的珍贵遗产。"
+    },
+    {
+      "name": "宇文恺",
+      "dynasty": "隋",
+      "period": "555年—612年",
+      "influence_score": 9,
+      "major_works": [
+        "隋大兴城（长安城）",
+        "隋东都洛阳城",
+        "仁寿宫"
+      ],
+      "achievements": "隋朝著名建筑师，主持设计并营建了隋大兴城（即唐长安城），这是中国历史上规划最为严整的都城，面积达84平方公里，其规划思想对日本奈良、京都等城市产生深远影响。"
+    },
+    {
+      "name": "喻皓",
+      "dynasty": "宋",
+      "period": "约920年—约995年",
+      "influence_score": 9,
+      "major_works": [
+        "开封开宝寺塔（铁塔）",
+        "杭州梵天寺木塔"
+      ],
+      "achievements": "北宋初年著名建筑工匠，以精通高层木结构建筑著称，撰写了中国第一部建筑专著《木经》（已失传）。曾主持修建开封开宝寺木塔，采用预应力技巧处理地基沉降，其建筑技艺被同时代文人沈括记录于《梦溪笔谈》中。"
+    },
+    {
+      "name": "刘秉忠",
+      "dynasty": "元",
+      "period": "1216年—1274年",
+      "influence_score": 9,
+      "major_works": [
+        "元大都（北京城前身）规划",
+        "元上都"
+      ],
+      "achievements": "元朝著名政治家和城市规划师，主持规划元大都（今北京城的前身），其规划格局影响了明清北京城的形制，被誉为'北京城的设计师'。"
+    },
+    {
+      "name": "梁九",
+      "dynasty": "清",
+      "period": "约1618年—约1698年",
+      "influence_score": 9,
+      "major_works": [
+        "故宫太和殿重建",
+        "景山诸殿"
+      ],
+      "achievements": "清代著名建筑工匠，师从冯巧，主持康熙年间太和殿的重建工程。太和殿是现存规模最大的古代木构建筑，梁九以精湛技艺保证了工程质量，被誉为清初建筑业的最杰出匠师。"
+    },
+    {
+      "name": "阮安",
+      "dynasty": "明",
+      "period": "约1380年—约1453年",
+      "influence_score": 8,
+      "major_works": [
+        "北京三大殿修复",
+        "北京城池扩建",
+        "通惠河疏浚"
+      ],
+      "achievements": "明代著名建筑工程师，虽为宦官，但精通建筑与水利工程，主持了多次北京城的重大建设工程，包括三大殿修复、城池扩建和通惠河疏浚，在明代建筑史上地位举足轻重。"
+    },
+    {
+      "name": "阎立德",
+      "dynasty": "唐",
+      "period": "约593年—656年",
+      "influence_score": 7,
+      "major_works": [
+        "唐昭陵营建",
+        "翠微宫",
+        "玉华宫"
+      ],
+      "achievements": "唐代著名建筑师，唐太宗时期的工部尚书，主持营建昭陵等大型皇家建筑工程，与其弟阎立本（著名画家）并称，是唐代建筑与艺术的代表人物。"
+    },
+    {
+      "name": "也黑迭儿",
+      "dynasty": "元",
+      "period": "生卒年不详（元代）",
+      "influence_score": 7,
+      "major_works": [
+        "元大都宫殿群"
+      ],
+      "achievements": "元代著名建筑师，元世祖忽必烈时期主持营建元大都宫殿，是元朝宫廷建筑的重要设计者，其工程融合了蒙古、汉、藏等多民族建筑艺术风格。"
+    },
+    {
+      "name": "张涟",
+      "dynasty": "明末清初",
+      "period": "约1587年—约1671年",
+      "influence_score": 7,
+      "major_works": [
+        "弇山园（太仓）",
+        "豫园修缮（上海）"
+      ],
+      "achievements": "明末清初著名造园叠山匠师，以叠石造山技艺享誉江南，开创了'张氏叠山'流派，影响清代宫廷叠山造园，其子张然继承衣钵，进入清宫主持御苑造园工程。"
+    },
+    {
+      "name": "张然",
+      "dynasty": "清",
+      "period": "约1625年—约1700年",
+      "influence_score": 7,
+      "major_works": [
+        "玉泉山静明园叠山",
+        "瀛台修缮"
+      ],
+      "achievements": "清代著名宫廷造园叠山匠师，张涟之子，继承父业进入清宫，主持玉泉山静明园等皇家园林的叠石造山工程，代表了清代皇家园林叠山艺术的最高水平。"
+    },
+    {
+      "name": "李冲",
+      "dynasty": "北魏",
+      "period": "450年—498年",
+      "influence_score": 7,
+      "major_works": [
+        "北魏洛阳城营建"
+      ],
+      "achievements": "北魏孝文帝时期的著名官员和建筑主管，与蒋少游共同主持北魏迁都后洛阳城的营建工程，奠定了洛阳作为北朝政治文化中心的城市格局。"
+    },
+    {
+      "name": "张志纯",
+      "dynasty": "元",
+      "period": "约1195年—约1275年",
+      "influence_score": 7,
+      "major_works": [
+        "永乐宫（芮城）壁画工程监造"
+      ],
+      "achievements": "元代著名道士及建筑监管者，主持山西芮城永乐宫的营建工程，永乐宫保存了中国面积最大的元代道教壁画（1000余平方米），是元代建筑与绘画艺术的集大成之作。"
+    },
+    {
+      "name": "蒋少游",
+      "dynasty": "北魏",
+      "period": "生卒年不详（北魏）",
+      "influence_score": 6,
+      "major_works": [
+        "洛阳太极殿",
+        "洛阳城规划"
+      ],
+      "achievements": "北魏著名建筑师，主持迁都洛阳后的都城营建，设计太极殿等宫殿建筑群，为北魏建筑鼎盛时期的代表人物。"
+    },
+    {
+      "name": "冯巧",
+      "dynasty": "明末清初",
+      "period": "生卒年不详（明末清初）",
+      "influence_score": 6,
+      "major_works": [
+        "明末清初宫殿营造"
+      ],
+      "achievements": "明末清初著名工匠，技艺精湛，曾任职于工部，多次负责宫殿营造事务，是梁九的师父，对清初宫廷建筑技艺的传承起到重要作用。"
+    },
+    {
+      "name": "阳城延",
+      "dynasty": "汉",
+      "period": "生卒年不详（西汉）",
+      "influence_score": 5,
+      "major_works": [
+        "未央宫扩建",
+        "长安城营建"
+      ],
+      "achievements": "西汉建筑官员，曾主持长安城及未央宫营建工程，是西汉时期著名的宫廷建筑主管官员。"
+    }
+  ]
+}
