@@ -61,6 +61,24 @@ export async function loadData(url) {
 }
 
 /**
+ * 获取数据文件URL（兼容dev和build环境的base路径）
+ */
+export function getDataUrl(filename) {
+  const base = import.meta.env.BASE_URL || '/';
+  return base + 'data/' + filename;
+}
+
+/**
+ * 加载 public/data/ 下的JSON文件
+ * @param {string} filename - 文件名，如 'buildings.json'
+ * @returns {Promise<object|null>}
+ */
+export async function loadJson(filename) {
+  const url = getDataUrl(filename);
+  return loadData(url);
+}
+
+/**
  * 创建图表容器
  */
 export function createChartContainer(id, className = 'chart-container') {
