@@ -2,12 +2,15 @@
  * 信息弹窗工具 - 用于显示图表点击后的详细信息
  */
 
+import { ORNAMENTS, ornamentByCategory } from './ornaments.js';
+
 /**
  * 创建并显示信息弹窗
  * @param {Object} options - 弹窗配置
  * @param {string} options.title - 标题
  * @param {string} options.content - HTML内容
  * @param {Object} options.data - 数据对象（可选）
+ * @param {string|boolean} options.ornament - 顶部线描装饰：建筑类别字符串，false 则隐藏（默认使用通用飞檐）
  */
 export function showInfoModal(options) {
   // 移除已存在的弹窗
@@ -107,8 +110,20 @@ export function showInfoModal(options) {
   `;
   contentEl.innerHTML = options.content;
 
+  // 顶部古建筑线描装饰（提升视觉层次）
+  if (options.ornament !== false) {
+    const orn = document.createElement('div');
+    orn.className = 'info-modal-ornament';
+    orn.innerHTML = options.ornament
+      ? ornamentByCategory(options.ornament)
+      : ORNAMENTS.default;
+    content.appendChild(closeBtn);
+    content.appendChild(orn);
+  } else {
+    content.appendChild(closeBtn);
+  }
+
   // 组装
-  content.appendChild(closeBtn);
   content.appendChild(titleEl);
   content.appendChild(contentEl);
   overlay.appendChild(content);

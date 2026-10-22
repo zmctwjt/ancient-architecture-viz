@@ -22,7 +22,9 @@ function initApp() {
   effects.initNavTransitions();
   effects.initBackButton();
   
-  console.log('🎋 千年营造·华夏砖木 - 应用初始化完成');
+  if (import.meta.env && import.meta.env.DEV) {
+    console.log('千年营造·华夏砖木 - 应用初始化完成');
+  }
 }
 
 /**

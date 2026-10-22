@@ -15,7 +15,7 @@ html {
 }
 
 body {
-  font-family: 'Microsoft YaHei', 'PingFang SC', 'Noto Sans SC', sans-serif;
+  font-family: var(--font-sans);
   background: #0a0e14;
   color: rgba(255, 255, 255, 0.9);
   min-height: 100vh;
@@ -50,6 +50,12 @@ body {
   --chart-purple: #9B59B6;
   --chart-blue: #3498DB;
   --chart-green: #2ECC71;
+
+
+  /* 字体栈：标题用中文衬线（等效思源宋体质感），正文用无衬线 */
+  --font-serif: 'Songti SC', 'STSong', 'SimSun', 'Source Han Serif SC', 'Noto Serif SC', serif;
+  --font-sans: 'Microsoft YaHei', 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans SC', sans-serif;
+  --font-num: 'DIN Alternate', 'Bahnschrift', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
 
   /* z-index 层级管理 */
   --z-base: 1;
@@ -159,6 +165,7 @@ body {
 }
 
 .page-title {
+  font-family: var(--font-serif);
   font-size: 0.36rem;
   font-weight: 600;
   color: var(--color-primary);
@@ -231,6 +238,7 @@ body {
 }
 
 .panel-title {
+  font-family: var(--font-serif);
   font-size: 0.16rem;
   color: var(--color-primary);
   margin-bottom: 0.1rem;
@@ -387,7 +395,8 @@ body {
   font-size: 0.36rem;
   font-weight: 700;
   color: var(--color-primary);
-  font-family: 'Orbitron', 'Arial', sans-serif;
+  font-family: var(--font-num);
+  letter-spacing: 0.02em;
 }
 
 .stat-label {
@@ -927,4 +936,140 @@ body {
 .tab-btn:active::after, .dynasty-btn:active::after {
   width: 200%;
   height: 200%;
+}
+
+/* ==================== 古建筑线描装饰系统 ==================== */
+/* 用于弹窗顶部、面板装饰、空状态等位置，统一线描语言 */
+
+.info-modal-ornament {
+  width: 100%;
+  max-width: 3.2rem;
+  margin: 0 auto 0.12rem;
+  color: rgba(200, 169, 110, 0.55);
+  opacity: 0.9;
+}
+.info-modal-ornament svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* 面板装饰图 */
+.ornament-figure {
+  margin: 0;
+  padding: 0.1rem 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: rgba(200, 169, 110, 0.5);
+}
+.ornament-figure svg {
+  width: 1.2rem;
+  height: auto;
+  display: block;
+}
+.ornament-caption {
+  margin-top: 0.06rem;
+  font-size: 0.11rem;
+  letter-spacing: 0.02rem;
+  color: rgba(255, 255, 255, 0.45);
+  text-align: center;
+}
+
+/* 首页 Hero 飞檐水印 */
+.hero-ornament {
+  position: relative;
+  width: 100%;
+  max-width: 6rem;
+  margin: 0.05rem auto 0;
+  padding: 0;
+  color: rgba(200, 169, 110, 0.16);
+  pointer-events: none;
+}
+.hero-ornament svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* 建筑类别小徽标（卡片角标） */
+.type-badge-ornament {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 0.3rem;
+  height: 0.3rem;
+  color: rgba(200, 169, 110, 0.75);
+  flex: 0 0 auto;
+}
+.type-badge-ornament svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* ==================== 印章式人物头像框 ==================== */
+.seal-avatar {
+  width: 0.5rem;
+  height: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid rgba(200, 169, 110, 0.55);
+  border-radius: 4px;
+  background: linear-gradient(135deg, rgba(200, 169, 110, 0.14), rgba(78, 205, 196, 0.08));
+  color: #C8A96E;
+  font-size: 0.2rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  flex: 0 0 auto;
+  position: relative;
+  box-shadow: inset 0 0 12px rgba(200, 169, 110, 0.12);
+}
+.seal-avatar::after {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  border: 1px solid rgba(200, 169, 110, 0.2);
+  border-radius: 2px;
+  pointer-events: none;
+}
+.seal-avatar.seal-lg {
+  width: 0.7rem;
+  height: 0.7rem;
+  font-size: 0.28rem;
+}
+
+/* ==================== 统一页脚 ==================== */
+.site-footer {
+  text-align: center;
+  padding: 0.24rem 0.15rem 0.3rem;
+  margin-top: 0.3rem;
+  border-top: 1px solid rgba(200, 169, 110, 0.2);
+}
+.site-footer .footer-brand {
+  font-size: 0.14rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 0.07rem;
+  letter-spacing: 0.01rem;
+}
+.site-footer .footer-meta {
+  font-size: 0.12rem;
+  color: rgba(255, 255, 255, 0.42);
+  line-height: 1.7;
+}
+.site-footer .footer-ornament {
+  width: 0.9rem;
+  margin: 0 auto 0.12rem;
+  color: rgba(200, 169, 110, 0.28);
+}
+.site-footer .footer-ornament svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .hero-ornament { max-width: 4rem; }
+  .info-modal-ornament { max-width: 2.4rem; }
 }

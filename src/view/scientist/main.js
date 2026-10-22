@@ -2,7 +2,7 @@
  * 杰出科学家大屏 - 数据驱动版
  * 数据来源：/data/architects_processed.json
  */
-import * as echarts from 'echarts';
+import echarts from '../../js/common/echarts.js';
 import { loadData, COLORS, ECHARTS_THEME, getDataUrl, loadJson, matchDynastyGroup } from '../../js/common/utils.js';
 import { pageEnterAnimation } from '../../js/common/animation.js';
 import { showInfoModal, generateDataHTML } from '../../js/common/infoModal.js';
@@ -305,8 +305,13 @@ async function initPersonCards(data) {
 
   container.innerHTML = topScientists.map(s => `
     <div class="person-card" data-name="${s.name}">
-      <h4>${s.name}</h4>
-      <div class="meta">${s.dynasty} · ${s.period}</div>
+      <div style="display: flex; gap: 0.12rem; align-items: flex-start;">
+        <div class="seal-avatar" aria-hidden="true">${s.name.charAt(0)}</div>
+        <div style="flex: 1; min-width: 0;">
+          <h4>${s.name}</h4>
+          <div class="meta">${s.dynasty} · ${s.period}</div>
+        </div>
+      </div>
       <div class="desc">${s.achievements ? s.achievements.substring(0, 80) + '...' : ''}</div>
     </div>
   `).join('');
@@ -391,10 +396,15 @@ function showPersonDetail(person) {
   showInfoModal({
     title: `${person.name} - ${person.dynasty}时期`,
     content: `
+      <div style="display: flex; gap: 0.15rem; align-items: center; margin-bottom: 0.15rem;">
+        <div class="seal-avatar seal-lg" aria-hidden="true">${person.name.charAt(0)}</div>
+        <div style="flex: 1; min-width: 0;">
+          <p><strong style="color: #4ECDC4;">时期：</strong>${person.period}</p>
+          <p><strong style="color: #4ECDC4;">影响力指数：</strong>${person.influence_score || 0} / 100</p>
+        </div>
+      </div>
       <div style="margin-bottom: 0.15rem;">
-        <p><strong style="color: #4ECDC4;">时期：</strong>${person.period}</p>
-        <p><strong style="color: #4ECDC4;">影响力指数：</strong>${person.influence_score || 0}分</p>
-        <p><strong style="color: #4ECDC4;">主要成就：</strong>${works}</p>
+        <p><strong style="color: #4ECDC4;">代表作品：</strong>${works}</p>
       </div>
       <div style="background: rgba(255,255,255,0.05); padding: 0.15rem; border-radius: 6px;">
         <p style="line-height: 1.8;">${person.achievements || ''}</p>

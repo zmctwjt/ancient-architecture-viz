@@ -13,6 +13,7 @@
     "start": "build.bat"
   },
   "devDependencies": {
+    "pptxgenjs": "^4.0.1",
     "vite": "^4.5.0"
   },
   "dependencies": {
@@ -23,7 +24,8 @@
     "数据可视化",
     "中国古代建筑",
     "ECharts",
-    "计算机设计大赛"
+    "建筑可视化",
+    "文化遗产"
   ],
   "author": "",
   "license": "MIT"

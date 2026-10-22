@@ -2,7 +2,7 @@
  * 建筑著作大屏 - 数据驱动版
  * 数据来源：/data/books_processed.json
  */
-import * as echarts from 'echarts';
+import echarts from '../../js/common/echarts.js';
 import { COLORS, ECHARTS_THEME, loadJson, matchDynastyGroup } from '../../js/common/utils.js';
 import { pageEnterAnimation } from '../../js/common/animation.js';
 import { showInfoModal, generateDataHTML } from '../../js/common/infoModal.js';

@@ -26,3 +26,13 @@ dist-temp
 *.njsproj
 *.sln
 *.sw?
+
+# 本地数据备份（不纳入版本库）
+.backup-data/
+dist-test/
+
+# WorkBuddy 本地工作记录
+.workbuddy/
+
+# 生成的辅助文件
+千年营造华夏砖木-技术文档与使用说明.html

@@ -2,7 +2,7 @@
  * 建筑文化页面 - 数据驱动版
  * 从 /data/culture_processed.json 加载数据
  */
-import * as echarts from 'echarts';
+import echarts from '../../js/common/echarts.js';
 import { gsap } from 'gsap';
 import { showInfoModal } from '../../js/common/infoModal.js';
 import { cultureInsights, generateInsightHTML } from '../../js/common/insights.js';
@@ -787,7 +787,7 @@ function initDynastyButtons() {
 }
 
 async function reinitWithFilter(dynastyParam) {
-  console.log('[reinitWithFilter] 筛选朝代:', dynastyParam);
+  // 调试信息已移除
   chartInstances.forEach((chart, domId) => {
     if (chart && !chart.isDisposed()) chart.dispose();
     const dom = document.getElementById(domId);
@@ -812,7 +812,7 @@ function filterByDynasty(cultureData, dynasties) {
       const dynastyField = d['朝代'] || d['dynasty'] || '';
       return dynasties.some(fd => matchDynastyGroup(dynastyField, fd));
     });
-    console.log(`[filterByDynasty] ${key}: ${filtered[key].detail.length}/${detail.length} 条匹配 ${dynasties.join(',')}`);
+    // 调试信息已移除
   }
   return filtered;
 }

@@ -3,7 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-> 2026年中国大学生计算机设计大赛 - 数据可视化与交互信息设计作品
+> 中国古代建筑数据可视化平台
 
 ---
 

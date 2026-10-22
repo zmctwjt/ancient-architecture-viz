@@ -29,8 +29,8 @@ export default defineConfig(({ command }) => {
 
     // 多页面入口配置
     build: {
-      // CSS 内联到 HTML 中，避免 MPA 模式下 CSS 文件引用丢失
-      cssCodeSplit: false,
+      // 每个入口独立输出 CSS，确保各页面 <link> 正确注入（MPA 下 false 会导致部分页面丢样式）
+      cssCodeSplit: true,
       rollupOptions: {
         input: {
           index: resolve(__dirname, 'index.html'),
@@ -43,9 +43,13 @@ export default defineConfig(({ command }) => {
         output: {
           entryFileNames: 'js/[name]-[hash].js',
           chunkFileNames: 'js/[name]-[hash].js',
-          manualChunks: {
-            echarts: ['echarts'],
-            gsap: ['gsap']
+          manualChunks(id) {
+            if (id.includes('node_modules/echarts') || id.includes('node_modules/zrender')) {
+              return 'echarts';
+            }
+            if (id.includes('node_modules/gsap')) {
+              return 'gsap';
+            }
           },
           assetFileNames: (assetInfo) => {
             if (/\.(png|jpe?g|gif|svg|webp|ico)$/i.test(assetInfo.name)) {
@@ -57,7 +61,8 @@ export default defineConfig(({ command }) => {
       },
       outDir: 'dist',
       emptyOutDir: true,
-      sourcemap: true
+      sourcemap: false,
+      chunkSizeWarningLimit: 800
     },
 
     // 开发服务器配置
@@ -70,12 +75,12 @@ export default defineConfig(({ command }) => {
 
     // CSS 配置
     css: {
-      devSourcemap: true
+      devSourcemap: false
     },
 
     // 优化依赖
     optimizeDeps: {
-      include: ['echarts', 'gsap']
+      include: ['echarts/core', 'echarts/charts', 'echarts/components', 'echarts/renderers', 'gsap']
     }
   };
 });

@@ -2,7 +2,7 @@
  * 首页 - 总览大屏（数据驱动版）
  * 所有数据从 /data/*.json 加载，不再硬编码
  */
-import * as echarts from 'echarts';
+import echarts from '../../js/common/echarts.js';
 import { gsap } from 'gsap';
 import { loadData, COLORS, ECHARTS_THEME, getDataUrl, loadJson, matchDynastyGroup } from '../../js/common/utils.js';
 import { fallingLeavesAnimation, countUpAnimation, pageEnterAnimation } from '../../js/common/animation.js';
@@ -102,13 +102,17 @@ function initUI() {
 
 // 加载数据并初始化图表（可重复调用）
 async function initData(filterDynasties) {
-  let buildings = [], architectsMeta = {}, booksMeta = {};
+  let buildings = [], architectsMeta = {}, booksMeta = {}, cultureCount = 0;
   try {
     buildings = await loadJson('buildings.json');
     const aData = await loadJson('architects_processed.json');
     architectsMeta = aData.meta || {};
     const lData = await loadJson('books_processed.json');
     booksMeta = lData.meta || {};
+    // 文化形态总数 = 民居 + 官府 + 皇宫 + 桥梁
+    const cData = await loadJson('culture_processed.json');
+    cultureCount = ['residence', 'official', 'palace', 'bridge']
+      .reduce((sum, k) => sum + ((cData[k] && cData[k].total) || 0), 0);
   } catch(e) { console.warn('加载数据失败', e); }
 
   let filteredBuildings = buildings;
@@ -119,7 +123,7 @@ async function initData(filterDynasties) {
   }
 
   const filterDynastyStr = filterDynasties && filterDynasties.length > 0 ? filterDynasties.join(',') : null;
-  initCountUp(filteredBuildings.length, architectsMeta.total || 0, booksMeta.total || 0);
+  initCountUp(filteredBuildings.length, architectsMeta.total || 0, booksMeta.total || 0, cultureCount);
   await initTimelineChart(filteredBuildings, filterDynastyStr);
   await initRadarChart(filteredBuildings);
   initInsightsPanel(filterDynastyStr);
@@ -155,9 +159,9 @@ function updateNavLinks(filterDynasty) {
 /**
  * 数字滚动动画 - 从JSON数据计算
  */
-function initCountUp(buildingCount, architectCount, bookCount) {
+function initCountUp(buildingCount, architectCount, bookCount, cultureCount) {
   const statNumbers = document.querySelectorAll('.stat-number');
-  const targets = [buildingCount, architectCount, bookCount, 11]; // 11大建筑类别
+  const targets = [buildingCount, architectCount, bookCount, cultureCount || 26]; // 文化形态数由数据计算
   statNumbers.forEach((el, i) => {
     const target = targets[i] || 0;
     el.dataset.count = target;
@@ -329,6 +333,7 @@ async function initRadarChart(buildingData) {
     s.material = matMap[k] || 50;
     s.craft = craftMap[k] || 50;
     // 文化价值基于世界遗产比例
+      // 文化价值按建筑类别加权（民居60 / 官府55 / 皇宫95 / 桥梁70）
     const cultureMap = { '民居': 60, '官府': 55, '皇宫': 95, '桥梁': 70 };
     s.culture = cultureMap[k] || 50;
   });

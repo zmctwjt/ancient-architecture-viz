@@ -108,7 +108,7 @@
   </style>
 </head>
 <body>
-  <a href="../home/index.html" class="back-link" id="back-link">← 返回首页</a>
+  <a href="../home/index.html" class="back-link" aria-label="返回首页" id="back-link">← 返回首页</a>
 
   <script>
     // 返回首页时带上 dynasty 参数
@@ -144,13 +144,13 @@
       <!-- 影响力排行 -->
       <div class="chart-panel panel-full">
         <h2 class="panel-title">建筑科学家影响力排行</h2>
-        <div id="timeline-chart" class="chart-container"></div>
+        <div role="img" aria-label="数据可视化图表" id="timeline-chart" class="chart-container"></div>
       </div>
 
       <!-- 关系网络 -->
       <div class="chart-panel panel-full">
         <h2 class="panel-title">人物-朝代关联网络</h2>
-        <div id="graph-chart" class="chart-container"></div>
+        <div role="img" aria-label="数据可视化图表" id="graph-chart" class="chart-container"></div>
       </div>
 
       <!-- 重点人物 -->
@@ -164,7 +164,7 @@
       <!-- 影响力统计 -->
       <div class="chart-panel panel-full">
         <h2 class="panel-title">人物影响力指标</h2>
-        <div id="bar-chart" class="chart-container"></div>
+        <div role="img" aria-label="数据可视化图表" id="bar-chart" class="chart-container"></div>
         <div style="margin-top: 0.1rem; padding: 0.1rem; background: rgba(255,255,255,0.05); border-radius: 6px; font-size: 0.11rem; color: rgba(255,255,255,0.6); line-height: 1.6;">
           <strong style="color: #C8A96E;">影响力指数计算方式：</strong>综合考量历史贡献度（著作/工程数量与重要性）、技术开创性（是否首创某种技术或规范）、历史知名度（后世引用与记载频次）、时代跨度（活跃时期长度）四个维度，由领域专家按1-10分制评分后加权汇总得出。满分10分。
         </div>
@@ -173,9 +173,17 @@
 
     <div class="decorative-bar"></div>
 
-    <footer class="page-footer">
-      <p style="font-size: 0.14rem; color: rgba(255, 255, 255, 0.6); margin-bottom: 0.05rem;">2026年中国大学生计算机设计大赛 | 数据可视化与交互信息设计</p>
-      <p style="font-size: 0.12rem; color: rgba(255, 255, 255, 0.4);">数据来源：中国古代建筑史、建筑学家传记资料</p>
+    <footer class="site-footer">
+      <div class="footer-ornament" aria-hidden="true">
+          <svg viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 62h104"/><path d="M20 62V50h80v12"/><path d="M16 50h88"/>
+            <path d="M26 50l8-12h52l8 12"/><path d="M24 38h72"/>
+            <path d="M34 38l10-12h32l10 12"/><path d="M30 26h60"/>
+            <path d="M36 26c6-8 42-8 48 0"/><path d="M26 26c-5-3-4-9 1-11M94 26c5-3 4-9-1-11"/>
+          </svg>
+        </div>
+      <p class="footer-brand">千年营造 · 华夏砖木 —— 中国古代建筑数据可视化平台</p>
+      <p class="footer-meta">数据来源：中国古代建筑史、建筑学家传记资料</p>
     </footer>
   </div>
 

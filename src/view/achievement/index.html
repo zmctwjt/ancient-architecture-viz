@@ -70,7 +70,7 @@
   </style>
 </head>
 <body>
-  <a href="../home/index.html" class="back-link" id="back-link">← 返回首页</a>
+  <a href="../home/index.html" class="back-link" aria-label="返回首页" id="back-link">← 返回首页</a>
 
   <script>
     // 返回首页时带上 dynasty 参数
@@ -106,51 +106,59 @@
       <!-- 朝代分布玫瑰图 -->
       <div class="chart-panel">
         <h2 class="panel-title">各朝代建筑数量分布</h2>
-        <div id="rose-chart" class="chart-container"></div>
+        <div role="img" aria-label="数据可视化图表" id="rose-chart" class="chart-container"></div>
       </div>
 
       <!-- 建筑技术分类 -->
       <div class="chart-panel">
         <h2 class="panel-title">建筑技术成就分类</h2>
-        <div id="polar-chart" class="chart-container"></div>
+        <div role="img" aria-label="数据可视化图表" id="polar-chart" class="chart-container"></div>
       </div>
 
       <!-- 古建筑地理分布 -->
       <div class="chart-panel panel-full">
         <h2 class="panel-title">古建筑地理分布</h2>
-        <div id="map-chart" class="chart-container"></div>
+        <div role="img" aria-label="数据可视化图表" id="map-chart" class="chart-container"></div>
       </div>
 
       <!-- 历代建筑类型发展趋势 -->
       <div class="chart-panel panel-full">
         <h2 class="panel-title">历代建筑类型发展趋势</h2>
-        <div id="area-chart" class="chart-container"></div>
+        <div role="img" aria-label="数据可视化图表" id="area-chart" class="chart-container"></div>
       </div>
 
       <!-- 各省古建筑数量TOP10 -->
       <div class="chart-panel panel-full">
         <h2 class="panel-title">各省古建筑数量TOP10</h2>
-        <div id="rank-chart" class="chart-container"></div>
+        <div role="img" aria-label="数据可视化图表" id="rank-chart" class="chart-container"></div>
       </div>
 
       <!-- 世界遗产分布 -->
       <div class="chart-panel">
         <h2 class="panel-title">世界遗产分布（按类别）</h2>
-        <div id="protection-chart" class="chart-container"></div>
+        <div role="img" aria-label="数据可视化图表" id="protection-chart" class="chart-container"></div>
       </div>
 
       <!-- 建造年代分布 -->
       <div class="chart-panel">
         <h2 class="panel-title">建造年代分布</h2>
-        <div id="year-chart" class="chart-container"></div>
+        <div role="img" aria-label="数据可视化图表" id="year-chart" class="chart-container"></div>
       </div>
     </div>
 
     <div class="decorative-bar"></div>
 
-    <footer class="page-footer">
-      <p style="font-size: 0.14rem; color: rgba(255, 255, 255, 0.6); margin-bottom: 0.05rem;">2026年中国大学生计算机设计大赛 | 数据可视化与交互信息设计</p>
-      <p style="font-size: 0.12rem; color: rgba(255, 255, 255, 0.4);">数据来源：国家文物局全国重点文物保护单位名录</p>
+    <footer class="site-footer">
+      <div class="footer-ornament" aria-hidden="true">
+          <svg viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 62h104"/><path d="M20 62V50h80v12"/><path d="M16 50h88"/>
+            <path d="M26 50l8-12h52l8 12"/><path d="M24 38h72"/>
+            <path d="M34 38l10-12h32l10 12"/><path d="M30 26h60"/>
+            <path d="M36 26c6-8 42-8 48 0"/><path d="M26 26c-5-3-4-9 1-11M94 26c5-3 4-9-1-11"/>
+          </svg>
+        </div>
+      <p class="footer-brand">千年营造 · 华夏砖木 —— 中国古代建筑数据可视化平台</p>
+      <p class="footer-meta">数据来源：国家文物局全国重点文物保护单位名录</p>
     </footer>
   </div>
 

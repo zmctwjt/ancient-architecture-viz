@@ -2,7 +2,7 @@
  * 建筑成就大屏 - 数据驱动版
  * 所有图表数据从 /data/buildings.json 聚合生成
  */
-import * as echarts from 'echarts';
+import echarts from '../../js/common/echarts.js';
 import { loadData, COLORS, ECHARTS_THEME, getDataUrl, loadJson, matchDynastyGroup } from '../../js/common/utils.js';
 import { pageEnterAnimation } from '../../js/common/animation.js';
 import { showInfoModal, generateDataHTML, addChartClickHandler } from '../../js/common/infoModal.js';
@@ -286,6 +286,7 @@ async function initMapChart(buildingData) {
     const list = items.map(b => `<li style="margin-bottom:0.06rem;">${b.name}（${b.dynasty}·${b.category}）</li>`).join('');
     showInfoModal({
       title: `${province}古建筑（${params.value}处）`,
+      ornament: items[0] && items[0].category,
       content: `<ul style="padding-left:0.2rem;line-height:1.6;">${list}${items.length < params.value ? `<li style="color:#888;">...等共${params.value}处</li>` : ''}</ul>`
     });
   });
@@ -586,6 +587,7 @@ async function initProtectionChart(buildingData) {
     const list = items.map(b => `<li style="margin-bottom:0.06rem;">${b.name}（${b.dynasty}·${b.location}）${(b.description||'').includes('世界') ? '🌍' : ''}</li>`).join('');
     showInfoModal({
       title: `${cat[0]} - ${params.seriesName}（${params.value}处）`,
+      ornament: cat[0],
       content: `<ul style="padding-left:0.2rem;line-height:1.6;">${list}${items.length < params.value ? `<li style="color:#888;">...等共${params.value}处</li>` : ''}</ul>`
     });
   });
