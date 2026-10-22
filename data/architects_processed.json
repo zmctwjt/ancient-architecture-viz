@@ -90,19 +90,19 @@
   "influence_distribution": [
     {
       "name": "极高(90-100)",
-      "value": 0
+      "value": 6
     },
     {
       "name": "高(80-89)",
-      "value": 0
+      "value": 4
     },
     {
       "name": "中(60-79)",
-      "value": 0
+      "value": 7
     },
     {
       "name": "低(<60)",
-      "value": 20
+      "value": 3
     }
   ],
   "graph_data": {
@@ -112,7 +112,7 @@
         "name": "鲁班",
         "category": 0,
         "symbolSize": 2.0,
-        "value": 10,
+        "value": 100,
         "dynasty": "春秋",
         "draggable": true
       },
@@ -121,7 +121,7 @@
         "name": "阳城延",
         "category": 0,
         "symbolSize": 1.0,
-        "value": 5,
+        "value": 52,
         "dynasty": "汉",
         "draggable": true
       },
@@ -130,7 +130,7 @@
         "name": "蒋少游",
         "category": 0,
         "symbolSize": 1.2,
-        "value": 6,
+        "value": 58,
         "dynasty": "北魏",
         "draggable": true
       },
@@ -139,7 +139,7 @@
         "name": "宇文恺",
         "category": 0,
         "symbolSize": 1.8,
-        "value": 9,
+        "value": 87,
         "dynasty": "隋",
         "draggable": true
       },
@@ -148,7 +148,7 @@
         "name": "阎立德",
         "category": 0,
         "symbolSize": 1.4,
-        "value": 7,
+        "value": 74,
         "dynasty": "唐",
         "draggable": true
       },
@@ -157,7 +157,7 @@
         "name": "李春",
         "category": 0,
         "symbolSize": 2.0,
-        "value": 10,
+        "value": 94,
         "dynasty": "隋",
         "draggable": true
       },
@@ -166,7 +166,7 @@
         "name": "喻皓",
         "category": 0,
         "symbolSize": 1.8,
-        "value": 9,
+        "value": 88,
         "dynasty": "宋",
         "draggable": true
       },
@@ -175,7 +175,7 @@
         "name": "李诫",
         "category": 0,
         "symbolSize": 2.0,
-        "value": 10,
+        "value": 98,
         "dynasty": "宋",
         "draggable": true
       },
@@ -184,7 +184,7 @@
         "name": "刘秉忠",
         "category": 0,
         "symbolSize": 1.8,
-        "value": 9,
+        "value": 85,
         "dynasty": "元",
         "draggable": true
       },
@@ -193,7 +193,7 @@
         "name": "也黑迭儿",
         "category": 0,
         "symbolSize": 1.4,
-        "value": 7,
+        "value": 70,
         "dynasty": "元",
         "draggable": true
       },
@@ -202,7 +202,7 @@
         "name": "蒯祥",
         "category": 0,
         "symbolSize": 2.0,
-        "value": 10,
+        "value": 96,
         "dynasty": "明",
         "draggable": true
       },
@@ -211,7 +211,7 @@
         "name": "阮安",
         "category": 0,
         "symbolSize": 1.6,
-        "value": 8,
+        "value": 78,
         "dynasty": "明",
         "draggable": true
       },
@@ -220,7 +220,7 @@
         "name": "计成",
         "category": 0,
         "symbolSize": 2.0,
-        "value": 10,
+        "value": 92,
         "dynasty": "明",
         "draggable": true
       },
@@ -229,7 +229,7 @@
         "name": "冯巧",
         "category": 0,
         "symbolSize": 1.2,
-        "value": 6,
+        "value": 56,
         "dynasty": "明末清初",
         "draggable": true
       },
@@ -238,7 +238,7 @@
         "name": "梁九",
         "category": 0,
         "symbolSize": 1.8,
-        "value": 9,
+        "value": 82,
         "dynasty": "清",
         "draggable": true
       },
@@ -247,7 +247,7 @@
         "name": "雷发达",
         "category": 0,
         "symbolSize": 2.0,
-        "value": 10,
+        "value": 95,
         "dynasty": "清",
         "draggable": true
       },
@@ -256,7 +256,7 @@
         "name": "张涟",
         "category": 0,
         "symbolSize": 1.4,
-        "value": 7,
+        "value": 68,
         "dynasty": "明末清初",
         "draggable": true
       },
@@ -265,7 +265,7 @@
         "name": "张然",
         "category": 0,
         "symbolSize": 1.4,
-        "value": 7,
+        "value": 66,
         "dynasty": "清",
         "draggable": true
       },
@@ -274,7 +274,7 @@
         "name": "李冲",
         "category": 0,
         "symbolSize": 1.4,
-        "value": 7,
+        "value": 62,
         "dynasty": "北魏",
         "draggable": true
       },
@@ -283,7 +283,7 @@
         "name": "张志纯",
         "category": 0,
         "symbolSize": 1.4,
-        "value": 7,
+        "value": 64,
         "dynasty": "元",
         "draggable": true
       },
@@ -484,7 +484,7 @@
       "name": "鲁班",
       "dynasty": "春秋",
       "period": "约公元前507年—约公元前444年",
-      "influence_score": 10,
+      "influence_score": 100,
       "major_works": [
         "鲁班锁",
         "云梯",
@@ -497,7 +497,7 @@
       "name": "李春",
       "dynasty": "隋",
       "period": "生卒年不详（隋代）",
-      "influence_score": 10,
+      "influence_score": 94,
       "major_works": [
         "赵州桥（安济桥）"
       ],
@@ -507,7 +507,7 @@
       "name": "李诫",
       "dynasty": "宋",
       "period": "1065年—1110年",
-      "influence_score": 10,
+      "influence_score": 98,
       "major_works": [
         "辟雍宫",
         "龙德宫",
@@ -522,7 +522,7 @@
       "name": "蒯祥",
       "dynasty": "明",
       "period": "1397年—1481年",
-      "influence_score": 10,
+      "influence_score": 96,
       "major_works": [
         "北京故宫承天门（天安门）",
         "北京故宫三大殿",
@@ -534,7 +534,7 @@
       "name": "计成",
       "dynasty": "明",
       "period": "1582年—约1642年",
-      "influence_score": 10,
+      "influence_score": 92,
       "major_works": [
         "东第园（扬州）",
         "寤园（常州）",
@@ -546,7 +546,7 @@
       "name": "雷发达",
       "dynasty": "清",
       "period": "1619年—1693年",
-      "influence_score": 10,
+      "influence_score": 95,
       "major_works": [
         "圆明园",
         "颐和园",
@@ -560,7 +560,7 @@
       "name": "宇文恺",
       "dynasty": "隋",
       "period": "555年—612年",
-      "influence_score": 9,
+      "influence_score": 87,
       "major_works": [
         "隋大兴城（长安城）",
         "隋东都洛阳城",
@@ -572,7 +572,7 @@
       "name": "喻皓",
       "dynasty": "宋",
       "period": "约920年—约995年",
-      "influence_score": 9,
+      "influence_score": 88,
       "major_works": [
         "开封开宝寺塔（铁塔）",
         "杭州梵天寺木塔"
@@ -583,7 +583,7 @@
       "name": "刘秉忠",
       "dynasty": "元",
       "period": "1216年—1274年",
-      "influence_score": 9,
+      "influence_score": 85,
       "major_works": [
         "元大都（北京城前身）规划",
         "元上都"
@@ -594,7 +594,7 @@
       "name": "梁九",
       "dynasty": "清",
       "period": "约1618年—约1698年",
-      "influence_score": 9,
+      "influence_score": 82,
       "major_works": [
         "故宫太和殿重建",
         "景山诸殿"
@@ -605,7 +605,7 @@
       "name": "阮安",
       "dynasty": "明",
       "period": "约1380年—约1453年",
-      "influence_score": 8,
+      "influence_score": 78,
       "major_works": [
         "北京三大殿修复",
         "北京城池扩建",
@@ -617,7 +617,7 @@
       "name": "阎立德",
       "dynasty": "唐",
       "period": "约593年—656年",
-      "influence_score": 7,
+      "influence_score": 74,
       "major_works": [
         "唐昭陵营建",
         "翠微宫",
@@ -629,7 +629,7 @@
       "name": "也黑迭儿",
       "dynasty": "元",
       "period": "生卒年不详（元代）",
-      "influence_score": 7,
+      "influence_score": 70,
       "major_works": [
         "元大都宫殿群"
       ],
@@ -639,7 +639,7 @@
       "name": "张涟",
       "dynasty": "明末清初",
       "period": "约1587年—约1671年",
-      "influence_score": 7,
+      "influence_score": 68,
       "major_works": [
         "弇山园（太仓）",
         "豫园修缮（上海）"
@@ -650,7 +650,7 @@
       "name": "张然",
       "dynasty": "清",
       "period": "约1625年—约1700年",
-      "influence_score": 7,
+      "influence_score": 66,
       "major_works": [
         "玉泉山静明园叠山",
         "瀛台修缮"
@@ -661,7 +661,7 @@
       "name": "李冲",
       "dynasty": "北魏",
       "period": "450年—498年",
-      "influence_score": 7,
+      "influence_score": 62,
       "major_works": [
         "北魏洛阳城营建"
       ],
@@ -671,7 +671,7 @@
       "name": "张志纯",
       "dynasty": "元",
       "period": "约1195年—约1275年",
-      "influence_score": 7,
+      "influence_score": 64,
       "major_works": [
         "永乐宫（芮城）壁画工程监造"
       ],
@@ -681,7 +681,7 @@
       "name": "蒋少游",
       "dynasty": "北魏",
       "period": "生卒年不详（北魏）",
-      "influence_score": 6,
+      "influence_score": 58,
       "major_works": [
         "洛阳太极殿",
         "洛阳城规划"
@@ -692,7 +692,7 @@
       "name": "冯巧",
       "dynasty": "明末清初",
       "period": "生卒年不详（明末清初）",
-      "influence_score": 6,
+      "influence_score": 56,
       "major_works": [
         "明末清初宫殿营造"
       ],
@@ -702,7 +702,7 @@
       "name": "阳城延",
       "dynasty": "汉",
       "period": "生卒年不详（西汉）",
-      "influence_score": 5,
+      "influence_score": 52,
       "major_works": [
         "未央宫扩建",
         "长安城营建"

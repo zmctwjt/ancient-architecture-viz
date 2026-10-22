@@ -69,17 +69,16 @@
     }
   }
   </script>
-  <script type="module" crossorigin src="/ancient-architecture-viz/js/literature-73fb0393.js"></script>
-  <link rel="modulepreload" crossorigin href="/ancient-architecture-viz/js/infoModal-0bcfa56d.js">
-  <link rel="modulepreload" crossorigin href="/ancient-architecture-viz/js/responsive-4ed993c7.js">
-  <link rel="modulepreload" crossorigin href="/ancient-architecture-viz/js/echarts-3efe7099.js">
+  <script type="module" crossorigin src="/ancient-architecture-viz/js/literature-5df269e6.js"></script>
+  <link rel="modulepreload" crossorigin href="/ancient-architecture-viz/js/echarts-77501837.js">
+  <link rel="modulepreload" crossorigin href="/ancient-architecture-viz/js/infoModal-ec0d047e.js">
   <link rel="modulepreload" crossorigin href="/ancient-architecture-viz/js/gsap-e9ea83b5.js">
   <link rel="modulepreload" crossorigin href="/ancient-architecture-viz/js/animation-a3d20002.js">
   <link rel="modulepreload" crossorigin href="/ancient-architecture-viz/js/insights-91087ff5.js">
-  <link rel="stylesheet" href="/ancient-architecture-viz/assets/style-525ebe98.css">
+  <link rel="stylesheet" href="/ancient-architecture-viz/assets/responsive-aca63c6c.css">
 </head>
 <body>
-  <a href="../home/index.html" class="back-link" id="back-link">← 返回首页</a>
+  <a href="../home/index.html" class="back-link" aria-label="返回首页" id="back-link">← 返回首页</a>
 
   <script>
     // 返回首页时带上 dynasty 参数
@@ -115,28 +114,41 @@
       <!-- 上方：著作朝代分布 -->
       <div class="chart-panel panel-full">
         <h2 class="panel-title">历代建筑著作朝代分布</h2>
-        <div id="timeline-chart" class="chart-container"></div>
+        <div role="img" aria-label="数据可视化图表" id="timeline-chart" class="chart-container"></div>
       </div>
 
       <!-- 中左：旭日图 -->
       <div class="chart-panel">
         <h2 class="panel-title">著作朝代分布</h2>
-        <div id="sunburst-chart" class="chart-container"></div>
+        <div role="img" aria-label="数据可视化图表" id="sunburst-chart" class="chart-container"></div>
       </div>
 
       <!-- 中右：著作类型分布 -->
       <div class="chart-panel">
         <h2 class="panel-title">著作类型分布</h2>
-        <div id="type-chart" class="chart-container"></div>
+        <div role="img" aria-label="数据可视化图表" id="type-chart" class="chart-container"></div>
       </div>
 
       <!-- 下方：关键词词云 -->
       <div class="chart-panel panel-full">
         <h2 class="panel-title">建筑著作核心关键词</h2>
-        <div id="wordcloud-chart" class="chart-container"></div>
+        <div role="img" aria-label="数据可视化图表" id="wordcloud-chart" class="chart-container"></div>
       </div>
     </div>
   </div>
+
+    <footer class="site-footer">
+      <div class="footer-ornament" aria-hidden="true">
+          <svg viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 62h104"/><path d="M20 62V50h80v12"/><path d="M16 50h88"/>
+            <path d="M26 50l8-12h52l8 12"/><path d="M24 38h72"/>
+            <path d="M34 38l10-12h32l10 12"/><path d="M30 26h60"/>
+            <path d="M36 26c6-8 42-8 48 0"/><path d="M26 26c-5-3-4-9 1-11M94 26c5-3 4-9-1-11"/>
+          </svg>
+        </div>
+      <p class="footer-brand">千年营造 · 华夏砖木 —— 中国古代建筑数据可视化平台</p>
+      <p class="footer-meta">数据来源：百度百科、故宫博物院、中国古代建筑文献集</p>
+    </footer>
 
   
 </body>

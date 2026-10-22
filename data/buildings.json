@@ -9,7 +9,9 @@
     "protectionLevel": "全国重点",
     "architect": "蒯祥等",
     "description": "世界上现存规模最大的木质结构古建筑群，1987年列入世界文化遗产。",
-    "significance": "中国古代宫殿建筑巅峰"
+    "significance": "中国古代宫殿建筑巅峰",
+    "start_dynasty": "明",
+    "end_dynasty": "明"
   },
   {
     "id": 2,
@@ -21,7 +23,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "世界海拔最高的宫堡式建筑群，1994年列入世界文化遗产。",
-    "significance": "藏式建筑杰出代表"
+    "significance": "藏式建筑杰出代表",
+    "start_dynasty": "唐",
+    "end_dynasty": "唐"
   },
   {
     "id": 3,
@@ -33,7 +37,9 @@
     "protectionLevel": "全国重点",
     "architect": "样式雷",
     "description": "中国现存规模最大的皇家园林，1998年列入世界文化遗产。",
-    "significance": "中国古典园林艺术巅峰"
+    "significance": "中国古典园林艺术巅峰",
+    "start_dynasty": "清",
+    "end_dynasty": "清"
   },
   {
     "id": 4,
@@ -45,7 +51,9 @@
     "protectionLevel": "全国重点",
     "architect": "样式雷",
     "description": "中国现存占地最大的古代帝王宫苑，1994年列入世界文化遗产。",
-    "significance": "清代第二政治中心"
+    "significance": "清代第二政治中心",
+    "start_dynasty": "清",
+    "end_dynasty": "清"
   },
   {
     "id": 5,
@@ -57,7 +65,9 @@
     "protectionLevel": "全国重点",
     "architect": "文徵明参与设计",
     "description": "江南古典园林代表，1997年列入世界文化遗产。",
-    "significance": "中国私家园林典范"
+    "significance": "中国私家园林典范",
+    "start_dynasty": "明",
+    "end_dynasty": "明"
   },
   {
     "id": 6,
@@ -67,9 +77,11 @@
     "location": "江苏苏州",
     "builtYear": "1593",
     "protectionLevel": "全国重点",
-    "architect": "",
+    "architect": "徐泰时（始建）、刘恕（重修）",
     "description": "中国大型古典私家园林，1997年列入世界文化遗产。",
-    "significance": "明清江南私家园林典范"
+    "significance": "明清江南私家园林典范",
+    "start_dynasty": "明",
+    "end_dynasty": "明"
   },
   {
     "id": 7,
@@ -79,9 +91,11 @@
     "location": "江苏苏州",
     "builtYear": "1140始建",
     "protectionLevel": "全国重点",
-    "architect": "",
+    "architect": "宋宗元（重建）",
     "description": "苏州典型小园，殿春簃为纽约大都会博物馆明轩蓝本。",
-    "significance": "小中见大造园典范"
+    "significance": "小中见大造园典范",
+    "start_dynasty": "清",
+    "end_dynasty": "清"
   },
   {
     "id": 8,
@@ -93,7 +107,9 @@
     "protectionLevel": "全国重点",
     "architect": "戈裕良",
     "description": "以假山著称，假山为戈裕良作品。",
-    "significance": "中国园林假山艺术巅峰"
+    "significance": "中国园林假山艺术巅峰",
+    "start_dynasty": "清",
+    "end_dynasty": "清"
   },
   {
     "id": 9,
@@ -103,9 +119,11 @@
     "location": "江苏苏州",
     "builtYear": "1044",
     "protectionLevel": "全国重点",
-    "architect": "",
+    "architect": "苏舜钦",
     "description": "苏州现存最古老的园林，透过漏窗将园外水与园内山融合。",
-    "significance": "宋代园林风格仅存代表"
+    "significance": "宋代园林风格仅存代表",
+    "start_dynasty": "宋",
+    "end_dynasty": "宋"
   },
   {
     "id": 10,
@@ -115,9 +133,11 @@
     "location": "江苏苏州",
     "builtYear": "1342",
     "protectionLevel": "全国重点",
-    "architect": "",
+    "architect": "天如禅师、倪瓒（参与）",
     "description": "元代园林代表，以假山闻名，有假山王国之称。",
-    "significance": "禅宗园林代表作"
+    "significance": "禅宗园林代表作",
+    "start_dynasty": "元",
+    "end_dynasty": "元"
   },
   {
     "id": 11,
@@ -127,9 +147,11 @@
     "location": "江苏扬州",
     "builtYear": "1818",
     "protectionLevel": "全国重点",
-    "architect": "",
+    "architect": "黄至筠",
     "description": "以叠石艺术闻名，园内四季假山各具特色。",
-    "significance": "中国园林四季假山独创之作"
+    "significance": "中国园林四季假山独创之作",
+    "start_dynasty": "清",
+    "end_dynasty": "清"
   },
   {
     "id": 12,
@@ -139,9 +161,11 @@
     "location": "江苏扬州",
     "builtYear": "1883",
     "protectionLevel": "全国重点",
-    "architect": "",
+    "architect": "何芷舠",
     "description": "有晚清第一园之称，以复道回廊著称。",
-    "significance": "中国廊道建筑艺术巅峰之作"
+    "significance": "中国廊道建筑艺术巅峰之作",
+    "start_dynasty": "清",
+    "end_dynasty": "清"
   },
   {
     "id": 13,
@@ -151,9 +175,11 @@
     "location": "山东潍坊",
     "builtYear": "明代",
     "protectionLevel": "全国重点",
-    "architect": "",
+    "architect": "丁善宝",
     "description": "北方私家园林代表，有鲁东园林典范之誉。",
-    "significance": "中国北方私家园林杰出代表"
+    "significance": "中国北方私家园林杰出代表",
+    "start_dynasty": "明",
+    "end_dynasty": "明"
   },
   {
     "id": 14,
@@ -165,7 +191,9 @@
     "protectionLevel": "全国重点",
     "architect": "张南阳",
     "description": "江南古典园林代表作，内有江南三大名石之一的玉玲珑。",
-    "significance": "明代江南私家园林典型代表"
+    "significance": "明代江南私家园林典型代表",
+    "start_dynasty": "明",
+    "end_dynasty": "明"
   },
   {
     "id": 15,
@@ -175,9 +203,11 @@
     "location": "广东佛山",
     "builtYear": "明代始建",
     "protectionLevel": "全国重点",
-    "architect": "",
+    "architect": "龙应时",
     "description": "广东四大名园之一，占地2.2公顷，建筑精巧。",
-    "significance": "岭南园林建筑艺术杰出代表"
+    "significance": "岭南园林建筑艺术杰出代表",
+    "start_dynasty": "明",
+    "end_dynasty": "清"
   },
   {
     "id": 16,
@@ -187,9 +217,11 @@
     "location": "广东东莞",
     "builtYear": "1850",
     "protectionLevel": "全国重点",
-    "architect": "",
+    "architect": "张敬修",
     "description": "广东四大名园之一，占地2200平方米，以精巧布局闻名。",
-    "significance": "岭南园林小中见大布局典范"
+    "significance": "岭南园林小中见大布局典范",
+    "start_dynasty": "清",
+    "end_dynasty": "清"
   },
   {
     "id": 17,
@@ -199,9 +231,11 @@
     "location": "广东广州",
     "builtYear": "1867",
     "protectionLevel": "全国重点",
-    "architect": "",
+    "architect": "邬彬",
     "description": "广东四大名园之一，占地仅1598平方米，以小巧玲珑著称。",
-    "significance": "岭南小型园林精品"
+    "significance": "岭南小型园林精品",
+    "start_dynasty": "清",
+    "end_dynasty": "清"
   },
   {
     "id": 18,
@@ -211,9 +245,11 @@
     "location": "广东佛山",
     "builtYear": "1796-1820",
     "protectionLevel": "全国重点",
-    "architect": "",
+    "architect": "梁蔼如",
     "description": "广东四大名园之一，以奇石巧布著称。",
-    "significance": "清代岭南文人园林典型代表"
+    "significance": "清代岭南文人园林典型代表",
+    "start_dynasty": "清",
+    "end_dynasty": "清"
   },
   {
     "id": 19,
@@ -223,9 +259,11 @@
     "location": "江苏无锡",
     "builtYear": "1516",
     "protectionLevel": "全国重点",
-    "architect": "",
+    "architect": "秦金",
     "description": "江南著名园林，以山池为中心，巧于因借。",
-    "significance": "明代江南园林借景手法经典范例"
+    "significance": "明代江南园林借景手法经典范例",
+    "start_dynasty": "明",
+    "end_dynasty": "明"
   },
   {
     "id": 20,
@@ -235,9 +273,11 @@
     "location": "浙江海盐",
     "builtYear": "1871",
     "protectionLevel": "全国重点",
-    "architect": "",
+    "architect": "冯缵斋",
     "description": "浙江现存规模最大的古典私家园林。",
-    "significance": "浙江古典园林典型代表"
+    "significance": "浙江古典园林典型代表",
+    "start_dynasty": "清",
+    "end_dynasty": "清"
   },
   {
     "id": 21,
@@ -247,9 +287,11 @@
     "location": "河北保定",
     "builtYear": "1227始建",
     "protectionLevel": "全国重点",
-    "architect": "",
+    "architect": "张柔",
     "description": "全国保存最完整的古莲花池，有城市蓬莱之称。",
-    "significance": "北方园林与江南园林结合代表"
+    "significance": "北方园林与江南园林结合代表",
+    "start_dynasty": "元",
+    "end_dynasty": "清"
   },
   {
     "id": 22,
@@ -259,9 +301,11 @@
     "location": "北京西城区",
     "builtYear": "1651",
     "protectionLevel": "全国重点",
-    "architect": "",
+    "architect": "样式雷",
     "description": "中国现存最古老、最完整的皇家园林之一。",
-    "significance": "中国皇家园林重要代表"
+    "significance": "中国皇家园林重要代表",
+    "start_dynasty": "清",
+    "end_dynasty": "清"
   },
   {
     "id": 23,
@@ -271,9 +315,11 @@
     "location": "陕西西安",
     "builtYear": "前246-208",
     "protectionLevel": "全国重点",
-    "architect": "",
+    "architect": "李斯（主持）",
     "description": "中国历史上第一个皇帝嬴政的陵墓，1987年列入世界文化遗产。",
-    "significance": "中国帝王陵寝制度开端"
+    "significance": "中国帝王陵寝制度开端",
+    "start_dynasty": "秦",
+    "end_dynasty": "秦"
   },
   {
     "id": 24,
@@ -283,9 +329,11 @@
     "location": "江苏南京",
     "builtYear": "1381-1405",
     "protectionLevel": "全国重点",
-    "architect": "",
+    "architect": "佚名（明初工匠）",
     "description": "明太祖朱元璋与马皇后陵墓，2003年列入世界文化遗产。",
-    "significance": "明清帝陵制度开创者"
+    "significance": "明清帝陵制度开创者",
+    "start_dynasty": "明",
+    "end_dynasty": "明"
   },
   {
     "id": 25,
@@ -295,9 +343,11 @@
     "location": "北京昌平区",
     "builtYear": "1409-1644",
     "protectionLevel": "全国重点",
-    "architect": "",
+    "architect": "蒯祥等",
     "description": "明朝十三位皇帝陵墓群，2003年列入世界文化遗产。",
-    "significance": "中国乃至世界现存规模最大帝后陵寝群"
+    "significance": "中国乃至世界现存规模最大帝后陵寝群",
+    "start_dynasty": "明",
+    "end_dynasty": "明"
   },
   {
     "id": 26,
@@ -309,7 +359,9 @@
     "protectionLevel": "全国重点",
     "architect": "样式雷",
     "description": "中国现存规模最大的帝王陵墓建筑群，2000年列入世界文化遗产。",
-    "significance": "清代陵寝建筑最高成就"
+    "significance": "清代陵寝建筑最高成就",
+    "start_dynasty": "清",
+    "end_dynasty": "清"
   },
   {
     "id": 27,
@@ -321,7 +373,9 @@
     "protectionLevel": "全国重点",
     "architect": "样式雷",
     "description": "清代帝王陵寝又一集中地，2000年列入世界文化遗产。",
-    "significance": "清代陵寝建筑典范"
+    "significance": "清代陵寝建筑典范",
+    "start_dynasty": "清",
+    "end_dynasty": "清"
   },
   {
     "id": 28,
@@ -331,9 +385,11 @@
     "location": "陕西乾县",
     "builtYear": "684",
     "protectionLevel": "全国重点",
-    "architect": "",
+    "architect": "阎立德（据载）",
     "description": "唐高宗李治与武则天合葬墓，为中国历代陵园中唯一夫妇皇帝合葬墓。",
-    "significance": "中国唯一夫妇皇帝合葬墓"
+    "significance": "中国唯一夫妇皇帝合葬墓",
+    "start_dynasty": "唐",
+    "end_dynasty": "唐"
   },
   {
     "id": 29,
@@ -345,7 +401,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "汉武帝刘彻陵墓，汉代帝王陵墓中规模最大。",
-    "significance": "汉代国力鼎盛时期帝王陵墓代表"
+    "significance": "汉代国力鼎盛时期帝王陵墓代表",
+    "start_dynasty": "汉",
+    "end_dynasty": "汉"
   },
   {
     "id": 30,
@@ -357,7 +415,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "汉景帝刘启及其皇后王氏合葬陵园。",
-    "significance": "汉代帝王陵寝制度典型代表"
+    "significance": "汉代帝王陵寝制度典型代表",
+    "start_dynasty": "汉",
+    "end_dynasty": "汉"
   },
   {
     "id": 31,
@@ -369,7 +429,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "世界上延续时间最长的家族墓地，1994年列入世界文化遗产。",
-    "significance": "中国规模最大、持续年代最长氏族墓地"
+    "significance": "中国规模最大、持续年代最长氏族墓地",
+    "start_dynasty": "周",
+    "end_dynasty": "清"
   },
   {
     "id": 32,
@@ -381,7 +443,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "西夏王朝皇家陵寝，有东方金字塔之称。",
-    "significance": "中国陵寝文化中独特的西夏王朝见证"
+    "significance": "中国陵寝文化中独特的西夏王朝见证",
+    "start_dynasty": "西夏",
+    "end_dynasty": "西夏"
   },
   {
     "id": 33,
@@ -393,7 +457,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "东周时期楚国都城遗址，总面积约16平方公里。",
-    "significance": "东周时期南方最大城市实物见证"
+    "significance": "东周时期南方最大城市实物见证",
+    "start_dynasty": "春秋",
+    "end_dynasty": "汉"
   },
   {
     "id": 34,
@@ -403,9 +469,11 @@
     "location": "陕西西安",
     "builtYear": "前202",
     "protectionLevel": "全国重点",
-    "architect": "",
+    "architect": "阳城延",
     "description": "西汉时期都城遗址，总面积约36平方公里。",
-    "significance": "丝绸之路起点城市遗址"
+    "significance": "丝绸之路起点城市遗址",
+    "start_dynasty": "汉",
+    "end_dynasty": "汉"
   },
   {
     "id": 35,
@@ -417,19 +485,23 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "六朝都城遗址，是中古时期重要政治中心。",
-    "significance": "中古时期都城规划珍贵实物"
+    "significance": "中古时期都城规划珍贵实物",
+    "start_dynasty": "曹魏",
+    "end_dynasty": "北齐"
   },
   {
     "id": 36,
     "name": "古格王国遗址",
-    "dynasty": "10-17世纪",
+    "dynasty": "宋-清",
     "category": "城址",
     "location": "西藏札达",
     "builtYear": "10世纪",
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "古格王朝都城遗址，占地约18万平方米。",
-    "significance": "西藏西部古文明重要见证"
+    "significance": "西藏西部古文明重要见证",
+    "start_dynasty": "宋",
+    "end_dynasty": "清"
   },
   {
     "id": 37,
@@ -441,7 +513,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "世界上最大最古老、保存最完好的生土建筑城市。",
-    "significance": "丝绸之路上重要城市遗址"
+    "significance": "丝绸之路上重要城市遗址",
+    "start_dynasty": "汉",
+    "end_dynasty": "元"
   },
   {
     "id": 38,
@@ -453,7 +527,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "丝绸之路上的重要城市遗址，总面积约220公顷。",
-    "significance": "丝绸之路文化交流历史见证"
+    "significance": "丝绸之路文化交流历史见证",
+    "start_dynasty": "汉",
+    "end_dynasty": "元"
   },
   {
     "id": 39,
@@ -465,7 +541,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "西域三十六国之一楼兰国的都城遗址。",
-    "significance": "丝绸之路上最神秘的古城遗址"
+    "significance": "丝绸之路上最神秘的古城遗址",
+    "start_dynasty": "汉",
+    "end_dynasty": "晋"
   },
   {
     "id": 40,
@@ -477,7 +555,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "世界现存最古老最高的木结构楼阁式佛塔，高67.31米。",
-    "significance": "中国木结构建筑巅峰，辽代高超建筑技艺见证"
+    "significance": "中国木结构建筑巅峰，辽代高超建筑技艺见证",
+    "start_dynasty": "辽",
+    "end_dynasty": "辽"
   },
   {
     "id": 41,
@@ -489,7 +569,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "中国现存第三早的木结构建筑，被梁思成称为中国第一国宝。",
-    "significance": "中国唐代木构建筑活化石"
+    "significance": "中国唐代木构建筑活化石",
+    "start_dynasty": "唐",
+    "end_dynasty": "唐"
   },
   {
     "id": 42,
@@ -501,7 +583,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "中国现存最早的木结构建筑，比佛光寺东大殿早75年。",
-    "significance": "中国木构建筑年代冠军"
+    "significance": "中国木构建筑年代冠军",
+    "start_dynasty": "唐",
+    "end_dynasty": "唐"
   },
   {
     "id": 43,
@@ -513,7 +597,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "中国佛教禅宗祖庭和中国武术发源地。",
-    "significance": "佛教中国化标志性建筑，武术文化发源地"
+    "significance": "佛教中国化标志性建筑，武术文化发源地",
+    "start_dynasty": "北魏",
+    "end_dynasty": "北魏"
   },
   {
     "id": 44,
@@ -525,7 +611,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "建在恒山金龙峡西侧翠屏峰半崖峭壁间，是世界仅存佛道儒三教合一寺庙。",
-    "significance": "中国建筑选址与结构奇迹"
+    "significance": "中国建筑选址与结构奇迹",
+    "start_dynasty": "北魏",
+    "end_dynasty": "北魏"
   },
   {
     "id": 45,
@@ -537,7 +625,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "中国现存规模最大、保存最完整的道教宫观建筑群。",
-    "significance": "元代官式建筑典型代表，中国壁画艺术最后高峰"
+    "significance": "元代官式建筑典型代表，中国壁画艺术最后高峰",
+    "start_dynasty": "元",
+    "end_dynasty": "元"
   },
   {
     "id": 46,
@@ -549,7 +639,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "中国国内现存时代较早、规模较大且保存完整的佛教寺院之一。",
-    "significance": "宋代佛寺布局完整标本"
+    "significance": "宋代佛寺布局完整标本",
+    "start_dynasty": "隋",
+    "end_dynasty": "宋"
   },
   {
     "id": 47,
@@ -561,7 +653,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "辽金时期中国华严宗重要寺庙，大雄宝殿面积1559平方米。",
-    "significance": "辽代官式建筑典型代表"
+    "significance": "辽代官式建筑典型代表",
+    "start_dynasty": "辽",
+    "end_dynasty": "辽"
   },
   {
     "id": 48,
@@ -573,7 +667,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "中国现存最完整的两座辽金时期大型寺院之一。",
-    "significance": "辽金建筑减柱法经典范例"
+    "significance": "辽金建筑减柱法经典范例",
+    "start_dynasty": "辽",
+    "end_dynasty": "金"
   },
   {
     "id": 49,
@@ -585,7 +681,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "",
-    "significance": "中国现存最古老的木结构建筑之一。"
+    "significance": "中国现存最古老的木结构建筑之一。",
+    "start_dynasty": "北汉",
+    "end_dynasty": "北汉"
   },
   {
     "id": 50,
@@ -597,7 +695,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "",
-    "significance": "寺内有宋至清代彩塑2000余尊。"
+    "significance": "寺内有宋至清代彩塑2000余尊。",
+    "start_dynasty": "明",
+    "end_dynasty": "明"
   },
   {
     "id": 51,
@@ -609,7 +709,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "",
-    "significance": "五台山第一大寺，与洛阳白马寺同为中国最早寺院。"
+    "significance": "五台山第一大寺，与洛阳白马寺同为中国最早寺院。",
+    "start_dynasty": "明",
+    "end_dynasty": "明"
   },
   {
     "id": 52,
@@ -621,7 +723,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "",
-    "significance": "因内有大白塔而得名，是五台山的标志性建筑。"
+    "significance": "因内有大白塔而得名，是五台山的标志性建筑。",
+    "start_dynasty": "明",
+    "end_dynasty": "明"
   },
   {
     "id": 53,
@@ -633,7 +737,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "",
-    "significance": "中国北方保存最完好的戒台，有天下第一戒台之称。"
+    "significance": "中国北方保存最完好的戒台，有天下第一戒台之称。",
+    "start_dynasty": "唐",
+    "end_dynasty": "唐"
   },
   {
     "id": 54,
@@ -645,7 +751,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "",
-    "significance": "寺内悬挂明永乐年间铸造的永乐大钟，钟高6.75米。"
+    "significance": "寺内悬挂明永乐年间铸造的永乐大钟，钟高6.75米。",
+    "start_dynasty": "清",
+    "end_dynasty": "清"
   },
   {
     "id": 55,
@@ -657,7 +765,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "",
-    "significance": "以石经闻名天下，寺内珍藏着石经、纸经、木版经。"
+    "significance": "以石经闻名天下，寺内珍藏着石经、纸经、木版经。",
+    "start_dynasty": "隋",
+    "end_dynasty": "唐"
   },
   {
     "id": 56,
@@ -669,7 +779,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "",
-    "significance": "藏传佛教格鲁派六大寺院之一，寺内酥油花被誉为三绝。"
+    "significance": "藏传佛教格鲁派六大寺院之一，寺内酥油花被誉为三绝。",
+    "start_dynasty": "明",
+    "end_dynasty": "明"
   },
   {
     "id": 57,
@@ -681,7 +793,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "",
-    "significance": "有青藏高原小故宫之称，是明代宫殿式建筑群在青藏高原的杰出代表。"
+    "significance": "有青藏高原小故宫之称，是明代宫殿式建筑群在青藏高原的杰出代表。",
+    "start_dynasty": "明",
+    "end_dynasty": "明"
   },
   {
     "id": 58,
@@ -693,7 +807,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "",
-    "significance": "藏传佛教格鲁派六大寺院之一，有世界藏学府之称。"
+    "significance": "藏传佛教格鲁派六大寺院之一，有世界藏学府之称。",
+    "start_dynasty": "清",
+    "end_dynasty": "清"
   },
   {
     "id": 59,
@@ -705,7 +821,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "",
-    "significance": "藏传佛教格鲁派六大寺院之一，鼎盛时期住寺僧人超过一万人。"
+    "significance": "藏传佛教格鲁派六大寺院之一，鼎盛时期住寺僧人超过一万人。",
+    "start_dynasty": "明",
+    "end_dynasty": "明"
   },
   {
     "id": 60,
@@ -717,7 +835,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "",
-    "significance": "藏传佛教格鲁派六大寺院之一，以辩经活动闻名。"
+    "significance": "藏传佛教格鲁派六大寺院之一，以辩经活动闻名。",
+    "start_dynasty": "明",
+    "end_dynasty": "明"
   },
   {
     "id": 61,
@@ -729,7 +849,9 @@
     "protectionLevel": "全国重点",
     "architect": "宗喀巴",
     "description": "",
-    "significance": "藏传佛教格鲁派六大寺院之一，由格鲁派创始人宗喀巴亲自倡建。"
+    "significance": "藏传佛教格鲁派六大寺院之一，由格鲁派创始人宗喀巴亲自倡建。",
+    "start_dynasty": "明",
+    "end_dynasty": "明"
   },
   {
     "id": 62,
@@ -741,7 +863,9 @@
     "protectionLevel": "全国重点",
     "architect": "根敦朱巴",
     "description": "",
-    "significance": "藏传佛教格鲁派六大寺院之一，寺内强巴佛殿供奉世界最大铜制弥勒佛坐像。"
+    "significance": "藏传佛教格鲁派六大寺院之一，寺内强巴佛殿供奉世界最大铜制弥勒佛坐像。",
+    "start_dynasty": "明",
+    "end_dynasty": "明"
   },
   {
     "id": 63,
@@ -753,7 +877,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "",
-    "significance": "中国现存最早的皇家园林，圣母殿为宋代建筑代表作。"
+    "significance": "中国现存最早的皇家园林，圣母殿为宋代建筑代表作。",
+    "start_dynasty": "宋",
+    "end_dynasty": "宋"
   },
   {
     "id": 64,
@@ -765,7 +891,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "",
-    "significance": "中国现存规模最大、保存最完整的关帝庙，总面积22万平方米。"
+    "significance": "中国现存规模最大、保存最完整的关帝庙，总面积22万平方米。",
+    "start_dynasty": "明",
+    "end_dynasty": "清"
   },
   {
     "id": 65,
@@ -777,7 +905,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "",
-    "significance": "中国现存规模最大的祭祀孔子的庙宇，1994年列入世界文化遗产。"
+    "significance": "中国现存规模最大的祭祀孔子的庙宇，1994年列入世界文化遗产。",
+    "start_dynasty": "汉",
+    "end_dynasty": "清"
   },
   {
     "id": 66,
@@ -789,7 +919,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "",
-    "significance": "中国现存规模最大的封建贵族府邸，1994年列入世界文化遗产。"
+    "significance": "中国现存规模最大的封建贵族府邸，1994年列入世界文化遗产。",
+    "start_dynasty": "宋",
+    "end_dynasty": "清"
   },
   {
     "id": 67,
@@ -801,7 +933,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "",
-    "significance": "明清两代帝王祭祀皇天、祈五谷丰登之场所，1998年列入世界文化遗产。"
+    "significance": "明清两代帝王祭祀皇天、祈五谷丰登之场所，1998年列入世界文化遗产。",
+    "start_dynasty": "明",
+    "end_dynasty": "明"
   },
   {
     "id": 68,
@@ -813,7 +947,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "",
-    "significance": "明清两代帝王祭祀皇地祇的场所，是中国现存最大的祭地之坛。"
+    "significance": "明清两代帝王祭祀皇地祇的场所，是中国现存最大的祭地之坛。",
+    "start_dynasty": "明",
+    "end_dynasty": "明"
   },
   {
     "id": 69,
@@ -825,7 +961,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "",
-    "significance": "明清两代帝王祭祀大明之神，北京五坛之一。"
+    "significance": "明清两代帝王祭祀大明之神，北京五坛之一。",
+    "start_dynasty": "明",
+    "end_dynasty": "明"
   },
   {
     "id": 70,
@@ -837,7 +975,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "",
-    "significance": "明清两代帝王祭祀夜明之神，又名夕月坛。"
+    "significance": "明清两代帝王祭祀夜明之神，又名夕月坛。",
+    "start_dynasty": "明",
+    "end_dynasty": "明"
   },
   {
     "id": 71,
@@ -849,7 +989,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "",
-    "significance": "明清两代帝王祭祀社稷的场所，是中国现存最完整的祭社稷场所。"
+    "significance": "明清两代帝王祭祀社稷的场所，是中国现存最完整的祭社稷场所。",
+    "start_dynasty": "明",
+    "end_dynasty": "明"
   },
   {
     "id": 72,
@@ -861,7 +1003,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "",
-    "significance": "中华民族始祖黄帝的陵寝所在地，有天下第一陵之称。"
+    "significance": "中华民族始祖黄帝的陵寝所在地，有天下第一陵之称。",
+    "start_dynasty": "汉",
+    "end_dynasty": "清"
   },
   {
     "id": 73,
@@ -873,7 +1017,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "",
-    "significance": "纪念大禹的重要祭祀建筑群，由禹陵、禹庙、禹祠三部分组成。"
+    "significance": "纪念大禹的重要祭祀建筑群，由禹陵、禹庙、禹祠三部分组成。",
+    "start_dynasty": "夏",
+    "end_dynasty": "清"
   },
   {
     "id": 74,
@@ -885,7 +1031,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "",
-    "significance": "中国四大石窟之一，现存主要洞窟45个，2001年列入世界文化遗产。"
+    "significance": "中国四大石窟之一，现存主要洞窟45个，2001年列入世界文化遗产。",
+    "start_dynasty": "北魏",
+    "end_dynasty": "北魏"
   },
   {
     "id": 75,
@@ -897,7 +1045,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "",
-    "significance": "中国四大石窟之一，现存窟龛2345个，2000年列入世界文化遗产。"
+    "significance": "中国四大石窟之一，现存窟龛2345个，2000年列入世界文化遗产。",
+    "start_dynasty": "北魏",
+    "end_dynasty": "唐"
   },
   {
     "id": 76,
@@ -909,7 +1059,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "",
-    "significance": "世界上现存规模最大、内容最丰富的佛教艺术圣地，1987年列入世界文化遗产。"
+    "significance": "世界上现存规模最大、内容最丰富的佛教艺术圣地，1987年列入世界文化遗产。",
+    "start_dynasty": "前秦",
+    "end_dynasty": "元"
   },
   {
     "id": 77,
@@ -921,7 +1073,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "",
-    "significance": "中国四大石窟之一，因山形酷似麦垛而得名，2014年列入世界文化遗产。"
+    "significance": "中国四大石窟之一，因山形酷似麦垛而得名，2014年列入世界文化遗产。",
+    "start_dynasty": "后秦",
+    "end_dynasty": "明"
   },
   {
     "id": 78,
@@ -933,7 +1087,9 @@
     "protectionLevel": "全国重点",
     "architect": "赵智凤",
     "description": "",
-    "significance": "世界八大石窟之一，共包含造像5万余躯，1999年列入世界文化遗产。"
+    "significance": "世界八大石窟之一，共包含造像5万余躯，1999年列入世界文化遗产。",
+    "start_dynasty": "宋",
+    "end_dynasty": "宋"
   },
   {
     "id": 79,
@@ -945,7 +1101,9 @@
     "protectionLevel": "全国重点",
     "architect": "海通和尚发起",
     "description": "",
-    "significance": "世界上最大的石刻弥勒佛坐像，通高71米，1996年列入世界文化遗产。"
+    "significance": "世界上最大的石刻弥勒佛坐像，通高71米，1996年列入世界文化遗产。",
+    "start_dynasty": "唐",
+    "end_dynasty": "唐"
   },
   {
     "id": 80,
@@ -957,7 +1115,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "",
-    "significance": "中国著名的石窟群之一，现存窟龛216个，造像800余尊。"
+    "significance": "中国著名的石窟群之一，现存窟龛216个，造像800余尊。",
+    "start_dynasty": "西秦",
+    "end_dynasty": "明"
   },
   {
     "id": 81,
@@ -969,7 +1129,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "",
-    "significance": "以精美的北朝和唐代石窟造像闻名。"
+    "significance": "以精美的北朝和唐代石窟造像闻名。",
+    "start_dynasty": "东魏",
+    "end_dynasty": "唐"
   },
   {
     "id": 82,
@@ -981,7 +1143,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "",
-    "significance": "中原地区重要的北魏石窟，帝后礼佛图浮雕为国内孤例。"
+    "significance": "中原地区重要的北魏石窟，帝后礼佛图浮雕为国内孤例。",
+    "start_dynasty": "北魏",
+    "end_dynasty": "宋"
   },
   {
     "id": 83,
@@ -993,7 +1157,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "",
-    "significance": "江南三大名楼之一，因崔颢《黄鹤楼》诗闻名天下。"
+    "significance": "江南三大名楼之一，因崔颢《黄鹤楼》诗闻名天下。",
+    "start_dynasty": "三国",
+    "end_dynasty": "三国"
   },
   {
     "id": 84,
@@ -1005,7 +1171,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "",
-    "significance": "江南三大名楼之一，因范仲淹《岳阳楼记》闻名天下。"
+    "significance": "江南三大名楼之一，因范仲淹《岳阳楼记》闻名天下。",
+    "start_dynasty": "三国",
+    "end_dynasty": "三国"
   },
   {
     "id": 85,
@@ -1017,7 +1185,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "",
-    "significance": "江南三大名楼之一，因王勃《滕王阁序》闻名天下。"
+    "significance": "江南三大名楼之一，因王勃《滕王阁序》闻名天下。",
+    "start_dynasty": "唐",
+    "end_dynasty": "唐"
   },
   {
     "id": 86,
@@ -1029,7 +1199,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "",
-    "significance": "因王之涣《登鹳雀楼》诗闻名天下，现存建筑为2002年重建。"
+    "significance": "因王之涣《登鹳雀楼》诗闻名天下，现存建筑为2002年重建。",
+    "start_dynasty": "北周",
+    "end_dynasty": "北周"
   },
   {
     "id": 87,
@@ -1041,7 +1213,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "",
-    "significance": "因清代诗人孙髯翁所作180字天下第一长联而闻名。"
+    "significance": "因清代诗人孙髯翁所作180字天下第一长联而闻名。",
+    "start_dynasty": "清",
+    "end_dynasty": "清"
   },
   {
     "id": 88,
@@ -1053,7 +1227,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "",
-    "significance": "因清代乾隆皇帝六下江南多次登楼而名声大噪。"
+    "significance": "因清代乾隆皇帝六下江南多次登楼而名声大噪。",
+    "start_dynasty": "明",
+    "end_dynasty": "明"
   },
   {
     "id": 89,
@@ -1065,7 +1241,9 @@
     "protectionLevel": "全国重点",
     "architect": "李春",
     "description": "世界现存最古老的敞肩石拱桥，比欧洲同类技术早700年。",
-    "significance": "中国古代桥梁技术巅峰"
+    "significance": "中国古代桥梁技术巅峰",
+    "start_dynasty": "隋",
+    "end_dynasty": "隋"
   },
   {
     "id": 90,
@@ -1077,7 +1255,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "11孔联拱石桥，栏杆上雕刻各异的石狮子485个，燕京八景之一卢沟晓月。",
-    "significance": "金代石桥建筑艺术代表"
+    "significance": "金代石桥建筑艺术代表",
+    "start_dynasty": "金",
+    "end_dynasty": "金"
   },
   {
     "id": 91,
@@ -1089,7 +1269,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "中国现存最长的古代石桥，全长2255米，362孔。",
-    "significance": "宋代海上丝绸之路工程能力见证"
+    "significance": "宋代海上丝绸之路工程能力见证",
+    "start_dynasty": "宋",
+    "end_dynasty": "宋"
   },
   {
     "id": 92,
@@ -1101,7 +1283,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "全球首创的启闭式桥梁，中间为18艘木船组成的浮桥。",
-    "significance": "世界上最早的启闭式桥梁"
+    "significance": "世界上最早的启闭式桥梁",
+    "start_dynasty": "宋",
+    "end_dynasty": "宋"
   },
   {
     "id": 93,
@@ -1113,7 +1297,9 @@
     "protectionLevel": "全国重点",
     "architect": "蔡襄主持",
     "description": "世界首创筏形基础技术，世界首座跨海石桥。",
-    "significance": "宋代海洋工程技术代表"
+    "significance": "宋代海洋工程技术代表",
+    "start_dynasty": "宋",
+    "end_dynasty": "宋"
   },
   {
     "id": 94,
@@ -1125,7 +1311,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "13根铁链横跨大渡河，铁链总重约21吨。",
-    "significance": "中国现存最早铁索桥之一"
+    "significance": "中国现存最早铁索桥之一",
+    "start_dynasty": "清",
+    "end_dynasty": "清"
   },
   {
     "id": 95,
@@ -1137,7 +1325,9 @@
     "protectionLevel": "全国重点",
     "architect": "侗族工匠",
     "description": "全用榫卯连接无铁钉的木构廊桥。",
-    "significance": "侗族建筑文化杰出代表"
+    "significance": "侗族建筑文化杰出代表",
+    "start_dynasty": "清",
+    "end_dynasty": "清"
   },
   {
     "id": 96,
@@ -1149,7 +1339,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "中国现存唯一完整的十字形古桥。",
-    "significance": "中国桥梁形制孤例"
+    "significance": "中国桥梁形制孤例",
+    "start_dynasty": "宋",
+    "end_dynasty": "宋"
   },
   {
     "id": 97,
@@ -1161,7 +1353,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "清朝入关前的皇宫，满汉蒙藏多民族文化融合的建筑典范，2004年列入世界文化遗产。",
-    "significance": "清朝崛起的建筑见证"
+    "significance": "清朝崛起的建筑见证",
+    "start_dynasty": "清",
+    "end_dynasty": "清"
   },
   {
     "id": 98,
@@ -1173,7 +1367,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "唐代主要皇宫，规模为北京故宫的4.5倍，2014年列入世界文化遗产。",
-    "significance": "唐代宫殿建筑最高水平"
+    "significance": "唐代宫殿建筑最高水平",
+    "start_dynasty": "唐",
+    "end_dynasty": "唐"
   },
   {
     "id": 99,
@@ -1185,7 +1381,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "西汉帝国的大朝正宫，是丝绸之路的东方起点，2014年列入世界文化遗产。",
-    "significance": "汉代宫城制度典型代表"
+    "significance": "汉代宫城制度典型代表",
+    "start_dynasty": "汉",
+    "end_dynasty": "汉"
   },
   {
     "id": 100,
@@ -1197,7 +1395,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "中国保存最完整的县级官署衙门，被誉为天下第一衙。",
-    "significance": "中国古代县级官署建筑活化石"
+    "significance": "中国古代县级官署建筑活化石",
+    "start_dynasty": "清",
+    "end_dynasty": "清"
   },
   {
     "id": 101,
@@ -1209,7 +1409,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "中国现存唯一完整的省级衙署。",
-    "significance": "清代省级官署建筑完整标本"
+    "significance": "清代省级官署建筑完整标本",
+    "start_dynasty": "清",
+    "end_dynasty": "清"
   },
   {
     "id": 102,
@@ -1221,7 +1423,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "中国现存规模最大、保存最完整的古代县衙。",
-    "significance": "明清县级衙署建筑完整标本"
+    "significance": "明清县级衙署建筑完整标本",
+    "start_dynasty": "明",
+    "end_dynasty": "明"
   },
   {
     "id": 103,
@@ -1233,7 +1437,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "中国近代史上重要政治中枢，从明初汉王府到太平天国天王府再到国民政府。",
-    "significance": "中国近代政治变迁建筑见证"
+    "significance": "中国近代政治变迁建筑见证",
+    "start_dynasty": "明",
+    "end_dynasty": "清"
   },
   {
     "id": 104,
@@ -1245,7 +1451,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "晋商大院代表，占地8724平方米，建筑面积4175平方米，6个大院20个小院。",
-    "significance": "晋商文化物质载体"
+    "significance": "晋商文化物质载体",
+    "start_dynasty": "清",
+    "end_dynasty": "清"
   },
   {
     "id": 105,
@@ -1257,7 +1465,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "中国最大的民居建筑群之一，总面积25万平方米。",
-    "significance": "中国民间建筑艺术博物馆"
+    "significance": "中国民间建筑艺术博物馆",
+    "start_dynasty": "清",
+    "end_dynasty": "清"
   },
   {
     "id": 106,
@@ -1269,7 +1479,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "清代名臣陈廷敬的故居，内外城墙总长近700米。",
-    "significance": "官宦民居建筑群杰出代表"
+    "significance": "官宦民居建筑群杰出代表",
+    "start_dynasty": "明",
+    "end_dynasty": "明"
   },
   {
     "id": 107,
@@ -1281,7 +1493,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "中国现存规模最大的近代地主庄园建筑群。",
-    "significance": "近代封建地主庄园实物见证"
+    "significance": "近代封建地主庄园实物见证",
+    "start_dynasty": "清",
+    "end_dynasty": "清"
   },
   {
     "id": 108,
@@ -1293,7 +1507,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "与山西晋中乔家大院、河南安阳马氏庄园并称中原三大官宅。",
-    "significance": "中原地区大型民居建筑群代表"
+    "significance": "中原地区大型民居建筑群代表",
+    "start_dynasty": "明",
+    "end_dynasty": "明"
   },
   {
     "id": 109,
@@ -1305,7 +1521,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "中西合璧的碉楼建筑群，2007年列入世界文化遗产。",
-    "significance": "华侨文化与本土防御文化融合代表"
+    "significance": "华侨文化与本土防御文化融合代表",
+    "start_dynasty": "明",
+    "end_dynasty": "明"
   },
   {
     "id": 110,
@@ -1317,7 +1535,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "中国古代最伟大的防御工程，1987年列入世界文化遗产。",
-    "significance": "世界建筑史上的人类奇迹"
+    "significance": "世界建筑史上的人类奇迹",
+    "start_dynasty": "明",
+    "end_dynasty": "明"
   },
   {
     "id": 111,
@@ -1329,7 +1549,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "中国现存规模最大、保存最完整的古代城墙，周长13.7公里。",
-    "significance": "中国古代城池建筑完整标本"
+    "significance": "中国古代城池建筑完整标本",
+    "start_dynasty": "明",
+    "end_dynasty": "明"
   },
   {
     "id": 112,
@@ -1341,7 +1563,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "世界上现存最长、规模最大的古代城墙，周长35.3公里。",
-    "significance": "世界古代城垣之最"
+    "significance": "世界古代城垣之最",
+    "start_dynasty": "明",
+    "end_dynasty": "明"
   },
   {
     "id": 113,
@@ -1353,7 +1577,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "中国南方最古老的砖塔之一，主塔高69.13米。",
-    "significance": "唐代砖塔建筑技术代表"
+    "significance": "唐代砖塔建筑技术代表",
+    "start_dynasty": "唐",
+    "end_dynasty": "唐"
   },
   {
     "id": 114,
@@ -1365,7 +1591,9 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "中国现存最古老的木结构楼阁式建筑，观音阁高23米。",
-    "significance": "辽代木结构建筑杰出代表"
+    "significance": "辽代木结构建筑杰出代表",
+    "start_dynasty": "辽",
+    "end_dynasty": "辽"
   },
   {
     "id": 115,
@@ -1377,6 +1605,8 @@
     "protectionLevel": "全国重点",
     "architect": "",
     "description": "战国时期赵国都城遗址，总面积约1888万平方米。",
-    "significance": "战国都城规划重要实物"
+    "significance": "战国都城规划重要实物",
+    "start_dynasty": "战国",
+    "end_dynasty": "战国"
   }
 ]

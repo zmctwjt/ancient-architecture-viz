@@ -59,117 +59,152 @@
   ],
   "type_distribution": [
     {
-      "name": "其他",
-      "value": 14
+      "name": "官修规范",
+      "value": 5
+    },
+    {
+      "name": "工匠手册",
+      "value": 4
+    },
+    {
+      "name": "私人专著",
+      "value": 3
+    },
+    {
+      "name": "综合笔记",
+      "value": 2
     }
   ],
   "survival_distribution": [
     {
-      "name": "未知",
-      "value": 14
+      "name": "存世",
+      "value": 11
+    },
+    {
+      "name": "残卷",
+      "value": 2
+    },
+    {
+      "name": "失传",
+      "value": 1
     }
   ],
   "sunburst_data": [
     {
-      "name": "其他",
+      "name": "官修规范",
       "children": [
         {
           "name": "考工记",
           "value": 1,
           "dynasty": "春秋—战国",
           "author": "齐国工匠（佚名）",
-          "survival": "未知"
+          "survival": "存世"
         },
         {
           "name": "营造法式",
           "value": 1,
           "dynasty": "北宋",
           "author": "李诫",
-          "survival": "未知"
-        },
-        {
-          "name": "木经",
-          "value": 1,
-          "dynasty": "北宋",
-          "author": "喻皓",
-          "survival": "未知"
-        },
-        {
-          "name": "园冶",
-          "value": 1,
-          "dynasty": "明",
-          "author": "计成",
-          "survival": "未知"
-        },
-        {
-          "name": "鲁班经",
-          "value": 1,
-          "dynasty": "明",
-          "author": "午荣（汇编）",
-          "survival": "未知"
+          "survival": "存世"
         },
         {
           "name": "工程做法",
           "value": 1,
           "dynasty": "清",
           "author": "工部（官修）",
-          "survival": "未知"
-        },
-        {
-          "name": "梦溪笔谈",
-          "value": 1,
-          "dynasty": "北宋",
-          "author": "沈括",
-          "survival": "未知"
+          "survival": "存世"
         },
         {
           "name": "营缮令",
           "value": 1,
           "dynasty": "唐",
           "author": "唐朝工部（官修）",
-          "survival": "未知"
-        },
-        {
-          "name": "天工开物",
-          "value": 1,
-          "dynasty": "明",
-          "author": "宋应星",
-          "survival": "未知"
-        },
-        {
-          "name": "长物志",
-          "value": 1,
-          "dynasty": "明",
-          "author": "文震亨",
-          "survival": "未知"
-        },
-        {
-          "name": "闲情偶寄",
-          "value": 1,
-          "dynasty": "清",
-          "author": "李渔",
-          "survival": "未知"
-        },
-        {
-          "name": "工段营造录",
-          "value": 1,
-          "dynasty": "清",
-          "author": "李斗",
-          "survival": "未知"
+          "survival": "残卷"
         },
         {
           "name": "经世大典",
           "value": 1,
           "dynasty": "元",
           "author": "脱脱等（官修）",
-          "survival": "未知"
+          "survival": "残卷"
+        }
+      ]
+    },
+    {
+      "name": "工匠手册",
+      "children": [
+        {
+          "name": "木经",
+          "value": 1,
+          "dynasty": "北宋",
+          "author": "喻皓",
+          "survival": "失传"
+        },
+        {
+          "name": "鲁班经",
+          "value": 1,
+          "dynasty": "明",
+          "author": "午荣（汇编）",
+          "survival": "存世"
+        },
+        {
+          "name": "工段营造录",
+          "value": 1,
+          "dynasty": "清",
+          "author": "李斗",
+          "survival": "存世"
         },
         {
           "name": "髹饰录",
           "value": 1,
           "dynasty": "明",
           "author": "黄成（著）、杨明（注）",
-          "survival": "未知"
+          "survival": "存世"
+        }
+      ]
+    },
+    {
+      "name": "私人专著",
+      "children": [
+        {
+          "name": "园冶",
+          "value": 1,
+          "dynasty": "明",
+          "author": "计成",
+          "survival": "存世"
+        },
+        {
+          "name": "长物志",
+          "value": 1,
+          "dynasty": "明",
+          "author": "文震亨",
+          "survival": "存世"
+        },
+        {
+          "name": "闲情偶寄",
+          "value": 1,
+          "dynasty": "清",
+          "author": "李渔",
+          "survival": "存世"
+        }
+      ]
+    },
+    {
+      "name": "综合笔记",
+      "children": [
+        {
+          "name": "梦溪笔谈",
+          "value": 1,
+          "dynasty": "北宋",
+          "author": "沈括",
+          "survival": "存世"
+        },
+        {
+          "name": "天工开物",
+          "value": 1,
+          "dynasty": "明",
+          "author": "宋应星",
+          "survival": "存世"
         }
       ]
     }
@@ -180,8 +215,8 @@
       "author": "齐国工匠（佚名）",
       "dynasty": "春秋—战国",
       "period": "",
-      "type": "其他",
-      "survival_status": "未知",
+      "type": "官修规范",
+      "survival_status": "存世",
       "significance": ""
     },
     {
@@ -189,8 +224,8 @@
       "author": "李诫",
       "dynasty": "北宋",
       "period": "",
-      "type": "其他",
-      "survival_status": "未知",
+      "type": "官修规范",
+      "survival_status": "存世",
       "significance": ""
     },
     {
@@ -198,8 +233,8 @@
       "author": "喻皓",
       "dynasty": "北宋",
       "period": "",
-      "type": "其他",
-      "survival_status": "未知",
+      "type": "工匠手册",
+      "survival_status": "失传",
       "significance": ""
     },
     {
@@ -207,8 +242,8 @@
       "author": "计成",
       "dynasty": "明",
       "period": "",
-      "type": "其他",
-      "survival_status": "未知",
+      "type": "私人专著",
+      "survival_status": "存世",
       "significance": ""
     },
     {
@@ -216,8 +251,8 @@
       "author": "午荣（汇编）",
       "dynasty": "明",
       "period": "",
-      "type": "其他",
-      "survival_status": "未知",
+      "type": "工匠手册",
+      "survival_status": "存世",
       "significance": ""
     },
     {
@@ -225,8 +260,8 @@
       "author": "工部（官修）",
       "dynasty": "清",
       "period": "",
-      "type": "其他",
-      "survival_status": "未知",
+      "type": "官修规范",
+      "survival_status": "存世",
       "significance": ""
     },
     {
@@ -234,8 +269,8 @@
       "author": "沈括",
       "dynasty": "北宋",
       "period": "",
-      "type": "其他",
-      "survival_status": "未知",
+      "type": "综合笔记",
+      "survival_status": "存世",
       "significance": ""
     },
     {
@@ -243,8 +278,8 @@
       "author": "唐朝工部（官修）",
       "dynasty": "唐",
       "period": "",
-      "type": "其他",
-      "survival_status": "未知",
+      "type": "官修规范",
+      "survival_status": "残卷",
       "significance": ""
     },
     {
@@ -252,8 +287,8 @@
       "author": "宋应星",
       "dynasty": "明",
       "period": "",
-      "type": "其他",
-      "survival_status": "未知",
+      "type": "综合笔记",
+      "survival_status": "存世",
       "significance": ""
     },
     {
@@ -261,8 +296,8 @@
       "author": "文震亨",
       "dynasty": "明",
       "period": "",
-      "type": "其他",
-      "survival_status": "未知",
+      "type": "私人专著",
+      "survival_status": "存世",
       "significance": ""
     },
     {
@@ -270,8 +305,8 @@
       "author": "李渔",
       "dynasty": "清",
       "period": "",
-      "type": "其他",
-      "survival_status": "未知",
+      "type": "私人专著",
+      "survival_status": "存世",
       "significance": ""
     },
     {
@@ -279,8 +314,8 @@
       "author": "李斗",
       "dynasty": "清",
       "period": "",
-      "type": "其他",
-      "survival_status": "未知",
+      "type": "工匠手册",
+      "survival_status": "存世",
       "significance": ""
     },
     {
@@ -288,8 +323,8 @@
       "author": "脱脱等（官修）",
       "dynasty": "元",
       "period": "",
-      "type": "其他",
-      "survival_status": "未知",
+      "type": "官修规范",
+      "survival_status": "残卷",
       "significance": ""
     },
     {
@@ -297,8 +332,8 @@
       "author": "黄成（著）、杨明（注）",
       "dynasty": "明",
       "period": "",
-      "type": "其他",
-      "survival_status": "未知",
+      "type": "工匠手册",
+      "survival_status": "存世",
       "significance": ""
     }
   ]

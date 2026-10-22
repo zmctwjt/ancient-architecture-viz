@@ -10,4 +10,3 @@ import{g as i}from"./gsap-e9ea83b5.js";function h(){const o=i.timeline();return 
       pointer-events: none;
       z-index: 0;
     `,r.appendChild(t),i.to(t,{y:"100vh",x:`+=${Math.random()*100-50}`,rotation:Math.random()*360,duration:d,delay:p,ease:"none",onComplete:()=>{t.remove()}})}for(let t=0;t<e.count;t++)setTimeout(c,t*200);const s=setInterval(c,e.interval);return()=>{clearInterval(s),r.querySelectorAll(".falling-leaf").forEach(t=>t.remove())}}export{v as c,y as f,h as p};
-//# sourceMappingURL=animation-a3d20002.js.map

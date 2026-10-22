@@ -16,4 +16,3 @@ const i={dynastyDistribution:{title:"朝代分布洞察",content:"115处古建�
       </div>
     </div>
   `}export{i as a,s as c,o as g,a as l,n as s};
-//# sourceMappingURL=insights-91087ff5.js.map
