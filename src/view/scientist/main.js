@@ -6,6 +6,7 @@ import echarts from '../../js/common/echarts.js';
 import { loadData, COLORS, ECHARTS_THEME, getDataUrl, loadJson, matchDynastyGroup } from '../../js/common/utils.js';
 import { pageEnterAnimation } from '../../js/common/animation.js';
 import { showInfoModal, generateDataHTML } from '../../js/common/infoModal.js';
+import { showDrawer } from '../../js/common/drawer.js';
 import { scientistInsights, generateInsightHTML } from '../../js/common/insights.js';
 import { initReveal } from '../../js/common/reveal.js';
 
@@ -104,7 +105,7 @@ async function initData(filterDynasties) {
   await initTimelineChart(architectData);
   await initGraphChart(architectData);
   await initPersonCards(architectData);
-  initReveal();
+  renderLineage(architectData.timeline_data || []);
   await initBarChart(architectData);
 
   addInsightPanels();
@@ -414,5 +415,90 @@ function showPersonDetail(person) {
     `
   });
 }
+
+
+/**
+ * 匠师谱系墙：按六大断代分栏，栏内按影响力降序
+ */
+const LINEAGE_GROUPS = [
+  { key: '先秦', label: '先秦', test: /夏|商|周|春秋|战国|先秦/ },
+  { key: '秦汉', label: '秦汉', test: /秦|汉/ },
+  { key: '魏晋', label: '魏晋', test: /魏|晋|南北朝|三国/ },
+  { key: '隋唐', label: '隋唐', test: /隋|唐/ },
+  { key: '宋元', label: '宋元', test: /宋|元|辽|金/ },
+  { key: '明清', label: '明清', test: /明|清/ },
+];
+
+function simplifyPeriod(raw) {
+  let s = String(raw || '').trim();
+  if (!s) return '生卒不详';
+  if (/不详|无考/.test(s)) return '生卒不详';
+  s = s.replace(/约/g, '').replace(/年/g, '').replace(/公元/g, '');
+  s = s.replace(/前/g, '前');
+  // 取「—」或「-」两侧，压缩为 前507—前444
+  const parts = s.split(/[—\-–]/).map((x) => x.trim()).filter(Boolean);
+  if (parts.length >= 2) return `${parts[0]}—${parts[parts.length - 1]}`;
+  return s.length > 14 ? s.slice(0, 14) + '…' : s;
+}
+
+function renderLineage(scientists) {
+  const box = document.getElementById('lineage-grid');
+  if (!box) return;
+
+  const cols = LINEAGE_GROUPS.map((g) => ({
+    ...g,
+    people: scientists
+      .filter((s) => g.test.test(String(s.dynasty || '')))
+      .sort((a, b) => (b.influence_score || 0) - (a.influence_score || 0)),
+  }));
+
+  box.innerHTML = cols.map((col) => `
+    <div class="lineage-col">
+      <div class="lineage-col__head">
+        <b>${col.label}</b>
+        <span>${col.people.length} 人</span>
+      </div>
+      ${col.people.length
+        ? `<div class="lineage-list">${col.people.map((p) => `
+            <div class="lineage-person" data-name="${p.name}" role="button" tabindex="0">
+              <div class="seal-avatar" aria-hidden="true">${p.name.charAt(0)}</div>
+              <div class="lineage-person__info">
+                <span class="lineage-person__name">${p.name}</span>
+                <span class="lineage-person__period">${simplifyPeriod(p.period)}</span>
+                <span class="lineage-person__score">${p.influence_score || 0}</span>
+              </div>
+            </div>`).join('')}</div>`
+        : '<div class="lineage-empty">暂无留名匠师</div>'}
+    </div>
+  `).join('');
+
+  // 点击 → 抽屉
+  const open = (el) => {
+    const person = scientists.find((s) => s.name === el.dataset.name);
+    if (!person) return;
+    showDrawer({
+      title: person.name,
+      subtitle: [person.dynasty, person.title || '匠师'].filter(Boolean).join(' · '),
+      glyph: null,
+      category: '官府',
+      fields: [
+        { label: '朝代', value: person.dynasty },
+        { label: '生卒', value: person.period },
+        { label: '身份', value: person.title },
+        { label: '影响力', value: `${person.influence_score || 0} / 100` },
+      ],
+      body: person.achievements ? `<p>${person.achievements}</p>` : '',
+      tags: (person.major_works || []).slice(0, 4),
+    });
+  };
+
+  box.querySelectorAll('.lineage-person').forEach((el) => {
+    el.addEventListener('click', () => open(el));
+    el.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(el); }
+    });
+  });
+}
+
 
 init();

@@ -8,6 +8,7 @@ import { loadData, COLORS, ECHARTS_THEME, getDataUrl, loadJson, matchDynastyGrou
 import { fallingLeavesAnimation, countUpAnimation, pageEnterAnimation } from '../../js/common/animation.js';
 import { showInfoModal } from '../../js/common/infoModal.js';
 import { glyphByCategory } from '../../js/common/glyphs.js';
+import { showBuildingDrawer } from '../../js/common/drawer.js';
 
 // 获取URL参数中的朝代过滤
 function getDynastyFilter() {
@@ -20,7 +21,7 @@ function getDynastyFilter() {
 const chartInstances = [];
 
 function initDynastyButtons() {
-  const btns = document.querySelectorAll('.dynasty-btn');
+  const btns = document.querySelectorAll('.band-seg');
   const urlParams = new URLSearchParams(window.location.search);
   const currentDynasties = urlParams.get('dynasty');
 
@@ -125,6 +126,7 @@ async function initData(filterDynasties) {
 
   const filterDynastyStr = filterDynasties && filterDynasties.length > 0 ? filterDynasties.join(',') : null;
   initStatCardLinks();
+  renderBand(buildings);
   renderWall(filteredBuildings);
   initCountUp(filteredBuildings.length, architectsMeta.total || 0, booksMeta.total || 0, cultureCount);
   await initTimelineChart(filteredBuildings, filterDynastyStr);
@@ -181,6 +183,22 @@ const WALL_DYNASTY_ORDER = {
 };
 
 /**
+ * 朝代时间带：把各朝代遗存数量写入分段
+ */
+function renderBand(allBuildings) {
+  const counts = {};
+  allBuildings.forEach((b) => {
+    const dg = dynastyGroup(b.dynasty);
+    counts[dg] = (counts[dg] || 0) + 1;
+  });
+  document.querySelectorAll('.band-seg').forEach((seg) => {
+    const n = counts[seg.dataset.dynasty] || 0;
+    const el = seg.querySelector('.band-seg__count');
+    if (el) el.textContent = n;
+  });
+}
+
+/**
  * 营造群像：一处建筑一格，按朝代排序、按类别着色
  */
 function renderWall(buildings) {
@@ -219,6 +237,7 @@ function renderWall(buildings) {
   // 3) 按朝代顺序输出，每段前加朝代标签
   const order = Object.keys(WALL_DYNASTY_ORDER);
   const html = [];
+  const flat = []; // 与格子顺序一致的建筑列表，供点击取用
   order.forEach((dg) => {
     const items = groups[dg];
     if (!items || !items.length) return;
@@ -228,13 +247,31 @@ function renderWall(buildings) {
     interleave(items).forEach((b) => {
       const color = WALL_CAT_COLORS[b.category] || '#C8A96E';
       const tip = `${b.name} · ${b.dynasty} · ${b.category}`;
+      const idx = flat.length;
+      flat.push(b);
       html.push(
-        `<div class="wall-cell" style="--cat-color:${color}" title="${tip}">${glyphByCategory(b.category)}</div>`
+        `<div class="wall-cell" data-idx="${idx}" style="--cat-color:${color}" title="${tip}" role="button" tabindex="0" aria-label="${tip}">${glyphByCategory(b.category)}</div>`
       );
     });
   });
 
   grid.innerHTML = html.join('');
+
+  // 点击格子 → 打开建筑详情抽屉
+  const openByCell = (cell) => {
+    const i = Number(cell.dataset.idx);
+    const b = flat[i];
+    if (b) showBuildingDrawer(b);
+  };
+  grid.querySelectorAll('.wall-cell').forEach((cell) => {
+    cell.addEventListener('click', () => openByCell(cell));
+    cell.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openByCell(cell);
+      }
+    });
+  });
 
   // 图例：按数量降序
   const counts = {};

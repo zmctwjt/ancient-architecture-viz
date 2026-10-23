@@ -166,10 +166,24 @@
         <h2 class="panel-title">人物影响力指标</h2>
         <div role="img" aria-label="数据可视化图表" id="bar-chart" class="chart-container"></div>
         <div style="margin-top: 0.1rem; padding: 0.1rem; background: rgba(255,255,255,0.05); border-radius: 6px; font-size: 0.11rem; color: rgba(255,255,255,0.6); line-height: 1.6;">
-          <strong style="color: #C8A96E;">影响力指数计算方式：</strong>综合考量历史贡献度（著作/工程数量与重要性）、技术开创性（是否首创某种技术或规范）、历史知名度（后世引用与记载频次）、时代跨度（活跃时期长度）四个维度，由领域专家按1-10分制评分后加权汇总得出。满分10分。
+          <strong style="color: #C8A96E;">影响力指数计算方式：</strong>综合考量历史贡献度（著作/工程数量与重要性）、技术开创性（是否首创某种技术或规范）、历史知名度（后世引用与记载频次）、时代跨度（活跃时期长度）四个维度，归一化至 <strong style="color:#C8A96E;">0—100 分制</strong>后加权汇总。鲁班以 100 分居首，阳城延 52 分居末。
         </div>
       </div>
     </div>
+
+    <!-- ==================== 匠师谱系 ==================== -->
+    <section class="lineage-section" aria-labelledby="lineage-title">
+      <div class="page-header" style="margin-bottom: 0.2rem;">
+        <h2 class="page-title" id="lineage-title" style="font-size: 0.28rem !important;">匠师谱系</h2>
+        <p class="page-subtitle">Lineage · 二十位匠师的时代分布与技艺高峰</p>
+      </div>
+      <p class="lineage-intro">
+        按六大断代排列，每栏内依影响力降序。可以读出两条线索：
+        <strong>先秦仅鲁班一人留名</strong>，而<strong>明清匠师数量骤增</strong>——
+        这既反映营造活动的繁荣，也反映明清匠作制度开始记录工匠姓名。
+      </p>
+      <div class="lineage-grid" id="lineage-grid"></div>
+    </section>
 
     <div class="decorative-bar"></div>
 

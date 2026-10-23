@@ -485,7 +485,7 @@
   place-items: center;
   color: var(--cat-color, var(--color-primary));
   opacity: 0.88;
-  cursor: default;
+  cursor: pointer;
   transition:
     transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
     opacity 0.25s ease,
@@ -577,4 +577,112 @@
   letter-spacing: 0.06em;
   color: var(--text-muted);
   font-variant-numeric: tabular-nums;
+}
+
+/* ============================================================
+   朝代时间带 —— 段宽按朝代跨度比例，一眼看出时间尺度
+   ============================================================ */
+.band {
+  display: flex;
+  width: 100%;
+  border: 1px solid var(--border-color);
+  background: rgba(200, 169, 110, 0.022);
+  overflow: hidden;
+}
+
+.band-seg {
+  /* 用 --flex 承载朝代跨度（年），宽度即时间比例 */
+  flex: var(--flex, 100) 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.02rem;
+  padding: 0.15rem 0.12rem 0.16rem;
+  background: transparent;
+  border: none;
+  border-right: 1px solid var(--border-color);
+  border-radius: 0 !important;
+  cursor: pointer;
+  text-align: left;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.3s var(--ease-out), color 0.3s var(--ease-out);
+}
+.band-seg:last-child { border-right: none; }
+
+/* 底部比例条 */
+.band-seg::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--color-primary);
+  opacity: 0.28;
+  transition: opacity 0.3s var(--ease-out), background 0.3s var(--ease-out);
+}
+
+.band-seg:hover {
+  background: rgba(200, 169, 110, 0.07) !important;
+}
+.band-seg:hover::after { opacity: 0.65; }
+
+.band-seg__name {
+  font-family: var(--font-serif);
+  font-size: 0.155rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--text-primary);
+  white-space: nowrap;
+  transition: color 0.3s var(--ease-out);
+}
+
+.band-seg__meta {
+  font-size: 0.105rem;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.band-seg__count {
+  font-family: var(--font-serif);
+  font-size: 0.125rem;
+  color: var(--color-primary);
+  font-weight: 700;
+  transition: color 0.3s var(--ease-out);
+}
+
+.band-seg__span {
+  font-size: 0.096rem;
+  letter-spacing: 0.02em;
+  color: rgba(242, 235, 224, 0.36);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 选中态 */
+.band-seg.active {
+  background: var(--color-accent) !important;
+}
+.band-seg.active::after { opacity: 1; background: #FBF3E8; }
+.band-seg.active .band-seg__name { color: #FBF3E8; }
+.band-seg.active .band-seg__meta { color: rgba(251, 243, 232, 0.75); }
+.band-seg.active .band-seg__count { color: #FBF3E8; }
+.band-seg.active .band-seg__span { color: rgba(251, 243, 232, 0.55); }
+
+/* 段太窄时隐藏次要信息 */
+@media (max-width: 1100px) {
+  .band-seg__span { display: none; }
+}
+@media (max-width: 760px) {
+  .band { flex-wrap: wrap; }
+  .band-seg {
+    flex: 1 1 33.33%;
+    border-bottom: 1px solid var(--border-color);
+    padding: 0.09rem 0.07rem;
+  }
+  .band-seg__name { font-size: 0.12rem; letter-spacing: 0.04em; }
+  .band-seg__meta { font-size: 0.088rem; }
 }

@@ -174,13 +174,38 @@
           </div>
 
           <div class="fp-filter" id="dynasty-filter">
-            <div id="dynasty-selector" style="display: flex; flex-wrap: wrap; gap: 0.06rem;">
-              <button class="dynasty-btn" data-dynasty="先秦">先秦</button>
-              <button class="dynasty-btn" data-dynasty="秦汉">秦汉</button>
-              <button class="dynasty-btn" data-dynasty="魏晋">魏晋</button>
-              <button class="dynasty-btn" data-dynasty="隋唐">隋唐</button>
-              <button class="dynasty-btn" data-dynasty="宋元">宋元</button>
-              <button class="dynasty-btn" data-dynasty="明清">明清</button>
+            <!-- 朝代时间带：段宽按朝代跨度比例，点击筛选 -->
+            <div class="band" id="dynasty-selector" role="group" aria-label="按朝代筛选">
+              <button class="band-seg" data-dynasty="先秦" style="--flex: 1849" aria-pressed="false">
+                <span class="band-seg__name">先秦</span>
+                <span class="band-seg__meta"><b class="band-seg__count">6</b> 处</span>
+                <span class="band-seg__span">前2070—前221</span>
+              </button>
+              <button class="band-seg" data-dynasty="秦汉" style="--flex: 441" aria-pressed="false">
+                <span class="band-seg__name">秦汉</span>
+                <span class="band-seg__meta"><b class="band-seg__count">14</b> 处</span>
+                <span class="band-seg__span">前221—220</span>
+              </button>
+              <button class="band-seg" data-dynasty="魏晋" style="--flex: 369" aria-pressed="false">
+                <span class="band-seg__name">魏晋</span>
+                <span class="band-seg__meta"><b class="band-seg__count">9</b> 处</span>
+                <span class="band-seg__span">220—589</span>
+              </button>
+              <button class="band-seg" data-dynasty="隋唐" style="--flex: 326" aria-pressed="false">
+                <span class="band-seg__name">隋唐</span>
+                <span class="band-seg__meta"><b class="band-seg__count">11</b> 处</span>
+                <span class="band-seg__span">581—907</span>
+              </button>
+              <button class="band-seg" data-dynasty="宋元" style="--flex: 408" aria-pressed="false">
+                <span class="band-seg__name">宋元</span>
+                <span class="band-seg__meta"><b class="band-seg__count">17</b> 处</span>
+                <span class="band-seg__span">960—1368</span>
+              </button>
+              <button class="band-seg" data-dynasty="明清" style="--flex: 543" aria-pressed="false">
+                <span class="band-seg__name">明清</span>
+                <span class="band-seg__meta"><b class="band-seg__count">57</b> 处</span>
+                <span class="band-seg__span">1368—1911</span>
+              </button>
             </div>
           </div>
 
