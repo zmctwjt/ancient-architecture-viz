@@ -60,26 +60,21 @@
 /* 朱砂印章 */
 .fp-seal {
   margin-top: auto;
-  width: 0.46rem;
-  height: 0.46rem;
+  width: 0.44rem;
+  height: 0.44rem;
   display: grid;
   place-items: center;
   background: var(--color-accent);
-  color: #F7EDE2;
+  color: #FBF3E8;
   font-family: var(--font-serif);
-  font-size: 0.15rem;
+  font-size: 0.21rem;
   font-weight: 700;
-  letter-spacing: 0.02em;
   line-height: 1;
-  border-radius: 3px;
-  transform: rotate(-3deg);
+  border-radius: 2px;
+  transform: rotate(-4deg);
   box-shadow:
-    0 2px 10px rgba(200, 69, 47, 0.35),
-    inset 0 0 0 2px rgba(255, 255, 255, 0.16);
-  /* 印章用两字竖排 */
-  writing-mode: vertical-rl;
-  text-orientation: upright;
-  padding: 0.04rem 0;
+    0 2px 10px rgba(200, 69, 47, 0.32),
+    inset 0 0 0 2px rgba(255, 255, 255, 0.14);
 }
 
 .fp-spine__year {
@@ -412,10 +407,9 @@
   .fp-spine__year { display: none; }
   .fp-seal {
     margin: 0 0 0 auto;
-    writing-mode: horizontal-tb;
     width: 0.4rem;
     height: 0.4rem;
-    font-size: 0.13rem;
+    font-size: 0.19rem;
   }
 
   .fp-lede__title { font-size: 0.4rem; }
