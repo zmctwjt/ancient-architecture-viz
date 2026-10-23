@@ -6,6 +6,7 @@ import echarts from '../../js/common/echarts.js';
 import { loadData, COLORS, ECHARTS_THEME, getDataUrl, loadJson, matchDynastyGroup } from '../../js/common/utils.js';
 import { pageEnterAnimation } from '../../js/common/animation.js';
 import { showInfoModal, generateDataHTML, addChartClickHandler } from '../../js/common/infoModal.js';
+import { ROOF_TYPES, STRUCT_NODES } from '../../js/common/glyphs.js';
 import { achievementInsights, generateInsightHTML } from '../../js/common/insights.js';
 
 // 朝代分组函数
@@ -121,6 +122,8 @@ async function initData(filterDynasties) {
 }
 
 async function init() {
+  renderRoofTypology();
+  renderStructNodes();
   initUI();
   await initData(getDynastyFilter());
 }
@@ -660,5 +663,46 @@ async function initYearChart(buildingData) {
   });
   window.addEventListener('resize', () => chart.resize());
 }
+
+
+/**
+ * 屋顶形制图解 —— 六种屋顶线描 + 等级说明
+ */
+function renderRoofTypology() {
+  const box = document.getElementById('roof-typology');
+  if (!box) return;
+  box.innerHTML = ROOF_TYPES.map((r) => `
+    <figure class="typology-item">
+      <div class="typology-item__svg">${r.svg}</div>
+      <figcaption>
+        <div class="typology-item__head">
+          <span class="typology-item__name">${r.name}</span>
+          <span class="typology-item__level">${r.level}</span>
+        </div>
+        <p class="typology-item__note">${r.note}</p>
+      </figcaption>
+    </figure>
+  `).join('');
+}
+
+/**
+ * 结构节点图解 —— 斗拱 / 榫卯 / 梁架 / 台基
+ */
+function renderStructNodes() {
+  const box = document.getElementById('struct-nodes');
+  if (!box) return;
+  box.innerHTML = STRUCT_NODES.map((n) => `
+    <figure class="typology-item">
+      <div class="typology-item__svg">${n.svg}</div>
+      <figcaption>
+        <div class="typology-item__head">
+          <span class="typology-item__name">${n.name}</span>
+        </div>
+        <p class="typology-item__note">${n.note}</p>
+      </figcaption>
+    </figure>
+  `).join('');
+}
+
 
 init();

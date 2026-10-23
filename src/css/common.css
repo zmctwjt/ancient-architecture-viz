@@ -1512,3 +1512,94 @@ button:focus-visible,
   transform: none !important;
   box-shadow: none !important;
 }
+
+/* ============================================================
+   屋顶形制图解 / 结构节点图解
+   ============================================================ */
+.typology-section {
+  margin-top: 0.4rem;
+}
+
+.typology-intro {
+  font-size: 0.113rem;
+  line-height: 1.85;
+  color: var(--text-muted);
+  max-width: 7rem;
+  margin: 0 0 0.2rem;
+  letter-spacing: 0.01em;
+}
+
+.typology-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(2.3rem, 1fr));
+  gap: 0.16rem;
+}
+
+.typology-item {
+  margin: 0;
+  padding: 0.16rem 0.16rem 0.18rem;
+  border: 1px solid var(--border-color);
+  background: rgba(200, 169, 110, 0.018);
+  transition:
+    border-color 0.35s var(--ease-out),
+    background 0.35s var(--ease-out),
+    transform 0.35s var(--ease-out);
+}
+.typology-item:hover {
+  border-color: var(--border-strong);
+  background: rgba(200, 169, 110, 0.055);
+  transform: translateY(-3px);
+}
+
+.typology-item__svg {
+  color: var(--color-primary);
+  margin-bottom: 0.14rem;
+  opacity: 0.92;
+}
+.typology-item__svg svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.typology-item__head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.08rem;
+  padding-bottom: 0.07rem;
+  margin-bottom: 0.08rem;
+  border-bottom: 1px solid var(--border-color);
+}
+.typology-item__name {
+  font-family: var(--font-serif);
+  font-size: 0.155rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--text-primary);
+}
+.typology-item__level {
+  font-size: 0.096rem;
+  letter-spacing: 0.06em;
+  color: var(--color-accent);
+  padding: 0.01rem 0.05rem;
+  border: 1px solid var(--accent-line);
+  white-space: nowrap;
+}
+
+.typology-item__note {
+  font-size: 0.105rem;
+  line-height: 1.75;
+  color: var(--text-muted);
+  margin: 0;
+  letter-spacing: 0.01em;
+}
+
+@media (max-width: 900px) {
+  .typology-grid {
+    grid-template-columns: repeat(auto-fit, minmax(1.6rem, 1fr));
+    gap: 0.1rem;
+  }
+  .typology-item { padding: 0.1rem; }
+  .typology-item__name { font-size: 0.13rem; }
+  .typology-item__note { font-size: 0.098rem; }
+}

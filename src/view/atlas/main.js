@@ -123,6 +123,15 @@ function initDensityChart(data) {
   };
 
   chart.setOption(option);
+
+  // 下钻：点击朝代跳转建筑成就页并带上筛选
+  chart.on('click', (params) => {
+    const d = rows[params.dataIndex];
+    if (!d) return;
+    window.location.href = `../achievement/index.html?dynasty=${encodeURIComponent(d.dynasty)}`;
+  });
+  chart.getZr().setCursorStyle('pointer');
+
   window.addEventListener('resize', () => chart.resize());
 }
 

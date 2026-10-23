@@ -444,3 +444,137 @@
     transition: none !important;
   }
 }
+
+/* ============================================================
+   营造群像 —— 115 处建筑剪影矩阵
+   ============================================================ */
+.wall-section {
+  margin-top: 0.42rem;
+}
+
+.wall-intro {
+  font-size: 0.113rem;
+  line-height: 1.85;
+  color: var(--text-muted);
+  margin: 0 0 0.18rem;
+  max-width: 7rem;
+  letter-spacing: 0.01em;
+}
+.wall-intro em {
+  font-style: normal;
+  font-family: var(--font-serif);
+  font-size: 0.14rem;
+  color: var(--color-accent);
+  font-weight: 700;
+  padding: 0 0.02rem;
+}
+
+.wall-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(0.54rem, 1fr));
+  gap: 0.05rem;
+  padding: 0.18rem;
+  background: rgba(200, 169, 110, 0.022);
+  border: 1px solid var(--border-color);
+}
+
+.wall-cell {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  display: grid;
+  place-items: center;
+  color: var(--cat-color, var(--color-primary));
+  opacity: 0.88;
+  cursor: default;
+  transition:
+    transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.25s ease,
+    color 0.25s ease;
+  transform-origin: center;
+}
+
+.wall-cell svg {
+  width: 86%;
+  height: 86%;
+  display: block;
+}
+
+.wall-cell:hover {
+  opacity: 1;
+  transform: scale(1.45);
+  color: var(--color-accent);
+  z-index: 3;
+}
+
+/* 悬停时高亮同类 */
+.wall-grid:hover .wall-cell { opacity: 0.42; }
+.wall-grid:hover .wall-cell:hover { opacity: 1; }
+
+.wall-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.14rem 0.18rem;
+  margin-top: 0.14rem;
+}
+
+.wall-legend__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.05rem;
+  font-size: 0.108rem;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+}
+.wall-legend__item i {
+  width: 7px;
+  height: 7px;
+  background: currentColor;
+  display: inline-block;
+  flex: 0 0 auto;
+}
+.wall-legend__item b {
+  font-weight: 400;
+  font-family: var(--font-serif);
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 900px) {
+  .wall-grid {
+    grid-template-columns: repeat(auto-fill, minmax(0.42rem, 1fr));
+    gap: 0.035rem;
+    padding: 0.1rem;
+  }
+  .wall-intro { font-size: 0.105rem; }
+  .wall-legend { gap: 0.1rem 0.12rem; }
+  .wall-legend__item { font-size: 0.092rem; }
+}
+
+/* 群像内的朝代分段标签 */
+.wall-row-label {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: baseline;
+  gap: 0.08rem;
+  padding: 0.1rem 0 0.02rem;
+  margin-top: 0.06rem;
+  border-top: 1px solid var(--border-color);
+  font-family: var(--font-serif);
+}
+.wall-row-label:first-child {
+  border-top: none;
+  margin-top: 0;
+  padding-top: 0.02rem;
+}
+.wall-row-label em {
+  font-style: normal;
+  font-size: 0.112rem;
+  letter-spacing: 0.18em;
+  color: var(--color-primary);
+}
+.wall-row-label span {
+  font-size: 0.098rem;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}

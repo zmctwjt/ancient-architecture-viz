@@ -7,6 +7,7 @@ import { gsap } from 'gsap';
 import { loadData, COLORS, ECHARTS_THEME, getDataUrl, loadJson, matchDynastyGroup } from '../../js/common/utils.js';
 import { fallingLeavesAnimation, countUpAnimation, pageEnterAnimation } from '../../js/common/animation.js';
 import { showInfoModal } from '../../js/common/infoModal.js';
+import { glyphByCategory } from '../../js/common/glyphs.js';
 
 // 获取URL参数中的朝代过滤
 function getDynastyFilter() {
@@ -124,6 +125,7 @@ async function initData(filterDynasties) {
 
   const filterDynastyStr = filterDynasties && filterDynasties.length > 0 ? filterDynasties.join(',') : null;
   initStatCardLinks();
+  renderWall(filteredBuildings);
   initCountUp(filteredBuildings.length, architectsMeta.total || 0, booksMeta.total || 0, cultureCount);
   await initTimelineChart(filteredBuildings, filterDynastyStr);
   await initRadarChart(filteredBuildings);
@@ -155,6 +157,103 @@ function updateNavLinks(filterDynasty) {
     }
     item.setAttribute('href', url.pathname + url.search);
   });
+}
+
+/**
+ * 建筑类别配色（11 类，与整体文人色系一致）
+ */
+const WALL_CAT_COLORS = {
+  '寺庙': '#7FA8A0',
+  '园林': '#C8452F',
+  '城址': '#6E8FA8',
+  '墓葬': '#8C7A9E',
+  '祭祀建筑': '#C8A96E',
+  '石窟': '#A88A5C',
+  '桥梁': '#8E9B73',
+  '楼阁': '#D9BC80',
+  '民居': '#B08968',
+  '官府': '#A9644F',
+  '皇宫': '#E0C48A',
+};
+
+const WALL_DYNASTY_ORDER = {
+  '先秦': 0, '秦汉': 1, '魏晋': 2, '隋唐': 3, '宋元': 4, '明清': 5,
+};
+
+/**
+ * 营造群像：一处建筑一格，按朝代排序、按类别着色
+ */
+function renderWall(buildings) {
+  const grid = document.getElementById('wall-grid');
+  if (!grid) return;
+
+  // 1) 按六大朝代分组
+  const groups = {};
+  buildings.forEach((b) => {
+    const dg = dynastyGroup(b.dynasty);
+    if (!groups[dg]) groups[dg] = [];
+    groups[dg].push(b);
+  });
+
+  // 2) 组内按类别分桶后轮流取，避免同类扎堆形成色带
+  const interleave = (items) => {
+    const buckets = {};
+    items.forEach((b) => {
+      if (!buckets[b.category]) buckets[b.category] = [];
+      buckets[b.category].push(b);
+    });
+    const arrays = Object.values(buckets);
+    const out = [];
+    let idx = 0;
+    while (out.length < items.length) {
+      let added = false;
+      for (const arr of arrays) {
+        if (arr[idx]) { out.push(arr[idx]); added = true; }
+      }
+      if (!added) break;
+      idx++;
+    }
+    return out;
+  };
+
+  // 3) 按朝代顺序输出，每段前加朝代标签
+  const order = Object.keys(WALL_DYNASTY_ORDER);
+  const html = [];
+  order.forEach((dg) => {
+    const items = groups[dg];
+    if (!items || !items.length) return;
+    html.push(
+      `<div class="wall-row-label"><em>${dg}</em><span>${items.length} 处</span></div>`
+    );
+    interleave(items).forEach((b) => {
+      const color = WALL_CAT_COLORS[b.category] || '#C8A96E';
+      const tip = `${b.name} · ${b.dynasty} · ${b.category}`;
+      html.push(
+        `<div class="wall-cell" style="--cat-color:${color}" title="${tip}">${glyphByCategory(b.category)}</div>`
+      );
+    });
+  });
+
+  grid.innerHTML = html.join('');
+
+  // 图例：按数量降序
+  const counts = {};
+  buildings.forEach((b) => {
+    counts[b.category] = (counts[b.category] || 0) + 1;
+  });
+  const legend = document.getElementById('wall-legend');
+  if (legend) {
+    legend.innerHTML = Object.entries(counts)
+      .sort((a, b) => b[1] - a[1])
+      .map(([cat, n]) => {
+        const color = WALL_CAT_COLORS[cat] || '#C8A96E';
+        return `<span class="wall-legend__item"><i style="background:${color}"></i><b>${cat}</b>${n}</span>`;
+      })
+      .join('');
+  }
+
+  const cnt = document.getElementById('wall-count');
+  if (cnt) cnt.textContent = buildings.length;
 }
 
 /**
