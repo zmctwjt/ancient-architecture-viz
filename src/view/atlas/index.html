@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>营造图谱 - 千年营造·华夏砖木</title>
+  <link rel="stylesheet" href="../../css/common.css">
+  <link rel="stylesheet" href="../../css/responsive.css">
+  <meta name="description" content="从遗存密度、世纪分布、地域类型矩阵与朝代流向四个切片，透视中国古建筑的留存规律">
+  <script>(function(){var d=document.documentElement;var r=window.devicePixelRatio||1;d.setAttribute('data-dpr',r);function s(){var w=d.clientWidth;var rem=(w/1920)*100;rem=Math.max(rem,54);d.style.fontSize=rem+'px'}s();window.addEventListener('resize',s);window.addEventListener('pageshow',function(e){if(e.persisted)s()});window.flexible={dpr:r,rem:function(){return parseFloat(d.style.fontSize)},refreshRem:s}})();</script>
+  <style>
+    html { background-color: #070604 !important; }
+    body { background: transparent !important; }
+
+    /* 指标条：细线分隔，与首页数据条同一语言 */
+    .atlas-metrics {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border-top: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 0.3rem;
+    }
+    .atlas-metric {
+      padding: 0.18rem 0.16rem 0.2rem;
+      border-right: 1px solid var(--border-color);
+      position: relative;
+    }
+    .atlas-metric:last-child { border-right: none; }
+    .atlas-metric__num {
+      font-family: var(--font-serif);
+      font-size: 0.4rem;
+      line-height: 1;
+      font-weight: 700;
+      color: var(--text-primary);
+      font-variant-numeric: tabular-nums;
+      display: block;
+      margin-bottom: 0.07rem;
+    }
+    .atlas-metric__num small {
+      font-size: 0.13rem;
+      font-weight: 400;
+      color: var(--text-muted);
+      margin-left: 0.03rem;
+    }
+    .atlas-metric__label {
+      font-size: 0.11rem;
+      letter-spacing: 0.04em;
+      color: var(--text-secondary);
+    }
+    .atlas-metric__note {
+      display: block;
+      margin-top: 0.05rem;
+      font-size: 0.1rem;
+      color: var(--text-muted);
+      letter-spacing: 0.02em;
+    }
+
+    /* 图表区块标题 */
+    .atlas-block {
+      margin-bottom: 0.34rem;
+    }
+    .atlas-block__head {
+      display: flex;
+      align-items: baseline;
+      gap: 0.14rem;
+      padding-bottom: 0.1rem;
+      margin-bottom: 0.16rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .atlas-block__head h2 {
+      font-family: var(--font-serif);
+      font-size: 0.2rem;
+      letter-spacing: 0.1em;
+      color: var(--text-primary);
+      margin: 0;
+    }
+    .atlas-block__head span {
+      font-size: 0.1rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .atlas-block__note {
+      font-size: 0.108rem;
+      line-height: 1.8;
+      color: var(--text-muted);
+      margin: 0.1rem 0 0;
+      letter-spacing: 0.01em;
+      padding-left: 0.16rem;
+      border-left: 2px solid var(--border-color);
+    }
+    .atlas-block__note strong {
+      color: var(--color-primary);
+      font-weight: 600;
+    }
+
+    #density-chart  { height: 3.4rem; }
+    #century-chart  { height: 4rem; }
+    #heatmap-chart  { height: 4.4rem; }
+    #sankey-chart   { height: 4rem; }
+
+    @media (max-width: 900px) {
+      .atlas-metrics { grid-template-columns: repeat(2, 1fr); }
+      .atlas-metric { border-bottom: 1px solid var(--border-color); }
+      .atlas-metric:nth-child(2) { border-right: none; }
+      .atlas-metric:nth-last-child(-n+2) { border-bottom: none; }
+      .atlas-metric__num { font-size: 0.32rem; }
+      #density-chart, #century-chart, #heatmap-chart, #sankey-chart { height: 3.2rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-container">
+    <div class="content-wrapper">
+      <a href="../home/index.html" class="back-link" aria-label="返回首页">← 返回首页</a>
+
+      <header class="page-header">
+        <h1 class="page-title">营造图谱</h1>
+        <p class="page-subtitle">从遗存密度、世纪分布、地域矩阵到朝代流向的四个切片</p>
+      </header>
+
+      <!-- 指标条 -->
+      <section class="atlas-metrics" aria-label="关键指标">
+        <div class="atlas-metric">
+          <span class="atlas-metric__num" id="m-total">0<small>处</small></span>
+          <span class="atlas-metric__label">古建筑遗存样本</span>
+          <span class="atlas-metric__note">覆盖 6 大朝代断代</span>
+        </div>
+        <div class="atlas-metric">
+          <span class="atlas-metric__num" id="m-density">0<small>处/百年</small></span>
+          <span class="atlas-metric__label">明清时期留存密度</span>
+          <span class="atlas-metric__note">先秦仅为 0.32 处/百年</span>
+        </div>
+        <div class="atlas-metric">
+          <span class="atlas-metric__num" id="m-heritage">0<small>%</small></span>
+          <span class="atlas-metric__label">世界文化遗产占比</span>
+          <span class="atlas-metric__note">26 处列入世界遗产名录</span>
+        </div>
+        <div class="atlas-metric">
+          <span class="atlas-metric__num" id="m-architect">0<small>%</small></span>
+          <span class="atlas-metric__label">留有匠师姓名</span>
+          <span class="atlas-metric__note">其余 80 处佚名</span>
+        </div>
+      </section>
+
+      <!-- 1. 朝代营造密度 -->
+      <section class="atlas-block" aria-labelledby="b1">
+        <div class="atlas-block__head">
+          <h2 id="b1">朝代营造密度</h2>
+          <span>Density by Dynasty</span>
+        </div>
+        <div class="chart-panel">
+          <div class="chart-container" id="density-chart" role="img" aria-label="各朝代遗存数量与每百年留存密度双轴图"></div>
+        </div>
+        <p class="atlas-block__note">
+          柱子为遗存数量，折线为<strong>每百年密度</strong>（数量 ÷ 朝代跨度）。二者同向攀升，
+          说明越晚近的朝代留存越多——不是营造活动变频繁，而是<strong>木构建筑的自然存续上限约在数百年</strong>。
+        </p>
+      </section>
+
+      <!-- 2. 世纪分布 -->
+      <section class="atlas-block" aria-labelledby="b2">
+        <div class="atlas-block__head">
+          <h2 id="b2">世纪分布</h2>
+          <span>Century Profile</span>
+        </div>
+        <div class="chart-panel">
+          <div class="chart-container" id="century-chart" role="img" aria-label="按世纪统计的古建筑数量分布"></div>
+        </div>
+        <p class="atlas-block__note">
+          按始建年代归入世纪（公元前以朱砂标记）。曲线在<strong>14—19 世纪</strong>陡然抬升，
+          构成一条典型的"历史留存衰减曲线"。
+        </p>
+      </section>
+
+      <!-- 3. 省份 × 类别矩阵 -->
+      <section class="atlas-block" aria-labelledby="b3">
+        <div class="atlas-block__head">
+          <h2 id="b3">地域与类型的交叉矩阵</h2>
+          <span>Province × Typology</span>
+        </div>
+        <div class="chart-panel">
+          <div class="chart-container" id="heatmap-chart" role="img" aria-label="各省份建筑类型分布热力图"></div>
+        </div>
+        <p class="atlas-block__note">
+          横轴为建筑类型，纵轴为遗存数量前 15 的省份。色块越亮代表该省该类型遗存越多：
+          <strong>山西、河南、江苏</strong>三省的寺庙与城址格明显偏亮，构成中原营造的核心区。
+        </p>
+      </section>
+
+      <!-- 4. 朝代 → 类别 流向 -->
+      <section class="atlas-block" aria-labelledby="b4">
+        <div class="atlas-block__head">
+          <h2 id="b4">朝代向类型的流向</h2>
+          <span>Dynasty → Typology Flow</span>
+        </div>
+        <div class="chart-panel">
+          <div class="chart-container" id="sankey-chart" role="img" aria-label="朝代到建筑类型的桑基流向图"></div>
+        </div>
+        <p class="atlas-block__note">
+          左侧为朝代，右侧为建筑类型，带宽即数量。可以读出类型的时间偏好：
+          <strong>寺塔贯穿全程</strong>，园林几乎全部集中在明清，城址则多见于秦汉与先秦。
+        </p>
+      </section>
+
+      <section class="insights-section" style="padding: 0.1rem 0 0.2rem;">
+        <div class="atlas-block__head">
+          <h2>数据说明</h2>
+          <span>Method</span>
+        </div>
+        <p class="atlas-block__note" style="border-left-color: var(--color-accent);">
+          本页全部指标由 <strong>buildings.json</strong> 原始字段计算得出：<br>
+          · 朝代密度 = 该朝代遗存数 ÷ 朝代跨度（年）× 100<br>
+          · 世纪分布取 <strong>builtYear</strong> 字段的首个年份，公元前以负数标记<br>
+          · 地域矩阵按 <strong>location</strong> 字段的省级前缀归并<br>
+          · 桑基流向为「朝代 → category」的计数矩阵<br>
+          数据来源：国家文物局全国重点文物保护单位名录。
+        </p>
+      </section>
+
+      <footer class="site-footer">
+        <div class="footer-ornament" aria-hidden="true">
+          <svg viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 62h104"/><path d="M20 62V50h80v12"/><path d="M16 50h88"/>
+            <path d="M26 50l8-12h52l8 12"/><path d="M24 38h72"/>
+            <path d="M34 38l10-12h32l10 12"/><path d="M30 26h60"/>
+            <path d="M36 26c6-8 42-8 48 0"/><path d="M26 26c-5-3-4-9 1-11M94 26c5-3 4-9-1-11"/>
+          </svg>
+        </div>
+        <p class="footer-brand">千年营造 · 华夏砖木 —— 中国古代建筑数据可视化平台</p>
+        <p class="footer-meta">数据来源：国家文物局全国重点文物保护单位名录</p>
+      </footer>
+    </div>
+  </div>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

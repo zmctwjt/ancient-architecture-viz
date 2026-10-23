@@ -1124,12 +1124,12 @@ body::after {
 .chart-panel,
 .person-card {
   position: relative;
-  /* 用实色渐变代替 backdrop-filter：避免与 fixed 背景层叠加产生竖向亮带 */
+  /* 暖墨实色渐变（与页面底色同族，避免冷蓝与暖背景打架） */
   background: linear-gradient(
     160deg,
-    #222b3a 0%,
-    #1a2130 55%,
-    #151b26 100%
+    #272019 0%,
+    #1E1812 55%,
+    #171310 100%
   );
   border: 1px solid rgba(200, 169, 110, 0.28);
   box-shadow:/n    inset 0 1px 0 rgba(255, 255, 255, 0.07),

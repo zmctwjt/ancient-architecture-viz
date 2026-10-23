@@ -39,3 +39,4 @@ dist-test/
 
 # 临时构建校验目录
 dist-css/
+dist-check2/

@@ -12,6 +12,9 @@ import {
   ScatterChart,
   GraphChart,
   SunburstChart,
+  HeatmapChart,
+  SankeyChart,
+  GaugeChart,
 } from 'echarts/charts';
 
 import {
@@ -37,6 +40,7 @@ import { CanvasRenderer } from 'echarts/renderers';
 echarts.use([
   // 图表
   BarChart, PieChart, LineChart, RadarChart, ScatterChart, GraphChart, SunburstChart,
+  HeatmapChart, SankeyChart, GaugeChart,
   // 坐标系与组件
   GridComponent, PolarComponent, RadarComponent,
   TooltipComponent, LegendComponent, TitleComponent,

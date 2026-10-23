@@ -38,7 +38,8 @@ export default defineConfig(({ command }) => {
           achievement: resolve(__dirname, 'src/view/achievement/index.html'),
           scientist: resolve(__dirname, 'src/view/scientist/index.html'),
           literature: resolve(__dirname, 'src/view/literature/index.html'),
-          culture: resolve(__dirname, 'src/view/culture/index.html')
+          culture: resolve(__dirname, 'src/view/culture/index.html'),
+          atlas: resolve(__dirname, 'src/view/atlas/index.html')
         },
         output: {
           entryFileNames: 'js/[name]-[hash].js',
