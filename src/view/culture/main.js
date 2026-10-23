@@ -8,7 +8,7 @@ import { showInfoModal } from '../../js/common/infoModal.js';
 import { cultureInsights, generateInsightHTML } from '../../js/common/insights.js';
 import { getDataUrl, loadJson, matchDynastyGroup } from '../../js/common/utils.js';
 
-const COLORS = ['#C8A96E', '#4ECDC4', '#E07B54', '#9B59B6', '#3498DB', '#2ECC71', '#F38181', '#AA96DA'];
+const COLORS = ['#C8A96E', '#7FA8A0', '#C8452F', '#8C7A9E', '#6E8FA8', '#8E9B73', '#A9644F', '#8C7A9E'];
 
 let cultureData = {};
 const chartInstances = new Map();
@@ -252,7 +252,7 @@ function initResidenceCharts() {
     grid: { top: '10%', bottom: '25%', left: '15%', right: '10%' },
     xAxis: { type: 'category', data: climateDist.map(d => d.name), axisLabel: { color: '#fff', fontSize: 10, rotate: 20, interval: 0 } },
     yAxis: { type: 'value', name: '提及次数', axisLabel: { color: '#fff', fontSize: 10 } },
-    series: [{ type: 'bar', data: climateDist.map(d => d.value), itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: '#4ECDC4' }, { offset: 1, color: '#C8A96E' }]) } }]
+    series: [{ type: 'bar', data: climateDist.map(d => d.value), itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: '#7FA8A0' }, { offset: 1, color: '#C8A96E' }]) } }]
   }, (params) => {
     const keyword = params.name;
     const items = detail.filter(d => {
@@ -275,7 +275,7 @@ function initResidenceCharts() {
     grid: { top: '10%', bottom: '25%', left: '15%', right: '10%' },
     xAxis: { type: 'category', data: types, axisLabel: { color: '#fff', fontSize: 10, rotate: 20, interval: 0 } },
     yAxis: { type: 'value', name: '遗存数量', axisLabel: { color: '#fff', fontSize: 10 } },
-    series: [{ type: 'bar', data: typeValues, itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: '#C8A96E' }, { offset: 1, color: '#4ECDC4' }]) } }]
+    series: [{ type: 'bar', data: typeValues, itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: '#C8A96E' }, { offset: 1, color: '#7FA8A0' }]) } }]
   }, (params) => {
     const item = detail[params.dataIndex];
     if (item) showDetailModal(item, '民居文化');
@@ -385,7 +385,7 @@ function initOfficialCharts() {
     grid: { top: '10%', bottom: '25%', left: '15%', right: '10%' },
     xAxis: { type: 'category', data: elementDist.map(d => d.name), axisLabel: { color: '#fff', fontSize: 10, interval: 0 } },
     yAxis: { type: 'value', name: '出现次数', axisLabel: { color: '#fff', fontSize: 10 } },
-    series: [{ type: 'bar', data: elementDist.map(d => d.value), itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: '#C8A96E' }, { offset: 1, color: '#E07B54' }]) } }]
+    series: [{ type: 'bar', data: elementDist.map(d => d.value), itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: '#C8A96E' }, { offset: 1, color: '#C8452F' }]) } }]
   }, (params) => {
     const element = params.name;
     const items = detail.filter(d => {
@@ -449,7 +449,7 @@ function initOfficialCharts() {
     grid: { top: '10%', bottom: '25%', left: '15%', right: '10%' },
     xAxis: { type: 'category', data: featureDist.map(d => d.name), axisLabel: { color: '#fff', fontSize: 10, interval: 0 } },
     yAxis: { type: 'value', name: '提及次数', axisLabel: { color: '#fff', fontSize: 10 } },
-    series: [{ type: 'bar', data: featureDist.map(d => d.value), itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: '#C8A96E' }, { offset: 1, color: '#E07B54' }]) } }]
+    series: [{ type: 'bar', data: featureDist.map(d => d.value), itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: '#C8A96E' }, { offset: 1, color: '#C8452F' }]) } }]
   }, (params) => {
     const keyword = params.name;
     const items = detail.filter(d => {
@@ -472,7 +472,7 @@ function initOfficialCharts() {
     grid: { left: '30%', right: '10%', top: '5%', bottom: '5%' },
     yAxis: { type: 'category', data: heritageNums.map(d => d.name), axisLabel: { color: '#fff', fontSize: 10 } },
     xAxis: { type: 'value', axisLabel: { color: '#fff', fontSize: 10 } },
-    series: [{ type: 'bar', data: heritageNums.map(d => d.value), itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [{ offset: 0, color: '#C8A96E' }, { offset: 1, color: '#4ECDC4' }]) }, label: { show: true, position: 'right', color: '#fff', fontSize: 10, formatter: '{c}' } }]
+    series: [{ type: 'bar', data: heritageNums.map(d => d.value), itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [{ offset: 0, color: '#C8A96E' }, { offset: 1, color: '#7FA8A0' }]) }, label: { show: true, position: 'right', color: '#fff', fontSize: 10, formatter: '{c}' } }]
   }, (params) => {
     const item = detail.find(d => (d['名称'] || '') === params.name);
     if (item) showDetailModal(item, '官府文化');
@@ -503,7 +503,7 @@ function initPalaceCharts() {
     grid: { top: '10%', bottom: '25%', left: '15%', right: '10%' },
     xAxis: { type: 'category', data: scaleNames, axisLabel: { color: '#fff', fontSize: 9, rotate: 20, interval: 0 } },
     yAxis: { type: 'value', name: '占地(万m²)', axisLabel: { color: '#fff', fontSize: 10 } },
-    series: [{ type: 'bar', data: scaleValues, itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: '#C8A96E' }, { offset: 1, color: '#9B59B6' }]) },
+    series: [{ type: 'bar', data: scaleValues, itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: '#C8A96E' }, { offset: 1, color: '#8C7A9E' }]) },
       label: { show: true, position: 'top', formatter: '{c}', color: '#fff', fontSize: 9 } }]
   }, (params) => {
     const item = detail[params.dataIndex];
@@ -544,7 +544,7 @@ function initPalaceCharts() {
     grid: { left: '30%', right: '10%', top: '5%', bottom: '5%' },
     yAxis: { type: 'category', data: whData.map(d => d.name), axisLabel: { color: '#fff', fontSize: 10 } },
     xAxis: { type: 'value', name: '列入年份', min: 1980, axisLabel: { color: '#fff', fontSize: 10 } },
-    series: [{ type: 'bar', data: whData.map(d => ({ value: d.year, text: d.text })), itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [{ offset: 0, color: '#9B59B6' }, { offset: 1, color: '#C8A96E' }]) }, label: { show: true, position: 'right', color: '#fff', fontSize: 10, formatter: '{c}' } }]
+    series: [{ type: 'bar', data: whData.map(d => ({ value: d.year, text: d.text })), itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [{ offset: 0, color: '#8C7A9E' }, { offset: 1, color: '#C8A96E' }]) }, label: { show: true, position: 'right', color: '#fff', fontSize: 10, formatter: '{c}' } }]
   }, (params) => {
     const item = detail.find(d => (d['名称'] || '').includes(params.name.replace('…', '')));
     if (item) showDetailModal(item, '皇宫文化');
@@ -659,7 +659,7 @@ function initBridgeCharts() {
     grid: { left: '30%', right: '10%', top: '5%', bottom: '5%' },
     yAxis: { type: 'category', data: spanData.map(d => d.name), axisLabel: { color: '#fff', fontSize: 10 } },
     xAxis: { type: 'value', name: '跨度(米)', axisLabel: { color: '#fff', fontSize: 10 } },
-    series: [{ type: 'bar', data: spanData.map(d => d.value), itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [{ offset: 0, color: '#4ECDC4' }, { offset: 1, color: '#C8A96E' }]) }, label: { show: true, position: 'right', color: '#fff', fontSize: 10, formatter: '{c}m' } }]
+    series: [{ type: 'bar', data: spanData.map(d => d.value), itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [{ offset: 0, color: '#7FA8A0' }, { offset: 1, color: '#C8A96E' }]) }, label: { show: true, position: 'right', color: '#fff', fontSize: 10, formatter: '{c}m' } }]
   }, (params) => {
     const item = detail.find(d => (d['名称'] || '') === params.name);
     if (item) showDetailModal(item, '桥梁文化');
@@ -672,7 +672,7 @@ function initBridgeCharts() {
     grid: { top: '10%', bottom: '25%', left: '15%', right: '10%' },
     xAxis: { type: 'category', data: materialDist.map(d => d.name), axisLabel: { color: '#fff', fontSize: 10, rotate: 20, interval: 0 } },
     yAxis: { type: 'value', name: '数量', axisLabel: { color: '#fff', fontSize: 10 } },
-    series: [{ type: 'bar', data: materialDist.map(d => d.value), itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: '#4ECDC4' }, { offset: 1, color: '#C8A96E' }]) } }]
+    series: [{ type: 'bar', data: materialDist.map(d => d.value), itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: '#7FA8A0' }, { offset: 1, color: '#C8A96E' }]) } }]
   }, (params) => {
     const material = params.name;
     const items = detail.filter(d => (d['主要材料'] || '') === material);
@@ -709,7 +709,7 @@ function initBridgeCharts() {
     grid: { top: '10%', bottom: '25%', left: '15%', right: '10%' },
     xAxis: { type: 'category', data: techDist.map(d => d.name), axisLabel: { color: '#fff', fontSize: 10, interval: 0 } },
     yAxis: { type: 'value', name: '提及次数', axisLabel: { color: '#fff', fontSize: 10 } },
-    series: [{ type: 'bar', data: techDist.map(d => d.value), itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: '#E07B54' }, { offset: 1, color: '#C8A96E' }]) } }]
+    series: [{ type: 'bar', data: techDist.map(d => d.value), itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: '#C8452F' }, { offset: 1, color: '#C8A96E' }]) } }]
   }, (params) => {
     const keyword = params.name;
     const items = detail.filter(d => {

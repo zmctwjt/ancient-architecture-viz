@@ -271,8 +271,8 @@ async function initGraphChart(data) {
       links: links,
       categories: [
         { name: '建筑科学家', itemStyle: { color: '#C8A96E' } },
-        { name: '历史时期', itemStyle: { color: '#4ECDC4' } },
-        { name: '代表作品', itemStyle: { color: '#E07B54' } }
+        { name: '历史时期', itemStyle: { color: '#7FA8A0' } },
+        { name: '代表作品', itemStyle: { color: '#C8452F' } }
       ],
       roam: true,
       label: { show: true, position: 'bottom', color: 'rgba(255,255,255,0.8)' },
@@ -370,7 +370,7 @@ async function initBarChart(data) {
       itemStyle: {
         color: {
           type: 'linear', x: 0, y: 0, x2: 1, y2: 0,
-          colorStops: [{ offset: 0, color: '#4ECDC4' }, { offset: 1, color: '#C8A96E' }]
+          colorStops: [{ offset: 0, color: '#7FA8A0' }, { offset: 1, color: '#C8A96E' }]
         },
         borderRadius: [0, 4, 4, 0]
       },
@@ -401,12 +401,12 @@ function showPersonDetail(person) {
       <div style="display: flex; gap: 0.15rem; align-items: center; margin-bottom: 0.15rem;">
         <div class="seal-avatar seal-lg" aria-hidden="true">${person.name.charAt(0)}</div>
         <div style="flex: 1; min-width: 0;">
-          <p><strong style="color: #4ECDC4;">时期：</strong>${person.period}</p>
-          <p><strong style="color: #4ECDC4;">影响力指数：</strong>${person.influence_score || 0} / 100</p>
+          <p><strong style="color: #7FA8A0;">时期：</strong>${person.period}</p>
+          <p><strong style="color: #7FA8A0;">影响力指数：</strong>${person.influence_score || 0} / 100</p>
         </div>
       </div>
       <div style="margin-bottom: 0.15rem;">
-        <p><strong style="color: #4ECDC4;">代表作品：</strong>${works}</p>
+        <p><strong style="color: #7FA8A0;">代表作品：</strong>${works}</p>
       </div>
       <div style="background: rgba(255,255,255,0.05); padding: 0.15rem; border-radius: 6px;">
         <p style="line-height: 1.8;">${person.achievements || ''}</p>

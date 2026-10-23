@@ -7,7 +7,6 @@ import { gsap } from 'gsap';
 import { loadData, COLORS, ECHARTS_THEME, getDataUrl, loadJson, matchDynastyGroup } from '../../js/common/utils.js';
 import { fallingLeavesAnimation, countUpAnimation, pageEnterAnimation } from '../../js/common/animation.js';
 import { showInfoModal } from '../../js/common/infoModal.js';
-import { initReveal } from '../../js/common/reveal.js';
 
 // 获取URL参数中的朝代过滤
 function getDynastyFilter() {
@@ -124,7 +123,6 @@ async function initData(filterDynasties) {
   }
 
   const filterDynastyStr = filterDynasties && filterDynasties.length > 0 ? filterDynasties.join(',') : null;
-  initReveal();
   initStatCardLinks();
   initCountUp(filteredBuildings.length, architectsMeta.total || 0, booksMeta.total || 0, cultureCount);
   await initTimelineChart(filteredBuildings, filterDynastyStr);
@@ -144,7 +142,7 @@ async function init() {
  * 更新导航链接，带上朝代筛选参数
  */
 function updateNavLinks(filterDynasty) {
-  const navItems = document.querySelectorAll('.nav-item');
+  const navItems = document.querySelectorAll('.fp-entry[data-nav]');
   navItems.forEach(item => {
     const baseHref = item.getAttribute('href');
     if (!baseHref) return;
@@ -177,7 +175,7 @@ function initCountUp(buildingCount, architectCount, bookCount, cultureCount) {
  * 保留当前朝代筛选状态
  */
 function initStatCardLinks() {
-  const cards = document.querySelectorAll('.stat-card');
+  const cards = document.querySelectorAll('.fp-stat');
   const targets = [
     '../achievement/index.html',
     '../scientist/index.html',
@@ -274,7 +272,7 @@ async function initTimelineChart(buildingData, filterDynasty) {
       symbol: 'circle',
       symbolSize: 10,
       lineStyle: { color: '#C8A96E', width: 3 },
-      itemStyle: { color: '#C8A96E', borderColor: '#fff', borderWidth: 2 },
+      itemStyle: { color: COLORS.primary, borderColor: '#0B0906', borderWidth: 2 },
       areaStyle: {
         color: {
           type: 'linear', x: 0, y: 0, x2: 0, y2: 1,
@@ -413,10 +411,10 @@ async function initRadarChart(buildingData) {
     series: [{
       type: 'radar',
       data: [
-        { value: [stats['民居'].countNorm, stats['民居'].material, stats['民居'].craft, stats['民居'].culture, stats['民居'].provinceNorm, stats['民居'].dynastyNorm], name: '民居', itemStyle: { color: '#E07B54' }, areaStyle: { opacity: 0.3 } },
-        { value: [stats['官府'].countNorm, stats['官府'].material, stats['官府'].craft, stats['官府'].culture, stats['官府'].provinceNorm, stats['官府'].dynastyNorm], name: '官府', itemStyle: { color: '#3498DB' }, areaStyle: { opacity: 0.3 } },
-        { value: [stats['皇宫'].countNorm, stats['皇宫'].material, stats['皇宫'].craft, stats['皇宫'].culture, stats['皇宫'].provinceNorm, stats['皇宫'].dynastyNorm], name: '皇宫', itemStyle: { color: '#C8A96E' }, areaStyle: { opacity: 0.3 } },
-        { value: [stats['桥梁'].countNorm, stats['桥梁'].material, stats['桥梁'].craft, stats['桥梁'].culture, stats['桥梁'].provinceNorm, stats['桥梁'].dynastyNorm], name: '桥梁', itemStyle: { color: '#4ECDC4' }, areaStyle: { opacity: 0.3 } }
+        { value: [stats['民居'].countNorm, stats['民居'].material, stats['民居'].craft, stats['民居'].culture, stats['民居'].provinceNorm, stats['民居'].dynastyNorm], name: '民居', itemStyle: { color: COLORS.accent }, areaStyle: { opacity: 0.3 } },
+        { value: [stats['官府'].countNorm, stats['官府'].material, stats['官府'].craft, stats['官府'].culture, stats['官府'].provinceNorm, stats['官府'].dynastyNorm], name: '官府', itemStyle: { color: '#6E8FA8' }, areaStyle: { opacity: 0.3 } },
+        { value: [stats['皇宫'].countNorm, stats['皇宫'].material, stats['皇宫'].craft, stats['皇宫'].culture, stats['皇宫'].provinceNorm, stats['皇宫'].dynastyNorm], name: '皇宫', itemStyle: { color: COLORS.primary }, areaStyle: { opacity: 0.3 } },
+        { value: [stats['桥梁'].countNorm, stats['桥梁'].material, stats['桥梁'].craft, stats['桥梁'].culture, stats['桥梁'].provinceNorm, stats['桥梁'].dynastyNorm], name: '桥梁', itemStyle: { color: COLORS.secondary }, areaStyle: { opacity: 0.3 } }
       ]
     }]
   };
@@ -447,7 +445,7 @@ async function initRadarChart(buildingData) {
  * 导航悬停效果
  */
 function initNavHover() {
-  const navItems = document.querySelectorAll('.nav-item');
+  const navItems = document.querySelectorAll('.fp-entry[data-nav]');
   navItems.forEach(item => {
     item.addEventListener('mouseenter', () => { gsap.to(item, { y: -8, duration: 0.3, ease: 'power2.out' }); });
     item.addEventListener('mouseleave', () => { gsap.to(item, { y: 0, duration: 0.3, ease: 'power2.out' }); });

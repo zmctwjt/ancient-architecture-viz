@@ -9,7 +9,7 @@ import { gsap } from 'gsap';
 export function pageEnterAnimation() {
   const tl = gsap.timeline();
   
-  tl.from('.page-title', {
+  tl.from('.page-title, .fp-lede__title', {
     opacity: 0,
     y: -30,
     duration: 0.8,
@@ -83,7 +83,7 @@ export function fallingLeavesAnimation(container, options = {}) {
   const defaults = {
     count: 20,          // 叶片数量
     interval: 2000,     // 生成间隔(ms)
-    colors: ['#C8A96E', '#4ECDC4', '#E07B54', '#8B7355'],
+    colors: ['#C8A96E', '#7FA8A0', '#C8452F', '#8B7355'],
     minSize: 10,
     maxSize: 20
   };
@@ -111,12 +111,13 @@ export function fallingLeavesAnimation(container, options = {}) {
       width: ${size}px;
       height: ${size}px;
       background: ${color};
-      opacity: 0.6;
+      opacity: 0.22;
       border-radius: 0 ${size}px;
       left: ${startX}vw;
       top: -${size}px;
       pointer-events: none;
       z-index: 0;
+      filter: blur(0.3px);
     `;
     
     containerEl.appendChild(leaf);

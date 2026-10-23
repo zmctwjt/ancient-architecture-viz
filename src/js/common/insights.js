@@ -94,18 +94,11 @@ export const cultureInsights = {
 export function generateInsightHTML(insight) {
   return `
     <div class="insight-panel">
-      <div class="insight-title">
-        <span>💡</span>
-        <span>${insight.title}</span>
-      </div>
+      <div class="insight-title">${insight.title}</div>
       <div class="insight-content">
-        <p style="margin-bottom: 0.08rem; line-height: 1.8;">${insight.content}</p>
-        <div style="display: flex; flex-wrap: wrap; gap: 0.05rem; margin-top: 0.08rem;">
-          ${insight.keyPoints.map(point => `
-            <span style="background: rgba(200, 169, 110, 0.15); color: #C8A96E; padding: 0.03rem 0.08rem; border-radius: 4px; font-size: 0.11rem; border: 1px solid rgba(200, 169, 110, 0.2);">
-              ${point}
-            </span>
-          `).join('')}
+        <p>${insight.content}</p>
+        <div class="insight-tags">
+          ${insight.keyPoints.map(point => `<span class="insight-tag">${point}</span>`).join('')}
         </div>
       </div>
     </div>

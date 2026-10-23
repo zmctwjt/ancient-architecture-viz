@@ -3,7 +3,7 @@
  * 注意：只作用于纯 HTML 卡片，不作用于图表容器，避免影响 ECharts 尺寸计算
  */
 
-const DEFAULT_SELECTOR = '.stat-card, .nav-item, .person-card';
+const DEFAULT_SELECTOR = '.person-card, .fp-stat, .fp-entry';
 
 export function initReveal(selector = DEFAULT_SELECTOR, options = {}) {
   // 尊重系统"减少动效"偏好

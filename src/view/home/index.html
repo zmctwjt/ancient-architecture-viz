@@ -5,138 +5,197 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>千年营造·华夏砖木 - 中国古代建筑数据可视化</title>
   <link rel="stylesheet" href="../../css/common.css">
+  <link rel="stylesheet" href="../../css/frontispiece.css">
   <link rel="stylesheet" href="../../css/responsive.css">
-  <meta name="description" content="基于数据可视化的中国古代建筑成就展示平台">
+  <meta name="description" content="以数据重述中国建筑的营造脉络：115 处全国重点文物保护单位、20 位匠师、14 部典籍、26 类建筑形态">
   <script>(function(){var d=document.documentElement;var r=window.devicePixelRatio||1;d.setAttribute('data-dpr',r);function s(){var w=d.clientWidth;var rem=(w/1920)*100;rem=Math.max(rem,54);d.style.fontSize=rem+'px'}s();window.addEventListener('resize',s);window.addEventListener('pageshow',function(e){if(e.persisted)s()});window.flexible={dpr:r,rem:function(){return parseFloat(d.style.fontSize)},refreshRem:s}})();</script>
-  <script type="importmap">
-  {
-    "imports": {
-      "echarts": "https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.esm.min.js",
-      "gsap": "https://cdn.jsdelivr.net/npm/gsap@3.12.7/+esm"
-    }
-  }
-  </script>
   <style>
-    html { background-color: #080b11 !important; }
+    html { background-color: #070604 !important; }
     /* body 保持透明，让全屏背景层透出 */
     body { background: transparent !important; }
     .falling-leaf { position: absolute; pointer-events: none; z-index: 0; }
+
+    /* 朝代筛选：细线标签，与编辑式版式统一 */
     .dynasty-btn {
-      padding: 0.06rem 0.16rem;
-      background: rgba(200, 169, 110, 0.1);
-      border: 1px solid rgba(200, 169, 110, 0.3);
-      border-radius: 20px;
-      color: #C8A96E;
-      font-size: 0.12rem;
+      padding: 0.055rem 0.14rem;
+      background: transparent;
+      border: 1px solid var(--border-color);
+      border-radius: 2px;
+      color: var(--text-secondary);
+      font-size: 0.115rem;
+      letter-spacing: 0.08em;
       cursor: pointer;
-      transition: all 0.3s;
+      transition: all var(--dur-base) var(--ease-out);
       outline: none;
+      font-family: var(--font-serif);
     }
     .dynasty-btn:hover {
-      background: rgba(200, 169, 110, 0.25);
-      border-color: #C8A96E;
-      transform: translateY(-2px);
+      border-color: var(--border-strong);
+      color: var(--text-primary);
+      background: rgba(200, 169, 110, 0.06);
     }
     .dynasty-btn.active {
-      background: linear-gradient(135deg, rgba(200, 169, 110, 0.4), rgba(78, 205, 196, 0.2));
-      border-color: #C8A96E;
-      color: #fff;
-      font-weight: 600;
-      box-shadow: 0 0 12px rgba(200, 169, 110, 0.3);
+      background: var(--color-accent);
+      border-color: var(--color-accent);
+      color: #F7EDE2;
+      box-shadow: 0 2px 12px -2px rgba(200, 69, 47, 0.5);
     }
   </style>
 </head>
 <body>
   <div class="page-container" id="app">
     <div class="leaves-container" id="leafContainer"></div>
-    
-    <div class="content-wrapper" role="main">
-      <header class="page-header">
-        <h1 class="page-title">千年营造·华夏砖木</h1>
-        <p class="page-subtitle">中国古代建筑数据可视化平台</p>
-        <div class="hero-ornament" aria-hidden="true">
-          <svg viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M8 62h104"/>
-            <path d="M20 62V50h80v12"/>
-            <path d="M16 50h88"/>
-            <path d="M26 50l8-12h52l8 12"/>
-            <path d="M24 38h72"/>
-            <path d="M34 38l10-12h32l10 12"/>
-            <path d="M30 26h60"/>
-            <path d="M36 26c6-8 42-8 48 0"/>
-            <path d="M26 26c-5-3-4-9 1-11M94 26c5-3 4-9-1-11"/>
-            <path d="M40 62v-6M60 62v-6M80 62v-6"/>
-          </svg>
-        </div>
-      </header>
-      
-      <div id="dynasty-filter" style="margin-top: 0.15rem; text-align: center;">
-        <div id="dynasty-selector" style="display: flex; justify-content: center; gap: 0.1rem; flex-wrap: wrap;">
-          <button class="dynasty-btn" data-dynasty="先秦">先秦</button>
-          <button class="dynasty-btn" data-dynasty="秦汉">秦汉</button>
-          <button class="dynasty-btn" data-dynasty="魏晋">魏晋</button>
-          <button class="dynasty-btn" data-dynasty="隋唐">隋唐</button>
-          <button class="dynasty-btn" data-dynasty="宋元">宋元</button>
-          <button class="dynasty-btn" data-dynasty="明清">明清</button>
-        </div>
-      </div>
-      <section class="stats-overview" style="padding: 0.15rem 0;">
-        <div class="stats-grid">
-          <div class="stat-card"><div class="stat-number" data-count="115">0</div><div class="stat-label">全国重点文物保护单位</div></div>
-          <div class="stat-card"><div class="stat-number" data-count="20">0</div><div class="stat-label">杰出建筑科学家</div></div>
-          <div class="stat-card"><div class="stat-number" data-count="14">0</div><div class="stat-label">传世建筑著作</div></div>
-          <div class="stat-card"><div class="stat-number" data-count="26">0</div><div class="stat-label">建筑文化形态</div></div>
-        </div>
-      </section>
-      
-      <nav class="nav-container">
-        <a href="../achievement/index.html" class="nav-item" data-nav="achievement"><span class="nav-icon">🏛️</span><span class="nav-label">建筑成就</span></a>
-        <a href="../scientist/index.html" class="nav-item" data-nav="scientist"><span class="nav-icon">👨‍🔬</span><span class="nav-label">杰出科学家</span></a>
-        <a href="../literature/index.html" class="nav-item" data-nav="literature"><span class="nav-icon">📚</span><span class="nav-label">传世著作</span></a>
-        <a href="../culture/index.html" class="nav-item" data-nav="culture"><span class="nav-icon">🏮</span><span class="nav-label">建筑文化</span></a>
-      </nav>
-      
-      <section style="padding: 0.15rem 0; display: grid; grid-template-columns: 1fr 1fr; gap: 0.15rem;">
-        <div class="chart-panel">
-          <h2 class="panel-title">中国古代建筑发展时间轴</h2>
-          <div role="img" aria-label="数据可视化图表" id="timeline-chart" class="chart-container" style="min-height: 3.5rem;"></div>
-        </div>
-        <div class="chart-panel">
-          <h2 class="panel-title">四类建筑特征对比</h2>
-          <div role="img" aria-label="数据可视化图表" id="radar-chart" class="chart-container" style="min-height: 3.5rem;"></div>
-        </div>
-      </section>
-      
-      <!-- 滚动数据总览 - 卡片式布局 -->
-      <section class="data-overview" style="padding: 0.15rem 0; margin: 0.15rem 0;">
-        <h2 class="panel-title" style="text-align: center; margin-bottom: 0.15rem;">中国古代建筑数据总览</h2>
-        <div id="scrollWrapper" style="height: 3.5rem; overflow: hidden; position: relative; border: 1px solid rgba(200, 169, 110, 0.3); border-radius: 4px; background: rgba(13, 17, 23, 0.6);">
-          <div id="scrollContent" style="position: absolute; width: 100%;">
-            <!-- JS动态生成卡片 -->
-          </div>
-        </div>
-      </section>
 
-      <section class="insights-section" style="padding: 0.2rem 0;">
-        <h2 class="panel-title" style="text-align: center; margin-bottom: 0.2rem; font-size: 0.18rem;">核心数据洞察</h2>
-        <div id="home-insights" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(3.5rem, 1fr)); gap: 0.15rem;"></div>
-      </section>
-      
-      <footer class="site-footer">
-        <div class="footer-ornament" aria-hidden="true">
-          <svg viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M8 62h104"/><path d="M20 62V50h80v12"/><path d="M16 50h88"/>
-            <path d="M26 50l8-12h52l8 12"/><path d="M24 38h72"/>
-            <path d="M34 38l10-12h32l10 12"/><path d="M30 26h60"/>
-            <path d="M36 26c6-8 42-8 48 0"/><path d="M26 26c-5-3-4-9 1-11M94 26c5-3 4-9-1-11"/>
-          </svg>
-        </div>
-        <p class="footer-brand">千年营造 · 华夏砖木 —— 中国古代建筑数据可视化平台</p>
-        <p class="footer-meta">数据来源：国家文物局、百度百科、中国非物质文化遗产网</p>
-      </footer>
+    <!-- ==================== 扉页 ==================== -->
+    <div class="fp-layout">
+      <!-- 左侧竖排书脊 -->
+      <aside class="fp-spine" aria-label="作品题名">
+        <div class="fp-spine__title">千年营造</div>
+        <div class="fp-spine__sub">华夏砖木</div>
+        <div class="fp-seal" aria-hidden="true">营造</div>
+      </aside>
+
+      <!-- 右侧正文 -->
+      <div class="fp-main">
+        <header class="fp-lede">
+          <p class="fp-lede__kicker">A Visual Atlas of Chinese Ancient Architecture</p>
+          <h1 class="page-title fp-lede__title">砖木之间，<em>千年营造</em></h1>
+          <p class="fp-lede__text">
+            自先秦至清末，营造之事未曾中断。宫殿、民居、官府、桥梁，一榫一卯皆有法度。
+            本平台以 115 处全国重点文物保护单位、20 位匠师、14 部典籍与 26 类建筑形态为样本，
+            在数据中重述中国建筑的秩序、技艺与传承。
+          </p>
+        </header>
+
+        <!-- 数据条 -->
+        <section class="fp-stats" aria-label="数据概览">
+          <div class="fp-stat" tabindex="0" role="link" aria-label="全国重点文物保护单位 115 处，点击查看建筑成就">
+            <div class="fp-stat__row">
+              <span class="fp-stat__num stat-number" data-count="115">0</span>
+              <span class="fp-stat__unit">处</span>
+            </div>
+            <span class="fp-stat__label">全国重点文物保护单位</span>
+          </div>
+          <div class="fp-stat" tabindex="0" role="link" aria-label="杰出建筑科学家 20 位，点击查看科学家">
+            <div class="fp-stat__row">
+              <span class="fp-stat__num stat-number" data-count="20">0</span>
+              <span class="fp-stat__unit">位</span>
+            </div>
+            <span class="fp-stat__label">杰出建筑科学家</span>
+          </div>
+          <div class="fp-stat" tabindex="0" role="link" aria-label="传世建筑著作 14 部，点击查看著作">
+            <div class="fp-stat__row">
+              <span class="fp-stat__num stat-number" data-count="14">0</span>
+              <span class="fp-stat__unit">部</span>
+            </div>
+            <span class="fp-stat__label">传世建筑著作</span>
+          </div>
+          <div class="fp-stat" tabindex="0" role="link" aria-label="建筑文化形态 26 类，点击查看建筑文化">
+            <div class="fp-stat__row">
+              <span class="fp-stat__num stat-number" data-count="26">0</span>
+              <span class="fp-stat__unit">类</span>
+            </div>
+            <span class="fp-stat__label">建筑文化形态</span>
+          </div>
+        </section>
+
+        <!-- 目录 -->
+        <nav class="fp-contents" aria-label="栏目目录">
+          <div class="fp-contents__head">
+            <h2>目 录</h2>
+            <span>Contents</span>
+          </div>
+
+          <a class="fp-entry" href="../achievement/index.html" data-nav="achievement">
+            <span class="fp-entry__index">壹</span>
+            <span class="fp-entry__body">
+              <span class="fp-entry__name">建筑成就</span>
+              <span class="fp-entry__desc">历代营造技艺、遗存分布与技术演进</span>
+            </span>
+            <span class="fp-entry__meta">115 处<span class="fp-entry__arrow">→</span></span>
+          </a>
+
+          <a class="fp-entry" href="../scientist/index.html" data-nav="scientist">
+            <span class="fp-entry__index">贰</span>
+            <span class="fp-entry__body">
+              <span class="fp-entry__name">杰出科学家</span>
+              <span class="fp-entry__desc">匠师谱系、朝代归属与影响力评估</span>
+            </span>
+            <span class="fp-entry__meta">20 位<span class="fp-entry__arrow">→</span></span>
+          </a>
+
+          <a class="fp-entry" href="../literature/index.html" data-nav="literature">
+            <span class="fp-entry__index">叁</span>
+            <span class="fp-entry__body">
+              <span class="fp-entry__name">传世著作</span>
+              <span class="fp-entry__desc">营造典籍的成书年代、类型与存佚状态</span>
+            </span>
+            <span class="fp-entry__meta">14 部<span class="fp-entry__arrow">→</span></span>
+          </a>
+
+          <a class="fp-entry" href="../culture/index.html" data-nav="culture">
+            <span class="fp-entry__index">肆</span>
+            <span class="fp-entry__body">
+              <span class="fp-entry__name">建筑文化</span>
+              <span class="fp-entry__desc">民居、官府、皇宫、桥梁四类深读</span>
+            </span>
+            <span class="fp-entry__meta">26 类<span class="fp-entry__arrow">→</span></span>
+          </a>
+        </nav>
+
+        <!-- ==================== 营造年表 ==================== -->
+        <section class="fp-section" aria-labelledby="chronicle-title">
+          <div class="fp-section__head">
+            <h2 id="chronicle-title">营造年表</h2>
+            <span>Chronicle &amp; Typology</span>
+          </div>
+
+          <div class="fp-filter" id="dynasty-filter">
+            <div id="dynasty-selector" style="display: flex; flex-wrap: wrap; gap: 0.06rem;">
+              <button class="dynasty-btn" data-dynasty="先秦">先秦</button>
+              <button class="dynasty-btn" data-dynasty="秦汉">秦汉</button>
+              <button class="dynasty-btn" data-dynasty="魏晋">魏晋</button>
+              <button class="dynasty-btn" data-dynasty="隋唐">隋唐</button>
+              <button class="dynasty-btn" data-dynasty="宋元">宋元</button>
+              <button class="dynasty-btn" data-dynasty="明清">明清</button>
+            </div>
+          </div>
+
+          <div class="chart-panel">
+            <h3 class="panel-title">中国古代建筑发展时间轴</h3>
+            <div class="chart-container" id="timeline-chart" role="img" aria-label="各朝代古建筑数量与发展趋势折线图"></div>
+          </div>
+
+          <div class="chart-panel" style="margin-top: 0.2rem;">
+            <h3 class="panel-title">四类建筑特征对比</h3>
+            <div class="chart-container" id="radar-chart" role="img" aria-label="民居、官府、皇宫、桥梁四类建筑特征雷达图"></div>
+          </div>
+
+          <section class="insights-section" style="padding: 0.3rem 0 0.1rem;">
+            <div class="fp-section__head">
+              <h2>数据洞察</h2>
+              <span>Insights</span>
+            </div>
+            <div id="home-insights" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(3.5rem, 1fr)); gap: 0;"></div>
+          </section>
+        </section>
+
+        <footer class="site-footer">
+          <div class="footer-ornament" aria-hidden="true">
+            <svg viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M8 62h104"/><path d="M20 62V50h80v12"/><path d="M16 50h88"/>
+              <path d="M26 50l8-12h52l8 12"/><path d="M24 38h72"/>
+              <path d="M34 38l10-12h32l10 12"/><path d="M30 26h60"/>
+              <path d="M36 26c6-8 42-8 48 0"/><path d="M26 26c-5-3-4-9 1-11M94 26c5-3 4-9-1-11"/>
+            </svg>
+          </div>
+          <p class="footer-brand">千年营造 · 华夏砖木 —— 中国古代建筑数据可视化平台</p>
+          <p class="footer-meta">数据来源：国家文物局、百度百科、中国非物质文化遗产网</p>
+        </footer>
+      </div>
     </div>
   </div>
-  
+
   <script type="module" src="./main.js"></script>
 </body>
 </html>

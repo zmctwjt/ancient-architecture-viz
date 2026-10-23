@@ -108,30 +108,30 @@ export function makeChartResponsive(chart) {
  * 颜色配置 - 古建筑主题色
  */
 export const COLORS = {
-  // 主色调
+  // 主色调（墨 + 朱砂 + 古铜，低饱和文人色系）
   primary: '#C8A96E',      // 古铜金
-  secondary: '#4ECDC4',    // 青瓦色
-  accent: '#E07B54',       // 朱砂红
-  
+  secondary: '#7FA8A0',    // 青瓦（降饱和）
+  accent: '#C8452F',       // 朱砂
+
   // 背景色
-  bgDark: '#0d1117',       // 深夜墨色
-  bgCard: 'rgba(13, 17, 23, 0.8)', // 卡片背景
-  
-  // 文字色
-  textPrimary: 'rgba(255, 255, 255, 0.9)',
-  textSecondary: 'rgba(255, 255, 255, 0.6)',
-  textMuted: 'rgba(255, 255, 255, 0.4)',
-  
-  // 图表配色方案
+  bgDark: '#0B0906',       // 暖墨
+  bgCard: 'rgba(18, 16, 12, 0.9)', // 卡片背景
+
+  // 文字色（暖白）
+  textPrimary: '#F2EBE0',
+  textSecondary: 'rgba(242, 235, 224, 0.68)',
+  textMuted: 'rgba(242, 235, 224, 0.42)',
+
+  // 图表配色方案（同色系、低饱和，保证可读性前提下统一气质）
   chart: [
     '#C8A96E',  // 古铜金
-    '#4ECDC4',  // 青瓦色
-    '#E07B54',  // 朱砂红
-    '#9B59B6',  // 紫罗兰
-    '#3498DB',  // 天蓝
-    '#2ECC71',  // 翠绿
-    '#F39C12',  // 琥珀
-    '#E74C3C',  // 朱红
+    '#7FA8A0',  // 青瓦
+    '#C8452F',  // 朱砂
+    '#8E9B73',  // 苍绿
+    '#6E8FA8',  // 黛蓝
+    '#A88A5C',  // 土黄
+    '#A9644F',  // 砖红
+    '#8C7A9E',  // 紫檀
   ]
 };
 

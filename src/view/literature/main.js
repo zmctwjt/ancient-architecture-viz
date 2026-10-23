@@ -203,7 +203,7 @@ async function initTimelineChart(data) {
       showInfoModal({
         title: `${d.name}时期建筑著作`,
         content: `
-          <p><strong style="color: #4ECDC4;">著作数量：</strong>${d.value}部</p>
+          <p><strong style="color: #7FA8A0;">著作数量：</strong>${d.value}部</p>
           <div style="background: rgba(255,255,255,0.05); padding: 0.1rem; border-radius: 6px; margin-top: 0.1rem;">
             <p style="line-height: 1.8;"><strong>包括：</strong>${(d.books || []).join('、')}</p>
           </div>
@@ -267,9 +267,9 @@ async function initSunburstChart(data) {
       showInfoModal({
         title: `《${name}》详情`,
         content: `
-          <p><strong style="color: #4ECDC4;">朝代：</strong>${detail.dynasty}</p>
-          <p><strong style="color: #4ECDC4;">类型：</strong>${detail.type}</p>
-          <p><strong style="color: #4ECDC4;">作者：</strong>${detail.author}</p>
+          <p><strong style="color: #7FA8A0;">朝代：</strong>${detail.dynasty}</p>
+          <p><strong style="color: #7FA8A0;">类型：</strong>${detail.type}</p>
+          <p><strong style="color: #7FA8A0;">作者：</strong>${detail.author}</p>
           <div style="background: rgba(255,255,255,0.05); padding: 0.1rem; border-radius: 6px;">
             <p style="line-height: 1.8;">${detail.significance}</p>
           </div>
@@ -424,7 +424,7 @@ async function initWordCloudChart(data) {
       showInfoModal({
         title: params.name,
         content: `
-          <p><strong style="color: #4ECDC4;">类别：</strong>${detail.category}</p>
+          <p><strong style="color: #7FA8A0;">类别：</strong>${detail.category}</p>
           <div style="background: rgba(255,255,255,0.05); padding: 0.1rem; border-radius: 6px;">
             <p style="line-height: 1.8;">${detail.desc}</p>
           </div>

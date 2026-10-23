@@ -15,7 +15,7 @@ html {
 }
 
 html {
-  background: #080b11;
+  background: #070604;
   /* 背景层用 fixed 定位，随视口铺满，不随内容高度变化 */
 }
 
@@ -23,7 +23,7 @@ body {
   font-family: var(--font-sans);
   /* 注意：body 不设背景色，避免遮挡全屏背景层 */
   background: transparent;
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--text-primary);
   min-height: 100vh;
   overflow-x: hidden;
   position: relative;
@@ -38,22 +38,15 @@ body::before {
   z-index: -2;
   pointer-events: none;
   background:
-    /* 顶部暖金光晕（大范围，避免边界）*/
-    radial-gradient(ellipse 130% 90% at 50% -15%, rgba(210, 175, 115, 0.22) 0%, rgba(200, 169, 110, 0.06) 45%, transparent 75%),
-    /* 底部青瓦光晕 */
-    radial-gradient(ellipse 130% 90% at 50% 115%, rgba(78, 205, 196, 0.18) 0%, rgba(78, 205, 196, 0.04) 45%, transparent 75%),
-    /* 左上、右下点缀 */
-    radial-gradient(circle at 8% 12%, rgba(200, 169, 110, 0.10) 0%, transparent 42%),
-    radial-gradient(circle at 92% 88%, rgba(78, 205, 196, 0.10) 0%, transparent 42%),
-    /* 居中柔光 */
-    radial-gradient(ellipse 60% 50% at 50% 45%, rgba(255, 240, 210, 0.045) 0%, transparent 70%),
-    /* 细网格（px 固定，不随 rem 跳变）*/
-    linear-gradient(rgba(200, 169, 110, 0.065) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(200, 169, 110, 0.065) 1px, transparent 1px),
+    /* 单层顶部柔光：层数越少，深色下的可见色阶断层越少 */
+    radial-gradient(ellipse 115% 75% at 50% -12%, rgba(200, 152, 88, 0.11) 0%, rgba(200, 160, 100, 0.028) 45%, transparent 70%),
+    /* 细网格（px 固定，全屏平铺） */
+    linear-gradient(rgba(200, 169, 110, 0.052) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(200, 169, 110, 0.052) 1px, transparent 1px),
     /* 底色 */
-    linear-gradient(180deg, #0e141d 0%, #0b1017 45%, #0a0f15 100%);
+    linear-gradient(180deg, #0E0B07 0%, #0B0906 50%, #090806 100%);
   background-size:
-    100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%,
+    100% 100%,
     48px 48px, 48px 48px, 100% 100%;
   background-position: center center;
 }
@@ -65,39 +58,65 @@ body::after {
   inset: 0;
   z-index: -1;
   pointer-events: none;
-  opacity: 0.028;
+  opacity: 0.032;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
   background-repeat: repeat;
 }
 
 /* ==================== CSS变量 ==================== */
 :root {
-  /* 主色调 */
+  /* ---- 墨色体系（暖墨，替代冷蓝灰） ---- */
+  --ink-900: #0B0906;   /* 页面底色 */
+  --ink-800: #12100C;   /* 卡片底 */
+  --ink-700: #1A1712;   /* 面板底 */
+  --ink-600: #241F18;   /* 悬浮态 */
+
+  /* ---- 主色：古铜金（次要金属色） ---- */
   --color-primary: #C8A96E;
-  --color-secondary: #4ECDC4;
-  --color-accent: #E07B54;
+  /* ---- 青瓦：降饱和，去掉荧光感 ---- */
+  --color-secondary: #7FA8A0;
+  /* ---- 朱砂：唯一锐利强调色 ---- */
+  --color-accent: #C8452F;
+  --accent-soft: rgba(200, 69, 47, 0.14);
+  --accent-line: rgba(200, 69, 47, 0.55);
 
   /* 背景色 - 确保深色背景不闪烁 */
-  --bg-dark: #0a0e14;
-  --bg-card: rgba(13, 17, 23, 0.95);
-  --bg-panel: rgba(20, 25, 35, 0.95);
+  --bg-dark: #0B0906;
+  --bg-card: rgba(18, 16, 12, 0.96);
+  --bg-panel: rgba(26, 23, 18, 0.96);
 
   /* 边框 */
-  --border-color: rgba(200, 169, 110, 0.3);
-  --border-glow: 0 0 20px rgba(200, 169, 110, 0.2);
+  --border-color: rgba(200, 169, 110, 0.22);
+  --border-strong: rgba(200, 169, 110, 0.42);
+  --border-glow: 0 0 20px rgba(200, 169, 110, 0.18);
 
-  /* 文字 */
-  --text-primary: rgba(255, 255, 255, 0.9);
-  --text-secondary: rgba(255, 255, 255, 0.7);
-  --text-muted: rgba(255, 255, 255, 0.5);
+  /* 文字（暖白，避免纯白刺眼） */
+  --text-primary: #F2EBE0;
+  --text-secondary: rgba(242, 235, 224, 0.72);
+  --text-muted: rgba(242, 235, 224, 0.46);
+
+  /* ---- 间距梯度 ---- */
+  --sp-1: 0.04rem;
+  --sp-2: 0.08rem;
+  --sp-3: 0.16rem;
+  --sp-4: 0.24rem;
+  --sp-5: 0.4rem;
+  --sp-6: 0.64rem;
+  --sp-7: 0.96rem;
+
+  /* ---- 动效 ---- */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-fast: 160ms;
+  --dur-base: 320ms;
+  --dur-slow: 640ms;
 
   /* 图表配色 */
   --chart-gold: #C8A96E;
-  --chart-cyan: #4ECDC4;
-  --chart-red: #E07B54;
-  --chart-purple: #9B59B6;
-  --chart-blue: #3498DB;
-  --chart-green: #2ECC71;
+  --chart-cyan: #7FA8A0;
+  --chart-red: #C8452F;
+  --chart-purple: #8C7A9E;
+  --chart-blue: #6E8FA8;
+  --chart-green: #8E9B73;
 
 
   /* 字体栈：标题用中文衬线（等效思源宋体质感），正文用无衬线 */
@@ -1329,4 +1348,167 @@ button:focus-visible,
 }
 .stat-card:hover .stat-label {
   color: rgba(255, 255, 255, 0.92);
+}
+
+
+/* ============================================================
+   编辑式数据洞察面板（去卡片化，朱砂竖线 + 衬线标题）
+   ============================================================ */
+.insight-panel {
+  position: relative;
+  height: 100%;
+  padding: 0.15rem 0.16rem 0.16rem 0.18rem;
+  /* 重置旧卡片样式（圆角/描边/投影），改为编辑式竖线 */
+  border-radius: 0;
+  border: none;
+  box-shadow: none;
+  border-left: 2px solid var(--color-accent);
+  background: linear-gradient(90deg, rgba(200, 69, 47, 0.055), transparent 72%);
+}
+
+.insight-title {
+  font-family: var(--font-serif);
+  font-size: 0.145rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--color-primary);
+  padding-bottom: 0.07rem;
+  margin-bottom: 0.09rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.insight-content p {
+  font-size: 0.11rem;
+  line-height: 1.9;
+  color: var(--text-secondary);
+  margin: 0 0 0.1rem;
+  letter-spacing: 0.01em;
+}
+
+.insight-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.05rem;
+}
+
+.insight-tag {
+  font-size: 0.098rem;
+  letter-spacing: 0.05em;
+  color: var(--color-primary);
+  padding: 0.02rem 0.07rem;
+  border: 1px solid var(--border-color);
+  border-radius: 2px;
+  background: transparent;
+  transition: border-color var(--dur-base) var(--ease-out),
+              color var(--dur-base) var(--ease-out);
+}
+.insight-panel:hover .insight-tag {
+  border-color: var(--border-strong);
+  color: var(--text-primary);
+}
+
+/* ---------- 叶片层与内容的层级 ---------- */
+.leaves-container {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+.fp-layout,
+.content-wrapper {
+  position: relative;
+  z-index: 1;
+}
+
+/* ============================================================
+   全站编辑式页头 + 统一的筛选标签
+   （用 !important 覆盖各页面内联 <style>，保持一处维护）
+   ============================================================ */
+.page-header {
+  text-align: left !important;
+  padding: 0.08rem 0 0.14rem !important;
+  margin-bottom: 0.22rem !important;
+  border-bottom: 1px solid var(--border-color);
+}
+.page-header::after { display: none !important; }
+
+.page-title {
+  font-family: var(--font-serif) !important;
+  font-size: 0.38rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.05em !important;
+  line-height: 1.16 !important;
+  color: var(--text-primary) !important;
+  display: block !important;
+  padding-left: 0.18rem !important;
+  border-left: 3px solid var(--color-accent) !important;
+  text-shadow: none !important;
+}
+.page-title::after { display: none !important; }
+
+.page-subtitle {
+  font-size: 0.12rem !important;
+  letter-spacing: 0.09em !important;
+  color: var(--text-muted) !important;
+  padding-left: 0.21rem !important;
+  margin-top: 0.07rem !important;
+}
+
+/* 筛选区左对齐，与编辑式版式对齐 */
+.page-header #dynasty-filter { text-align: left !important; }
+.page-header #dynasty-selector { justify-content: flex-start !important; }
+
+/* 朝代筛选：细线标签（全站统一） */
+.dynasty-btn {
+  padding: 0.05rem 0.13rem !important;
+  background: transparent !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 2px !important;
+  color: var(--text-secondary) !important;
+  font-family: var(--font-serif) !important;
+  font-size: 0.112rem !important;
+  letter-spacing: 0.08em !important;
+  cursor: pointer;
+  transition: all var(--dur-base) var(--ease-out);
+  outline: none;
+}
+.dynasty-btn:hover {
+  background: rgba(200, 169, 110, 0.07) !important;
+  border-color: var(--border-strong) !important;
+  color: var(--text-primary) !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+.dynasty-btn.active {
+  background: var(--color-accent) !important;
+  border-color: var(--color-accent) !important;
+  color: #F7EDE2 !important;
+  box-shadow: 0 2px 12px -2px rgba(200, 69, 47, 0.45) !important;
+}
+/* 去掉旧的扫光伪元素 */
+.dynasty-btn::after { display: none !important; }
+
+/* 返回链接：编辑式小标签 */
+.back-link {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 0.04rem;
+  font-size: 0.115rem !important;
+  letter-spacing: 0.08em;
+  color: var(--text-muted) !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 0.04rem 0 !important;
+  margin-bottom: 0.06rem;
+  border-bottom: 1px solid transparent !important;
+  transition: color var(--dur-base) var(--ease-out),
+              border-color var(--dur-base) var(--ease-out) !important;
+}
+.back-link:hover {
+  color: var(--color-primary) !important;
+  border-bottom-color: var(--border-strong) !important;
+  transform: none !important;
+  box-shadow: none !important;
 }

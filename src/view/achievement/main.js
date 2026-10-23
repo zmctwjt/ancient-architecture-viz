@@ -215,7 +215,7 @@ async function initPolarChart(buildingData) {
       coordinateSystem: 'polar',
       itemStyle: {
         color: (params) => {
-          const colors = ['#C8A96E', '#4ECDC4', '#E07B54', '#9B59B6', '#3498DB', '#2ECC71', '#F38181', '#AA96DA'];
+          const colors = ['#C8A96E', '#7FA8A0', '#C8452F', '#8C7A9E', '#6E8FA8', '#8E9B73', '#A9644F', '#8C7A9E'];
           return colors[params.dataIndex % colors.length];
         }
       }
@@ -271,7 +271,7 @@ async function initMapChart(buildingData) {
         itemStyle: {
           color: {
             type: 'linear', x: 0, y: 0, x2: 0, y2: 1,
-            colorStops: [{ offset: 0, color: '#C8A96E' }, { offset: 1, color: '#4ECDC4' }]
+            colorStops: [{ offset: 0, color: '#C8A96E' }, { offset: 1, color: '#7FA8A0' }]
           }
         }
       })),
@@ -326,7 +326,7 @@ async function initAreaChart(buildingData) {
     }
   });
 
-  const catColors = ['#C8A96E', '#4ECDC4', '#E07B54', '#9B59B6', '#3498DB', '#2ECC71', '#F38181', '#AA96DA'];
+  const catColors = ['#C8A96E', '#7FA8A0', '#C8452F', '#8C7A9E', '#6E8FA8', '#8E9B73', '#A9644F', '#8C7A9E'];
   const series = topCats.map((type, i) => ({
     name: type,
     type: 'line',
@@ -439,7 +439,7 @@ async function initRankChart(buildingData) {
       itemStyle: {
         color: {
           type: 'linear', x: 0, y: 0, x2: 1, y2: 0,
-          colorStops: [{ offset: 0, color: '#4ECDC4' }, { offset: 1, color: '#C8A96E' }]
+          colorStops: [{ offset: 0, color: '#7FA8A0' }, { offset: 1, color: '#C8A96E' }]
         },
         borderRadius: [0, 4, 4, 0]
       },
@@ -479,8 +479,8 @@ function showDynastyDetail(dynasty) {
     showInfoModal({
       title: `${dynasty}时期建筑详情`,
       content: `
-        <p><strong style="color: #4ECDC4;">时期：</strong>${detail.period}</p>
-        <p><strong style="color: #4ECDC4;">代表建筑：</strong>${detail.representative}</p>
+        <p><strong style="color: #7FA8A0;">时期：</strong>${detail.period}</p>
+        <p><strong style="color: #7FA8A0;">代表建筑：</strong>${detail.representative}</p>
         <div style="background: rgba(255,255,255,0.05); padding: 0.1rem; border-radius: 6px; margin-top: 0.1rem;">
           <p style="line-height: 1.8;">${detail.desc}</p>
         </div>
@@ -638,7 +638,7 @@ async function initYearChart(buildingData) {
       itemStyle: {
         color: {
           type: 'linear', x: 0, y: 0, x2: 0, y2: 1,
-          colorStops: [{ offset: 0, color: '#C8A96E' }, { offset: 1, color: '#4ECDC4' }]
+          colorStops: [{ offset: 0, color: '#C8A96E' }, { offset: 1, color: '#7FA8A0' }]
         },
         borderRadius: [4, 4, 0, 0]
       }

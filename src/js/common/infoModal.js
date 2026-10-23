@@ -76,8 +76,8 @@ export function showInfoModal(options) {
     transition: all 0.3s ease;
   `;
   closeBtn.onmouseenter = () => {
-    closeBtn.style.background = '#E07B54';
-    closeBtn.style.borderColor = '#E07B54';
+    closeBtn.style.background = '#C8452F';
+    closeBtn.style.borderColor = '#C8452F';
     closeBtn.style.color = 'white';
   };
   closeBtn.onmouseleave = () => {
