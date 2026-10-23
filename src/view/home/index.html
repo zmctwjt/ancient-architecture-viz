@@ -41,15 +41,16 @@
       box-shadow: 0 2px 12px -2px rgba(200, 69, 47, 0.5);
     }
   </style>
-  <script type="module" crossorigin src="/ancient-architecture-viz/js/home-111469a5.js"></script>
+  <script type="module" crossorigin src="/ancient-architecture-viz/js/home-91f78b85.js"></script>
   <link rel="modulepreload" crossorigin href="/ancient-architecture-viz/js/echarts-14d2862f.js">
   <link rel="modulepreload" crossorigin href="/ancient-architecture-viz/js/utils-9019bc75.js">
   <link rel="modulepreload" crossorigin href="/ancient-architecture-viz/js/gsap-e9ea83b5.js">
   <link rel="modulepreload" crossorigin href="/ancient-architecture-viz/js/animation-845c0385.js">
   <link rel="modulepreload" crossorigin href="/ancient-architecture-viz/js/infoModal-bb267f21.js">
   <link rel="modulepreload" crossorigin href="/ancient-architecture-viz/js/glyphs-c4593ec9.js">
-  <link rel="stylesheet" href="/ancient-architecture-viz/assets/index-512069a2.css">
-  <link rel="stylesheet" href="/ancient-architecture-viz/assets/responsive-be2cf188.css">
+  <link rel="modulepreload" crossorigin href="/ancient-architecture-viz/js/drawer-dff37fa8.js">
+  <link rel="stylesheet" href="/ancient-architecture-viz/assets/index-574d3ac7.css">
+  <link rel="stylesheet" href="/ancient-architecture-viz/assets/responsive-00c1e700.css">
 </head>
 <body>
   <div class="page-container" id="app">
@@ -183,13 +184,38 @@
           </div>
 
           <div class="fp-filter" id="dynasty-filter">
-            <div id="dynasty-selector" style="display: flex; flex-wrap: wrap; gap: 0.06rem;">
-              <button class="dynasty-btn" data-dynasty="先秦">先秦</button>
-              <button class="dynasty-btn" data-dynasty="秦汉">秦汉</button>
-              <button class="dynasty-btn" data-dynasty="魏晋">魏晋</button>
-              <button class="dynasty-btn" data-dynasty="隋唐">隋唐</button>
-              <button class="dynasty-btn" data-dynasty="宋元">宋元</button>
-              <button class="dynasty-btn" data-dynasty="明清">明清</button>
+            <!-- 朝代时间带：段宽按朝代跨度比例，点击筛选 -->
+            <div class="band" id="dynasty-selector" role="group" aria-label="按朝代筛选">
+              <button class="band-seg" data-dynasty="先秦" style="--flex: 1849" aria-pressed="false">
+                <span class="band-seg__name">先秦</span>
+                <span class="band-seg__meta"><b class="band-seg__count">6</b> 处</span>
+                <span class="band-seg__span">前2070—前221</span>
+              </button>
+              <button class="band-seg" data-dynasty="秦汉" style="--flex: 441" aria-pressed="false">
+                <span class="band-seg__name">秦汉</span>
+                <span class="band-seg__meta"><b class="band-seg__count">14</b> 处</span>
+                <span class="band-seg__span">前221—220</span>
+              </button>
+              <button class="band-seg" data-dynasty="魏晋" style="--flex: 369" aria-pressed="false">
+                <span class="band-seg__name">魏晋</span>
+                <span class="band-seg__meta"><b class="band-seg__count">9</b> 处</span>
+                <span class="band-seg__span">220—589</span>
+              </button>
+              <button class="band-seg" data-dynasty="隋唐" style="--flex: 326" aria-pressed="false">
+                <span class="band-seg__name">隋唐</span>
+                <span class="band-seg__meta"><b class="band-seg__count">11</b> 处</span>
+                <span class="band-seg__span">581—907</span>
+              </button>
+              <button class="band-seg" data-dynasty="宋元" style="--flex: 408" aria-pressed="false">
+                <span class="band-seg__name">宋元</span>
+                <span class="band-seg__meta"><b class="band-seg__count">17</b> 处</span>
+                <span class="band-seg__span">960—1368</span>
+              </button>
+              <button class="band-seg" data-dynasty="明清" style="--flex: 543" aria-pressed="false">
+                <span class="band-seg__name">明清</span>
+                <span class="band-seg__meta"><b class="band-seg__count">57</b> 处</span>
+                <span class="band-seg__span">1368—1911</span>
+              </button>
             </div>
           </div>
 
