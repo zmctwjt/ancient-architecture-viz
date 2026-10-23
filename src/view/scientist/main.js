@@ -7,6 +7,7 @@ import { loadData, COLORS, ECHARTS_THEME, getDataUrl, loadJson, matchDynastyGrou
 import { pageEnterAnimation } from '../../js/common/animation.js';
 import { showInfoModal, generateDataHTML } from '../../js/common/infoModal.js';
 import { scientistInsights, generateInsightHTML } from '../../js/common/insights.js';
+import { initReveal } from '../../js/common/reveal.js';
 
 const dynastyOrder = { '春秋': 1, '汉': 2, '隋': 3, '唐': 4, '北魏': 5, '宋': 6, '元': 7, '明': 8, '明末清初': 9, '清': 10 };
 
@@ -103,6 +104,7 @@ async function initData(filterDynasties) {
   await initTimelineChart(architectData);
   await initGraphChart(architectData);
   await initPersonCards(architectData);
+  initReveal();
   await initBarChart(architectData);
 
   addInsightPanels();

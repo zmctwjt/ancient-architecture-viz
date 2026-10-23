@@ -182,11 +182,24 @@ export const ECHARTS_THEME = {
     }
   },
   tooltip: {
-    backgroundColor: 'rgba(13, 17, 23, 0.9)',
-    borderColor: COLORS.primary,
+    backgroundColor: 'rgba(11, 16, 24, 0.94)',
+    borderColor: 'rgba(200, 169, 110, 0.55)',
     borderWidth: 1,
+    padding: [10, 14],
+    extraCssText:
+      'border-radius:10px;' +
+      'box-shadow:0 12px 34px -10px rgba(0,0,0,.85), 0 0 22px -8px rgba(200,169,110,.35);' +
+      'backdrop-filter:blur(10px);' +
+      'letter-spacing:.2px;',
     textStyle: {
-      color: COLORS.textPrimary
+      color: COLORS.textPrimary,
+      fontSize: 12,
+      lineHeight: 20
+    },
+    axisPointer: {
+      lineStyle: { color: 'rgba(200, 169, 110, 0.45)', width: 1, type: 'dashed' },
+      crossStyle: { color: 'rgba(200, 169, 110, 0.5)' },
+      shadowStyle: { color: 'rgba(200, 169, 110, 0.06)' }
     }
   },
   xAxis: {

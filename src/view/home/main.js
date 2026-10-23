@@ -7,6 +7,7 @@ import { gsap } from 'gsap';
 import { loadData, COLORS, ECHARTS_THEME, getDataUrl, loadJson, matchDynastyGroup } from '../../js/common/utils.js';
 import { fallingLeavesAnimation, countUpAnimation, pageEnterAnimation } from '../../js/common/animation.js';
 import { showInfoModal } from '../../js/common/infoModal.js';
+import { initReveal } from '../../js/common/reveal.js';
 
 // 获取URL参数中的朝代过滤
 function getDynastyFilter() {
@@ -123,6 +124,8 @@ async function initData(filterDynasties) {
   }
 
   const filterDynastyStr = filterDynasties && filterDynasties.length > 0 ? filterDynasties.join(',') : null;
+  initReveal();
+  initStatCardLinks();
   initCountUp(filteredBuildings.length, architectsMeta.total || 0, booksMeta.total || 0, cultureCount);
   await initTimelineChart(filteredBuildings, filterDynastyStr);
   await initRadarChart(filteredBuildings);
@@ -166,6 +169,48 @@ function initCountUp(buildingCount, architectCount, bookCount, cultureCount) {
     const target = targets[i] || 0;
     el.dataset.count = target;
     countUpAnimation(el, target, 2);
+  });
+}
+
+/**
+ * 统计卡片点击直达对应子页面（数据交互）
+ * 保留当前朝代筛选状态
+ */
+function initStatCardLinks() {
+  const cards = document.querySelectorAll('.stat-card');
+  const targets = [
+    '../achievement/index.html',
+    '../scientist/index.html',
+    '../literature/index.html',
+    '../culture/index.html',
+  ];
+
+  cards.forEach((card, i) => {
+    const href = targets[i];
+    if (!href) return;
+    card.style.cursor = 'pointer';
+    card.setAttribute('tabindex', '0');
+    card.setAttribute('role', 'link');
+    const label = card.querySelector('.stat-label');
+    if (label) {
+      card.setAttribute('aria-label', label.textContent.trim() + '，点击查看详情');
+    }
+
+    const go = () => {
+      const url = new URL(href, window.location.href);
+      const params = new URLSearchParams(window.location.search);
+      const dynasty = params.get('dynasty');
+      if (dynasty) url.searchParams.set('dynasty', dynasty);
+      window.location.href = url.pathname + (url.search || '');
+    };
+
+    card.addEventListener('click', go);
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        go();
+      }
+    });
   });
 }
 

@@ -14,12 +14,60 @@ html {
   font-size: 100px; /* flexible.js 会覆盖 */
 }
 
+html {
+  background: #080b11;
+  /* 背景层用 fixed 定位，随视口铺满，不随内容高度变化 */
+}
+
 body {
   font-family: var(--font-sans);
-  background: #0a0e14;
+  /* 注意：body 不设背景色，避免遮挡全屏背景层 */
+  background: transparent;
   color: rgba(255, 255, 255, 0.9);
   min-height: 100vh;
   overflow-x: hidden;
+  position: relative;
+}
+
+/* ==================== 全屏背景层 ==================== */
+/* 固定定位 + 视口铺满：无论内容多高、窗口多宽都不会出现接缝 */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background:
+    /* 顶部暖金光晕（大范围，避免边界）*/
+    radial-gradient(ellipse 130% 90% at 50% -15%, rgba(210, 175, 115, 0.22) 0%, rgba(200, 169, 110, 0.06) 45%, transparent 75%),
+    /* 底部青瓦光晕 */
+    radial-gradient(ellipse 130% 90% at 50% 115%, rgba(78, 205, 196, 0.18) 0%, rgba(78, 205, 196, 0.04) 45%, transparent 75%),
+    /* 左上、右下点缀 */
+    radial-gradient(circle at 8% 12%, rgba(200, 169, 110, 0.10) 0%, transparent 42%),
+    radial-gradient(circle at 92% 88%, rgba(78, 205, 196, 0.10) 0%, transparent 42%),
+    /* 居中柔光 */
+    radial-gradient(ellipse 60% 50% at 50% 45%, rgba(255, 240, 210, 0.045) 0%, transparent 70%),
+    /* 细网格（px 固定，不随 rem 跳变）*/
+    linear-gradient(rgba(200, 169, 110, 0.065) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(200, 169, 110, 0.065) 1px, transparent 1px),
+    /* 底色 */
+    linear-gradient(180deg, #0e141d 0%, #0b1017 45%, #0a0f15 100%);
+  background-size:
+    100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%,
+    48px 48px, 48px 48px, 100% 100%;
+  background-position: center center;
+}
+
+/* 噪点层：打散 8bit 深色渐变的色带（banding） */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.028;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
 }
 
 /* ==================== CSS变量 ==================== */
@@ -70,26 +118,10 @@ body {
   width: 100%;
   min-height: 100vh;
   padding: 0.2rem;
-  background:
-    /* 顶部古铜金光晕 */
-    radial-gradient(ellipse 80% 50% at 50% 0%, rgba(200, 169, 110, 0.1) 0%, transparent 60%),
-    /* 底部青瓦光晕 */
-    radial-gradient(ellipse 80% 50% at 50% 100%, rgba(78, 205, 196, 0.08) 0%, transparent 60%),
-    /* 左上角装饰光 */
-    radial-gradient(circle at 0% 0%, rgba(200, 169, 110, 0.06) 0%, transparent 30%),
-    /* 右下角装饰光 */
-    radial-gradient(circle at 100% 100%, rgba(78, 205, 196, 0.06) 0%, transparent 30%),
-    /* 中间微光 */
-    radial-gradient(circle at 50% 50%, rgba(200, 169, 110, 0.02) 0%, transparent 50%),
-    /* 微妙网格纹理 */
-    linear-gradient(rgba(200, 169, 110, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(200, 169, 110, 0.03) 1px, transparent 1px),
-    #0a0e14;
-  background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 0.4rem 0.4rem, 0.4rem 0.4rem;
+  /* 背景由 body::before 全屏层统一提供，这里保持透明以消除接缝 */
+  background: transparent;
   position: relative;
-  /* 允许垂直滚动，防止内容被截断；仅禁止水平滚动 */
   overflow-x: hidden;
-  overflow-y: auto;
 }
 
 /* 页面顶部装饰横线 */
@@ -122,20 +154,10 @@ body {
 .page-wrapper {
   width: 100%;
   min-height: 100vh;
-  background:
-    radial-gradient(ellipse 80% 50% at 50% 0%, rgba(200, 169, 110, 0.1) 0%, transparent 60%),
-    radial-gradient(ellipse 80% 50% at 50% 100%, rgba(78, 205, 196, 0.08) 0%, transparent 60%),
-    radial-gradient(circle at 0% 0%, rgba(200, 169, 110, 0.06) 0%, transparent 30%),
-    radial-gradient(circle at 100% 100%, rgba(78, 205, 196, 0.06) 0%, transparent 30%),
-    radial-gradient(circle at 50% 50%, rgba(200, 169, 110, 0.02) 0%, transparent 50%),
-    linear-gradient(rgba(200, 169, 110, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(200, 169, 110, 0.03) 1px, transparent 1px),
-    var(--bg-dark);
-  background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 0.4rem 0.4rem, 0.4rem 0.4rem;
+  background: transparent;
   position: relative;
   padding: 0.2rem;
   overflow-x: hidden;
-  overflow-y: auto;
 }
 
 /* 内容区最大宽度限制，防止大屏下内容过宽 */
@@ -199,7 +221,6 @@ body {
   border-radius: 8px;
   padding: 0.15rem;
   position: relative;
-  backdrop-filter: blur(10px);
   transition: all 0.3s ease;
   /* 默认不裁剪，避免图表提示/标签被截断；需要裁剪的场景单独加 .overflow-hidden */
   overflow: visible;
@@ -675,7 +696,6 @@ body {
   border: 1px solid var(--border-color);
   border-radius: 20px;
   background: var(--bg-card);
-  backdrop-filter: blur(10px);
   transition: all 0.3s ease;
 }
 
@@ -1072,4 +1092,248 @@ body {
 @media (max-width: 768px) {
   .hero-ornament { max-width: 4rem; }
   .info-modal-ornament { max-width: 2.4rem; }
+}
+
+/* ============================================================
+   视觉增强 v2 —— 卡片质感 / 悬停动效 / 层次
+   （追加覆写，保持原有结构不变）
+   ============================================================ */
+
+/* ---------- 卡片统一玻璃质感 ---------- */
+.stat-card,
+.nav-item,
+.chart-panel,
+.person-card {
+  position: relative;
+  /* 用实色渐变代替 backdrop-filter：避免与 fixed 背景层叠加产生竖向亮带 */
+  background: linear-gradient(
+    160deg,
+    #222b3a 0%,
+    #1a2130 55%,
+    #151b26 100%
+  );
+  border: 1px solid rgba(200, 169, 110, 0.28);
+  box-shadow:/n    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    0 4px 18px -8px rgba(0, 0, 0, 0.6);
+  transition:
+    transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 0.4s cubic-bezier(0.2, 0.8, 0.2, 1),
+    border-color 0.4s ease,
+    background 0.4s ease;
+}
+
+/* 卡片内左上角柔光 */
+.stat-card > *,
+.nav-item > * { position: relative; z-index: 1; }
+
+.stat-card {
+  overflow: hidden;
+}
+.stat-card::after {
+  content: '';
+  position: absolute;
+  top: -40%;
+  left: -20%;
+  width: 80%;
+  height: 140%;
+  background: radial-gradient(circle, rgba(200, 169, 110, 0.16) 0%, transparent 68%);
+  opacity: 0;
+  transition: opacity 0.45s ease;
+  pointer-events: none;
+}
+.stat-card:hover::after { opacity: 1; }
+
+/* ---------- 悬停：抬升 + 暖光晕 ---------- */
+.stat-card:hover,
+.chart-panel:hover {
+  transform: translateY(-5px);
+  border-color: rgba(200, 169, 110, 0.42);
+  box-shadow:
+    0 16px 44px -12px rgba(0, 0, 0, 0.75),
+    0 0 32px -6px rgba(200, 169, 110, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+/* ---------- 顶部渐变高光线（stat-card） ---------- */
+.stat-card::before {
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(200, 169, 110, 0.5) 25%,
+    rgba(120, 230, 210, 0.7) 50%,
+    rgba(200, 169, 110, 0.5) 75%,
+    transparent 100%
+  );
+  opacity: 0.55;
+  transition: opacity 0.4s ease;
+}
+.stat-card:hover::before { opacity: 1; }
+
+/* ---------- 导航卡片：图标放大 + 内发光 ---------- */
+.nav-item {
+  overflow: hidden;
+}
+.nav-item .nav-icon {
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.4s ease;
+  display: inline-block;
+}
+.nav-item:hover {
+  transform: translateY(-6px);
+  border-color: rgba(200, 169, 110, 0.5);
+  box-shadow:
+    0 18px 40px -14px rgba(0, 0, 0, 0.8),
+    0 0 30px -8px rgba(200, 169, 110, 0.35);
+}
+.nav-item:hover .nav-icon {
+  transform: scale(1.18) translateY(-2px);
+  filter: drop-shadow(0 0 10px rgba(200, 169, 110, 0.55));
+}
+.nav-item .nav-label {
+  transition: color 0.3s ease, letter-spacing 0.3s ease;
+}
+.nav-item:hover .nav-label {
+  color: #F0DFC0;
+  letter-spacing: 0.02em;
+}
+
+/* ---------- 图表面板：标题微亮（不裁剪，避免遮住 tooltip） ---------- */
+.chart-panel .panel-title {
+  transition: color 0.35s ease;
+}
+.chart-panel:hover .panel-title {
+  color: #E3C88C;
+}
+
+/* ---------- 统计数字：光晕 + 字重 ---------- */
+.stat-number {
+  text-shadow: 0 0 22px rgba(200, 169, 110, 0.35);
+  transition: text-shadow 0.4s ease, transform 0.4s ease;
+}
+.stat-card:hover .stat-number {
+  text-shadow: 0 0 30px rgba(200, 169, 110, 0.65);
+  transform: scale(1.03);
+}
+
+/* ---------- 朝代筛选按钮：选中态流动光晕 ---------- */
+.dynasty-btn {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  letter-spacing: 0.01em;
+}
+.dynasty-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.22) 50%, transparent 70%);
+  transform: translateX(-120%);
+  transition: transform 0.6s ease;
+  pointer-events: none;
+}
+.dynasty-btn:hover::after { transform: translateX(120%); }
+.dynasty-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px -6px rgba(200, 169, 110, 0.5);
+}
+.dynasty-btn.active {
+  box-shadow:
+    0 0 18px rgba(200, 169, 110, 0.45),
+    inset 0 0 12px rgba(200, 169, 110, 0.12);
+}
+
+/* ---------- 返回链接：更轻的胶囊质感 ---------- */
+.back-link {
+  transition: all 0.3s ease;
+}
+.back-link:hover {
+  transform: translateX(-3px);
+  box-shadow: 0 4px 16px -6px rgba(200, 169, 110, 0.45);
+}
+
+/* ---------- 键盘可达性 ---------- */
+a:focus-visible,
+button:focus-visible,
+.nav-item:focus-visible,
+.stat-card:focus-visible {
+  outline: 2px solid rgba(200, 169, 110, 0.9);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* ---------- 滚动进入视口渐显 ---------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.7s cubic-bezier(0.2, 0.8, 0.2, 1),
+              transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+  will-change: opacity, transform;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .stat-card:hover,
+  .nav-item:hover,
+  .chart-panel:hover {
+    transform: none;
+  }
+}
+
+/* ---------- 顶部 / 底部装饰线：全宽渐隐，避免"画框感" ---------- */
+.page-container::before,
+.page-wrapper::before {
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(200, 169, 110, 0.28) 18%,
+    rgba(120, 230, 210, 0.5) 50%,
+    rgba(200, 169, 110, 0.28) 82%,
+    transparent 100%);
+  opacity: 0.85;
+}
+.page-container::after,
+.page-wrapper::after {
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(78, 205, 196, 0.22) 25%,
+    rgba(78, 205, 196, 0.38) 50%,
+    rgba(78, 205, 196, 0.22) 75%,
+    transparent 100%);
+}
+
+
+
+/* ---------- 统计卡片：可点击提示 ---------- */
+.stat-card .stat-label {
+  transition: color 0.3s ease;
+}
+.stat-card .stat-label::after {
+  content: '›';
+  display: inline-block;
+  margin-left: 0.04rem;
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  color: #E3C88C;
+  font-weight: 700;
+}
+.stat-card:hover .stat-label::after,
+.stat-card:focus-visible .stat-label::after {
+  opacity: 1;
+  transform: translateX(0);
+}
+.stat-card:hover .stat-label {
+  color: rgba(255, 255, 255, 0.92);
 }
