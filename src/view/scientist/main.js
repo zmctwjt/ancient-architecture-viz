@@ -465,8 +465,8 @@ function renderLineage(scientists) {
               <div class="lineage-person__info">
                 <span class="lineage-person__name">${p.name}</span>
                 <span class="lineage-person__period">${simplifyPeriod(p.period)}</span>
-                <span class="lineage-person__score">${p.influence_score || 0}</span>
               </div>
+              <span class="lineage-person__score">${p.influence_score || 0}</span>
             </div>`).join('')}</div>`
         : '<div class="lineage-empty">暂无留名匠师</div>'}
     </div>

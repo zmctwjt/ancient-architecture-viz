@@ -70,7 +70,6 @@
   </style>
 </head>
 <body>
-  <a href="../home/index.html" class="back-link" aria-label="返回首页" id="back-link">← 返回首页</a>
 
   <script>
     // 返回首页时带上 dynasty 参数
@@ -87,6 +86,8 @@
   </script>
 
   <div class="page-container">
+    <div class="content-wrapper-wide">
+      <a href="../home/index.html" class="back-link" aria-label="返回首页" id="back-link">← 返回首页</a>
     <header class="page-header">
       <h1 class="page-title">中国古代建筑成就</h1>
       <p class="page-subtitle">全国重点文物保护单位 · 古建筑类数据可视化</p>
@@ -169,7 +170,7 @@
         斗拱承檐、榫卯连接、梁架定形、台基防潮——四类构件构成了中国木构建筑的技术底座，
         也是「营造法式」体系的核心。
       </p>
-      <div class="typology-grid" id="struct-nodes"></div>
+      <div class="typology-grid typology-grid--4" id="struct-nodes"></div>
     </section>
 
     <div class="decorative-bar"></div>
@@ -186,6 +187,7 @@
       <p class="footer-brand">千年营造 · 华夏砖木 —— 中国古代建筑数据可视化平台</p>
       <p class="footer-meta">数据来源：国家文物局全国重点文物保护单位名录</p>
     </footer>
+    </div>
   </div>
 
   <script type="module" src="./main.js"></script>
