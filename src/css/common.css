@@ -1286,31 +1286,24 @@ button:focus-visible,
   }
 }
 
-/* ---------- 顶部 / 底部装饰线：全宽渐隐，避免"画框感" ---------- */
+/* ---------- 顶部装饰：居中的短光带（不做全宽线，避免"画框感"） ---------- */
 .page-container::before,
 .page-wrapper::before {
-  left: 0;
-  right: 0;
+  left: 28%;
+  right: 28%;
   height: 1px;
   background: linear-gradient(90deg,
     transparent 0%,
-    rgba(200, 169, 110, 0.28) 18%,
-    rgba(120, 230, 210, 0.5) 50%,
-    rgba(200, 169, 110, 0.28) 82%,
+    rgba(200, 169, 110, 0.35) 22%,
+    rgba(120, 230, 210, 0.55) 50%,
+    rgba(200, 169, 110, 0.35) 78%,
     transparent 100%);
-  opacity: 0.85;
+  opacity: 0.65;
 }
+/* 底部不再额外画线：页脚已有装饰纹样 */
 .page-container::after,
 .page-wrapper::after {
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(90deg,
-    transparent 0%,
-    rgba(78, 205, 196, 0.22) 25%,
-    rgba(78, 205, 196, 0.38) 50%,
-    rgba(78, 205, 196, 0.22) 75%,
-    transparent 100%);
+  display: none;
 }
 
 
