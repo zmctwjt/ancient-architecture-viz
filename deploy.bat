@@ -8,6 +8,23 @@ echo   QianNian YingZao - Deploy to GitHub Pages
 echo ==========================================
 echo.
 
+REM ---------- 0. Git safe.directory ----------
+REM If the repo folder is owned by Administrators but run as a normal user,
+REM git refuses to operate (dubious ownership). Register an exception.
+set "REPO=%~dp0"
+if "%REPO:~-1%"=="\" set "REPO=%REPO:~0,-1%"
+git rev-parse --is-inside-work-tree >nul 2>&1
+if errorlevel 1 (
+    echo [0/4] Registering git safe.directory...
+    git config --global --add safe.directory "%REPO%"
+    git rev-parse --is-inside-work-tree >nul 2>&1
+    if errorlevel 1 (
+        echo [x] Git still refuses this repository. Aborted.
+        goto END
+    )
+    echo       Done.
+)
+
 REM ---------- 1. Build ----------
 echo [1/4] Building production bundle...
 call npm run build
@@ -21,8 +38,8 @@ echo.
 echo [2/4] Pushing source to main branch...
 git push origin main
 if errorlevel 1 (
-    echo [!] Push to main failed - see message above.
-    echo     Common cause: github.com HTTPS is blocked by proxy.
+    echo [WARN] Push to main failed.
+    echo        Check network or proxy access to github.com.
 )
 
 REM ---------- 3. Prepare gh-pages worktree ----------
@@ -70,7 +87,8 @@ if "!RESULT!"=="0" (
     echo      GitHub Pages needs 30-60 seconds to rebuild.
 ) else (
     echo [x] gh-pages push failed.
-    echo     Check network / proxy, then run this script again.
+    echo     If it says 502 / CONNECT tunnel failed, the proxy is blocking
+    echo     github.com temporarily. Wait a minute and run this script again.
 )
 
 :END
