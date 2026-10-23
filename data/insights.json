@@ -1,0 +1,798 @@
+{
+  "meta": {
+    "source": "buildings.json 字段派生计算",
+    "total": 115,
+    "categories": 11,
+    "provinces": 25,
+    "unparsedYears": 0
+  },
+  "dynasty_density": [
+    {
+      "dynasty": "先秦",
+      "count": 6,
+      "start": -2070,
+      "end": -221,
+      "span": 1849,
+      "perCentury": 0.32
+    },
+    {
+      "dynasty": "秦汉",
+      "count": 14,
+      "start": -221,
+      "end": 220,
+      "span": 441,
+      "perCentury": 3.17
+    },
+    {
+      "dynasty": "魏晋",
+      "count": 9,
+      "start": 220,
+      "end": 589,
+      "span": 369,
+      "perCentury": 2.44
+    },
+    {
+      "dynasty": "隋唐",
+      "count": 12,
+      "start": 581,
+      "end": 907,
+      "span": 326,
+      "perCentury": 3.68
+    },
+    {
+      "dynasty": "宋元",
+      "count": 17,
+      "start": 960,
+      "end": 1368,
+      "span": 408,
+      "perCentury": 4.17
+    },
+    {
+      "dynasty": "明清",
+      "count": 57,
+      "start": 1368,
+      "end": 1911,
+      "span": 543,
+      "perCentury": 10.5
+    }
+  ],
+  "century_distribution": [
+    {
+      "century": "前12世纪",
+      "value": 2,
+      "sortKey": -12
+    },
+    {
+      "century": "前7世纪",
+      "value": 1,
+      "sortKey": -7
+    },
+    {
+      "century": "前5世纪",
+      "value": 2,
+      "sortKey": -5
+    },
+    {
+      "century": "前4世纪",
+      "value": 1,
+      "sortKey": -4
+    },
+    {
+      "century": "前3世纪",
+      "value": 3,
+      "sortKey": -3
+    },
+    {
+      "century": "前2世纪",
+      "value": 3,
+      "sortKey": -2
+    },
+    {
+      "century": "前1世纪",
+      "value": 3,
+      "sortKey": -1
+    },
+    {
+      "century": "3世纪",
+      "value": 3,
+      "sortKey": 3
+    },
+    {
+      "century": "4世纪",
+      "value": 2,
+      "sortKey": 4
+    },
+    {
+      "century": "5世纪",
+      "value": 6,
+      "sortKey": 5
+    },
+    {
+      "century": "6世纪",
+      "value": 3,
+      "sortKey": 6
+    },
+    {
+      "century": "7世纪",
+      "value": 7,
+      "sortKey": 7
+    },
+    {
+      "century": "8世纪",
+      "value": 2,
+      "sortKey": 8
+    },
+    {
+      "century": "9世纪",
+      "value": 2,
+      "sortKey": 9
+    },
+    {
+      "century": "10世纪",
+      "value": 2,
+      "sortKey": 10
+    },
+    {
+      "century": "11世纪",
+      "value": 4,
+      "sortKey": 11
+    },
+    {
+      "century": "12世纪",
+      "value": 10,
+      "sortKey": 12
+    },
+    {
+      "century": "13世纪",
+      "value": 2,
+      "sortKey": 13
+    },
+    {
+      "century": "14世纪",
+      "value": 8,
+      "sortKey": 14
+    },
+    {
+      "century": "15世纪",
+      "value": 10,
+      "sortKey": 15
+    },
+    {
+      "century": "16世纪",
+      "value": 10,
+      "sortKey": 16
+    },
+    {
+      "century": "17世纪",
+      "value": 11,
+      "sortKey": 17
+    },
+    {
+      "century": "18世纪",
+      "value": 11,
+      "sortKey": 18
+    },
+    {
+      "century": "19世纪",
+      "value": 6,
+      "sortKey": 19
+    },
+    {
+      "century": "20世纪",
+      "value": 1,
+      "sortKey": 20
+    }
+  ],
+  "province_matrix": {
+    "provinces": [
+      "山西",
+      "北京",
+      "江苏",
+      "河北",
+      "陕西",
+      "西藏",
+      "广东",
+      "河南",
+      "山东",
+      "甘肃",
+      "浙江",
+      "新疆"
+    ],
+    "categories": [
+      "寺庙",
+      "园林",
+      "城址",
+      "墓葬",
+      "祭祀建筑",
+      "石窟",
+      "桥梁",
+      "楼阁",
+      "民居",
+      "官府",
+      "皇宫"
+    ],
+    "data": [
+      [
+        0,
+        0,
+        11
+      ],
+      [
+        4,
+        0,
+        2
+      ],
+      [
+        5,
+        0,
+        2
+      ],
+      [
+        6,
+        0,
+        1
+      ],
+      [
+        7,
+        0,
+        1
+      ],
+      [
+        8,
+        0,
+        3
+      ],
+      [
+        9,
+        0,
+        1
+      ],
+      [
+        0,
+        1,
+        3
+      ],
+      [
+        1,
+        1,
+        2
+      ],
+      [
+        2,
+        1,
+        1
+      ],
+      [
+        3,
+        1,
+        1
+      ],
+      [
+        4,
+        1,
+        5
+      ],
+      [
+        6,
+        1,
+        1
+      ],
+      [
+        10,
+        1,
+        1
+      ],
+      [
+        1,
+        2,
+        9
+      ],
+      [
+        2,
+        2,
+        1
+      ],
+      [
+        3,
+        2,
+        1
+      ],
+      [
+        9,
+        2,
+        1
+      ],
+      [
+        0,
+        3,
+        1
+      ],
+      [
+        1,
+        3,
+        2
+      ],
+      [
+        2,
+        3,
+        2
+      ],
+      [
+        3,
+        3,
+        2
+      ],
+      [
+        6,
+        3,
+        1
+      ],
+      [
+        9,
+        3,
+        1
+      ],
+      [
+        2,
+        4,
+        2
+      ],
+      [
+        3,
+        4,
+        4
+      ],
+      [
+        4,
+        4,
+        1
+      ],
+      [
+        10,
+        4,
+        2
+      ],
+      [
+        0,
+        5,
+        5
+      ],
+      [
+        2,
+        5,
+        1
+      ],
+      [
+        1,
+        6,
+        4
+      ],
+      [
+        6,
+        6,
+        1
+      ],
+      [
+        8,
+        6,
+        1
+      ],
+      [
+        0,
+        7,
+        1
+      ],
+      [
+        5,
+        7,
+        2
+      ],
+      [
+        8,
+        7,
+        1
+      ],
+      [
+        9,
+        7,
+        1
+      ],
+      [
+        1,
+        8,
+        1
+      ],
+      [
+        3,
+        8,
+        1
+      ],
+      [
+        4,
+        8,
+        1
+      ],
+      [
+        9,
+        8,
+        1
+      ],
+      [
+        0,
+        9,
+        1
+      ],
+      [
+        5,
+        9,
+        3
+      ],
+      [
+        1,
+        10,
+        1
+      ],
+      [
+        4,
+        10,
+        1
+      ],
+      [
+        7,
+        10,
+        1
+      ],
+      [
+        2,
+        11,
+        3
+      ]
+    ],
+    "provinceTotals": [
+      {
+        "name": "山西",
+        "value": 21
+      },
+      {
+        "name": "北京",
+        "value": 14
+      },
+      {
+        "name": "江苏",
+        "value": 12
+      },
+      {
+        "name": "河北",
+        "value": 9
+      },
+      {
+        "name": "陕西",
+        "value": 9
+      },
+      {
+        "name": "西藏",
+        "value": 6
+      },
+      {
+        "name": "广东",
+        "value": 6
+      },
+      {
+        "name": "河南",
+        "value": 5
+      },
+      {
+        "name": "山东",
+        "value": 4
+      },
+      {
+        "name": "甘肃",
+        "value": 4
+      },
+      {
+        "name": "浙江",
+        "value": 3
+      },
+      {
+        "name": "新疆",
+        "value": 3
+      }
+    ]
+  },
+  "category_flow": {
+    "nodes": [
+      {
+        "name": "先秦"
+      },
+      {
+        "name": "秦汉"
+      },
+      {
+        "name": "魏晋"
+      },
+      {
+        "name": "隋唐"
+      },
+      {
+        "name": "宋元"
+      },
+      {
+        "name": "明清"
+      },
+      {
+        "name": "寺庙"
+      },
+      {
+        "name": "园林"
+      },
+      {
+        "name": "城址"
+      },
+      {
+        "name": "墓葬"
+      },
+      {
+        "name": "祭祀建筑"
+      },
+      {
+        "name": "石窟"
+      },
+      {
+        "name": "桥梁"
+      },
+      {
+        "name": "楼阁"
+      },
+      {
+        "name": "民居"
+      },
+      {
+        "name": "官府"
+      },
+      {
+        "name": "皇宫"
+      }
+    ],
+    "links": [
+      {
+        "source": "明清",
+        "target": "皇宫",
+        "value": 2
+      },
+      {
+        "source": "明清",
+        "target": "园林",
+        "value": 17
+      },
+      {
+        "source": "明清",
+        "target": "墓葬",
+        "value": 4
+      },
+      {
+        "source": "明清",
+        "target": "寺庙",
+        "value": 11
+      },
+      {
+        "source": "明清",
+        "target": "祭祀建筑",
+        "value": 6
+      },
+      {
+        "source": "明清",
+        "target": "楼阁",
+        "value": 2
+      },
+      {
+        "source": "明清",
+        "target": "桥梁",
+        "value": 2
+      },
+      {
+        "source": "明清",
+        "target": "官府",
+        "value": 4
+      },
+      {
+        "source": "明清",
+        "target": "民居",
+        "value": 6
+      },
+      {
+        "source": "明清",
+        "target": "城址",
+        "value": 3
+      },
+      {
+        "source": "隋唐",
+        "target": "寺庙",
+        "value": 7
+      },
+      {
+        "source": "隋唐",
+        "target": "墓葬",
+        "value": 1
+      },
+      {
+        "source": "隋唐",
+        "target": "石窟",
+        "value": 1
+      },
+      {
+        "source": "隋唐",
+        "target": "楼阁",
+        "value": 1
+      },
+      {
+        "source": "隋唐",
+        "target": "桥梁",
+        "value": 1
+      },
+      {
+        "source": "隋唐",
+        "target": "皇宫",
+        "value": 1
+      },
+      {
+        "source": "宋元",
+        "target": "园林",
+        "value": 3
+      },
+      {
+        "source": "宋元",
+        "target": "城址",
+        "value": 1
+      },
+      {
+        "source": "宋元",
+        "target": "寺庙",
+        "value": 5
+      },
+      {
+        "source": "宋元",
+        "target": "祭祀建筑",
+        "value": 1
+      },
+      {
+        "source": "宋元",
+        "target": "官府",
+        "value": 1
+      },
+      {
+        "source": "宋元",
+        "target": "石窟",
+        "value": 1
+      },
+      {
+        "source": "宋元",
+        "target": "桥梁",
+        "value": 5
+      },
+      {
+        "source": "秦汉",
+        "target": "墓葬",
+        "value": 3
+      },
+      {
+        "source": "秦汉",
+        "target": "城址",
+        "value": 4
+      },
+      {
+        "source": "秦汉",
+        "target": "寺庙",
+        "value": 1
+      },
+      {
+        "source": "秦汉",
+        "target": "祭祀建筑",
+        "value": 2
+      },
+      {
+        "source": "秦汉",
+        "target": "石窟",
+        "value": 3
+      },
+      {
+        "source": "秦汉",
+        "target": "皇宫",
+        "value": 1
+      },
+      {
+        "source": "先秦",
+        "target": "墓葬",
+        "value": 2
+      },
+      {
+        "source": "先秦",
+        "target": "城址",
+        "value": 2
+      },
+      {
+        "source": "先秦",
+        "target": "祭祀建筑",
+        "value": 1
+      },
+      {
+        "source": "先秦",
+        "target": "楼阁",
+        "value": 1
+      },
+      {
+        "source": "魏晋",
+        "target": "城址",
+        "value": 1
+      },
+      {
+        "source": "魏晋",
+        "target": "寺庙",
+        "value": 2
+      },
+      {
+        "source": "魏晋",
+        "target": "石窟",
+        "value": 4
+      },
+      {
+        "source": "魏晋",
+        "target": "楼阁",
+        "value": 2
+      }
+    ]
+  },
+  "architect_coverage": {
+    "with": 35,
+    "without": 80,
+    "ratio": 0.304
+  },
+  "heritage": {
+    "count": 26,
+    "total": 115,
+    "ratio": 0.226
+  },
+  "timeline_band": [
+    {
+      "dynasty": "先秦",
+      "start": -2070,
+      "end": -221,
+      "count": 6,
+      "perCentury": 0.32
+    },
+    {
+      "dynasty": "秦汉",
+      "start": -221,
+      "end": 220,
+      "count": 14,
+      "perCentury": 3.17
+    },
+    {
+      "dynasty": "魏晋",
+      "start": 220,
+      "end": 589,
+      "count": 9,
+      "perCentury": 2.44
+    },
+    {
+      "dynasty": "隋唐",
+      "start": 581,
+      "end": 907,
+      "count": 12,
+      "perCentury": 3.68
+    },
+    {
+      "dynasty": "宋元",
+      "start": 960,
+      "end": 1368,
+      "count": 17,
+      "perCentury": 4.17
+    },
+    {
+      "dynasty": "明清",
+      "start": 1368,
+      "end": 1911,
+      "count": 57,
+      "perCentury": 10.5
+    }
+  ]
+}
